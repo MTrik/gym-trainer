@@ -536,21 +536,22 @@ navigator.serviceWorker.register(swURL);
 });
 }
 
-// Programs
+// Programs with Russian names
 const workoutPrograms = {
 'А': {
 name: 'Верх тела + Грудь-Плечи-Трицепс',
 exercises: [
-{ name: 'Chest Press / Жим в тренажере', sets: 4, reps: '10-12', weight: 22.5, rest: 120 },
-{ name: 'Lat Machine / Тяга верхнего блока', sets: 3, reps: '10-12', weight: 25, rest: 90 },
-{ name: 'Shoulder Press / Жим на плечи', sets: 4, reps: '10-12', weight: 17.5, rest: 90 },
-{ name: 'Жим в Смите', sets: 4, reps: '10-12', weight: 20, rest: 120 },
-{ name: 'Сведение в кроссовере', sets: 3, reps: '15', weight: 15, rest: 60 },
-{ name: 'Махи в стороны', sets: 3, reps: '15', weight: 10, rest: 60 },
-{ name: 'Бицепс (Pulley)', sets: 3, reps: '12-15', weight: 10, rest: 60 },
-{ name: 'Трицепс (Pulley)', sets: 3, reps: '12-15', weight: 10, rest: 60 },
-{ name: 'Разгибание на блоке', sets: 3, reps: '15', weight: 10, rest: 60 },
-{ name: 'Планка', sets: 3, reps: '30-45с', weight: 0, rest: 60 }
+{ name: 'Жим в тренажере сидя', sets: 4, reps: '10-12', weight: 22.5, rest: 120 },
+{ name: 'Тяга верхнего блока к груди', sets: 3, reps: '10-12', weight: 25, rest: 90 },
+{ name: 'Жим на плечи в тренажере', sets: 4, reps: '10-12', weight: 17.5, rest: 90 },
+{ name: 'Жим в машине Смита', sets: 4, reps: '10-12', weight: 20, rest: 120 },
+{ name: 'Сведение рук в кроссовере', sets: 3, reps: '15', weight: 15, rest: 60 },
+{ name: 'Махи гантелями в стороны', sets: 3, reps: '15', weight: 10, rest: 60 },
+{ name: 'Подъем на бицепс на блоке', sets: 3, reps: '12-15', weight: 10, rest: 60 },
+{ name: 'Французский жим на блоке', sets: 3, reps: '12-15', weight: 10, rest: 60 },
+{ name: 'Разгибание рук на блоке', sets: 3, reps: '15', weight: 10, rest: 60 },
+{ name: 'Скручивания на пресс', sets: 3, reps: '15-20', weight: 0, rest: 60 },
+{ name: 'Планка статическая', sets: 3, reps: '30-45с', weight: 0, rest: 60 }
 ]
 },
 'Б': {
@@ -559,36 +560,39 @@ exercises: [
 { name: 'Беговая дорожка', sets: 1, reps: '10 мин', weight: 0, rest: 60 },
 { name: 'Гребной тренажер', sets: 1, reps: '8 мин', weight: 0, rest: 60 },
 { name: 'Степпер', sets: 1, reps: '5 мин', weight: 0, rest: 60 },
-{ name: 'Подтягивания/Тяга блока', sets: 4, reps: '8-10', weight: 25, rest: 90 },
+{ name: 'Тяга верхнего блока', sets: 4, reps: '8-10', weight: 25, rest: 90 },
 { name: 'Тяга штанги в наклоне', sets: 4, reps: '10-12', weight: 20, rest: 90 },
-{ name: 'Тяга гантели', sets: 3, reps: '12', weight: 15, rest: 90 },
-{ name: 'Подъем на бицепс', sets: 4, reps: '10-12', weight: 15, rest: 60 },
-{ name: 'Молотки', sets: 3, reps: '15', weight: 10, rest: 60 }
+{ name: 'Тяга гантели к поясу', sets: 3, reps: '12', weight: 15, rest: 90 },
+{ name: 'Подъем штанги на бицепс', sets: 4, reps: '10-12', weight: 15, rest: 60 },
+{ name: 'Подъем гантелей на бицепс', sets: 3, reps: '12', weight: 12.5, rest: 60 },
+{ name: 'Молотковые подъемы', sets: 3, reps: '15', weight: 10, rest: 60 }
 ]
 },
 'В': {
 name: 'Ноги-Пресс',
 exercises: [
-{ name: 'Приседания', sets: 4, reps: '10-12', weight: 30, rest: 120 },
-{ name: 'Жим ногами', sets: 3, reps: '12-15', weight: 40, rest: 90 },
-{ name: 'Разгибания ног', sets: 3, reps: '12-15', weight: 25, rest: 60 },
-{ name: 'Сгибания ног', sets: 3, reps: '12-15', weight: 20, rest: 60 },
-{ name: 'Подъемы на носки', sets: 4, reps: '20', weight: 20, rest: 60 },
-{ name: 'Планка', sets: 3, reps: '60с', weight: 0, rest: 60 },
-{ name: 'Скручивания', sets: 3, reps: '20', weight: 0, rest: 60 }
+{ name: 'Приседания со штангой', sets: 4, reps: '10-12', weight: 30, rest: 120 },
+{ name: 'Жим ногами в тренажере', sets: 3, reps: '12-15', weight: 40, rest: 90 },
+{ name: 'Разгибания ног сидя', sets: 3, reps: '12-15', weight: 25, rest: 60 },
+{ name: 'Сгибания ног лежа', sets: 3, reps: '12-15', weight: 20, rest: 60 },
+{ name: 'Подъемы на носки стоя', sets: 4, reps: '20', weight: 20, rest: 60 },
+{ name: 'Планка классическая', sets: 3, reps: '60с', weight: 0, rest: 60 },
+{ name: 'Скручивания лежа', sets: 3, reps: '20', weight: 0, rest: 60 },
+{ name: 'Пресс в тренажере', sets: 3, reps: '12-15', weight: 10, rest: 60 }
 ]
 },
 'Г': {
 name: 'Функциональная + Силовая',
 exercises: [
-{ name: 'Беговая дорожка', sets: 1, reps: '10 мин', weight: 0, rest: 60 },
-{ name: 'Эллипс', sets: 1, reps: '10 мин', weight: 0, rest: 60 },
-{ name: 'TRX', sets: 3, reps: '30с', weight: 0, rest: 60 },
-{ name: 'Кинезис', sets: 3, reps: '12', weight: 10, rest: 60 },
-{ name: 'Босу', sets: 2, reps: '1 мин', weight: 0, rest: 60 },
+{ name: 'Беговая дорожка разминка', sets: 1, reps: '10 мин', weight: 0, rest: 60 },
+{ name: 'Эллиптический тренажер', sets: 1, reps: '10 мин', weight: 0, rest: 60 },
+{ name: 'Упражнения с петлями', sets: 3, reps: '30с', weight: 0, rest: 60 },
+{ name: 'Тренажер кинезис', sets: 3, reps: '12', weight: 10, rest: 60 },
+{ name: 'Баланс на полусфере', sets: 2, reps: '1 мин', weight: 0, rest: 60 },
 { name: 'Приседания силовые', sets: 4, reps: '6-8', weight: 40, rest: 150 },
-{ name: 'Chest Press силовой', sets: 4, reps: '6-8', weight: 30, rest: 150 },
-{ name: 'Растяжка', sets: 1, reps: '5 мин', weight: 0, rest: 0 }
+{ name: 'Жим силовой в тренажере', sets: 4, reps: '6-8', weight: 30, rest: 150 },
+{ name: 'Тяга силовая верхнего блока', sets: 3, reps: '8-10', weight: 30, rest: 120 },
+{ name: 'Растяжка всех групп мышц', sets: 1, reps: '5 мин', weight: 0, rest: 0 }
 ]
 }
 };
