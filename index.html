@@ -246,15 +246,6 @@ border-color: transparent;
 box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
-.exercise-card {
-background: linear-gradient(135deg, #eff6ff 0%, #f3e8ff 100%);
-border-radius: 16px;
-padding: 1.5rem;
-margin-bottom: 1rem;
-border: 1px solid #c7d2fe;
-box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-}
-
 .exercise-item {
 padding: 1rem;
 background: white;
@@ -300,6 +291,7 @@ font-size: 0.75rem;
 font-weight: 600;
 transition: all 0.2s ease;
 border: 2px solid transparent;
+cursor: pointer;
 }
 
 .set-dot.completed {
@@ -348,210 +340,151 @@ padding: 1rem;
 margin-bottom: 0.75rem;
 transition: all 0.2s ease;
 box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+cursor: pointer;
 }
 
 .schedule-item:active {
 transform: scale(0.98);
 }
 
-.schedule-item.today {
-border-color: #3b82f6;
-background: linear-gradient(135deg, #eff6ff, #f0f9ff);
-box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
+.exercise-name {
+font-weight: 600;
+font-size: 0.9rem;
+margin-bottom: 0.25rem;
 }
 
-.schedule-item.rest {
-background: linear-gradient(135deg, #f3f4f6, #f9fafb);
+.exercise-details {
+font-size: 0.8rem;
 color: #6b7280;
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-body { background: #111827; color: #f9fafb; }
-.app { background: #1f2937; }
-.nav { background: #1f2937; border-color: #374151; }
-.exercise-item { background: #374151; border-color: #4b5563; color: #f9fafb; }
-.schedule-item { background: #374151; border-color: #4b5563; color: #f9fafb; }
+.progress-bar {
+width: 100%;
+height: 8px;
+background: #e5e7eb;
+border-radius: 4px;
+overflow: hidden;
+margin-top: 0.5rem;
+}
+
+.progress-fill {
+height: 100%;
+background: linear-gradient(90deg, #10b981, #059669);
+transition: width 0.3s ease;
 }
 </style>
 </head>
+
 <body>
 <div class="app">
-<div class="header">
-<h1>🏋️ Gym Trainer</h1>
-<p>Персональный тренер</p>
-<div style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.9;">
-Программа <span id="currentWorkout">А</span>: <span id="workoutName">Верх тела + Грудь-Плечи-Трицепс</span>
-</div>
-</div>
+<header class="header">
+<h1>💪 Gym Trainer</h1>
+<p>Персональный тренер в кармане</p>
+</header>
 
 <nav class="nav">
-<button class="active" onclick="switchTab('timer', this)">⏱️<br>Таймер</button>
-<button onclick="switchTab('workout', this)">🎯<br>Тренировка</button>
-<button onclick="switchTab('calculator', this)">🧮<br>Веса</button>
-<button onclick="switchTab('schedule', this)">📅<br>План</button>
-<button onclick="switchTab('history', this)">📊<br>История</button>
+<button onclick="showTab('timer')" class="active">⏱️ Таймер</button>
+<button onclick="showTab('workouts')">🏋️ Программы</button>
+<button onclick="showTab('stats')">📊 Статистика</button>
+<button onclick="showTab('schedule')">📅 План</button>
 </nav>
 
 <div class="content">
-<!-- Timer Tab -->
-<div id="timer" class="tab-content active">
+<div id="timer-tab" class="tab-content active">
 <div class="timer-display">
-<div id="timerDisplay" class="timer-time">1:30</div>
-<div style="color: #6b7280; margin-bottom: 1.5rem;">Отдых между подходами</div>
+<div id="timer-time" class="timer-time">00:00</div>
 <div>
-<button id="timerBtn" class="btn btn-primary" onclick="toggleTimer()">▶️ Старт</button>
-<button class="btn btn-secondary" onclick="resetTimer()">🔄 Сброс</button>
+<button id="start-timer" class="btn btn-primary" onclick="startTimer(90)">Старт 90с</button>
+<button class="btn btn-info" onclick="startTimer(120)">120с</button>
+<button class="btn btn-secondary" onclick="startTimer(60)">60с</button>
 </div>
-<div style="margin-top: 1.5rem;">
-<button class="btn btn-info" onclick="setTimer(60)">60с</button>
-<button class="btn btn-info" onclick="setTimer(90)">90с</button>
-<button class="btn btn-info" onclick="setTimer(120)">120с</button>
+<div style="margin-top: 1rem;">
+<button id="pause-timer" class="btn btn-secondary" onclick="pauseTimer()" disabled>Пауза</button>
+<button id="stop-timer" class="btn btn-secondary" onclick="stopTimer()" disabled>Стоп</button>
 </div>
+</div>
+</div>
+
+<div id="workouts-tab" class="tab-content">
+<div class="workout-selector">
+<button class="workout-btn active" onclick="selectWorkout('А')">А<br><small>Верх тела</small></button>
+<button class="workout-btn" onclick="selectWorkout('Б')">Б<br><small>Спина-Бицепс</small></button>
+<button class="workout-btn" onclick="selectWorkout('В')">В<br><small>Ноги-Пресс</small></button>
+<button class="workout-btn" onclick="selectWorkout('Г')">Г<br><small>Функц+Сила</small></button>
+</div>
+<div id="workout-content">
+<!-- Упражнения загружаются здесь -->
 </div>
 </div>
 
-<!-- Workout Tab -->
-<div id="workout" class="tab-content">
-<div class="workout-selector" id="workoutSelector"></div>
-<div id="currentExerciseCard"></div>
-<div id="exerciseList"></div>
-</div>
-
-<!-- Calculator Tab -->
-<div id="calculator" class="tab-content">
-<h3 style="margin-bottom: 1.5rem;">Калькулятор весов</h3>
-<div id="calculatorList"></div>
-</div>
-
-<!-- Schedule Tab -->
-<div id="schedule" class="tab-content">
-<h3 style="margin-bottom: 1.5rem;">Недельный план</h3>
-<div id="scheduleList"></div>
-</div>
-
-<!-- History Tab -->
-<div id="history" class="tab-content">
-<h3 style="margin-bottom: 1.5rem;">История</h3>
+<div id="stats-tab" class="tab-content">
 <div class="stats-grid">
 <div class="stat-card">
-<div id="totalSets" class="stat-value">0</div>
+<div class="stat-value" id="total-workouts">0</div>
+<div class="stat-label">Тренировок</div>
+</div>
+<div class="stat-card">
+<div class="stat-value" id="total-sets">0</div>
 <div class="stat-label">Подходов</div>
 </div>
 <div class="stat-card">
-<div id="totalDays" class="stat-value">0</div>
-<div class="stat-label">Дней</div>
-</div>
-<div class="stat-card">
-<div id="totalWeight" class="stat-value">0</div>
+<div class="stat-value" id="total-tonnage">0</div>
 <div class="stat-label">Тоннаж</div>
 </div>
 </div>
-<div id="historyList"></div>
+<button class="btn btn-secondary" onclick="resetStats()" style="width: 100%;">Сбросить статистику</button>
+</div>
+
+<div id="schedule-tab" class="tab-content">
+<div class="schedule-item" onclick="selectWorkout('А')">
+<h4>Понедельник - Программа А</h4>
+<p>Верх тела + Грудь-Плечи-Трицепс</p>
+</div>
+<div class="schedule-item" onclick="selectWorkout('В')">
+<h4>Вторник - Программа В</h4>
+<p>Ноги-Пресс</p>
+</div>
+<div class="schedule-item">
+<h4>Среда - Отдых</h4>
+<p>Восстановление</p>
+</div>
+<div class="schedule-item" onclick="selectWorkout('Б')">
+<h4>Четверг - Программа Б</h4>
+<p>Спина-Бицепс + Кардио</p>
+</div>
+<div class="schedule-item" onclick="selectWorkout('А')">
+<h4>Пятница - Программа А</h4>
+<p>Верх тела + Грудь-Плечи-Трицепс</p>
+</div>
+<div class="schedule-item" onclick="selectWorkout('Г')">
+<h4>Суббота - Программа Г</h4>
+<p>Функциональная + Силовая</p>
+</div>
+<div class="schedule-item">
+<h4>Воскресенье - Отдых</h4>
+<p>Восстановление</p>
+</div>
 </div>
 </div>
 </div>
 
 <script>
-// PWA Features
-let deferredPrompt;
-
-// Generate PWA Manifest
-const manifest = {
-name: "Gym Trainer - Персональный тренер",
-short_name: "Gym Trainer",
-description: "Персональный тренер для спортзала",
-start_url: "./",
-display: "standalone",
-background_color: "#ffffff",
-theme_color: "#3b82f6",
-orientation: "portrait",
-icons: generateIcons()
-};
-
-function generateIcon(size) {
-const canvas = document.createElement('canvas');
-canvas.width = size;
-canvas.height = size;
-const ctx = canvas.getContext('2d');
-
-const gradient = ctx.createLinearGradient(0, 0, size, size);
-gradient.addColorStop(0, '#3b82f6');
-gradient.addColorStop(1, '#8b5cf6');
-ctx.fillStyle = gradient;
-ctx.fillRect(0, 0, size, size);
-
-ctx.font = `${size * 0.5}px system-ui`;
-ctx.textAlign = 'center';
-ctx.textBaseline = 'middle';
-ctx.fillStyle = '#ffffff';
-ctx.fillText('🏋️', size / 2, size / 2);
-
-return canvas.toDataURL();
-}
-
-function generateIcons() {
-const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
-return sizes.map(size => ({
-src: generateIcon(size),
-sizes: `${size}x${size}`,
-type: "image/png"
-}));
-}
-
-// Setup PWA
-function setupPWA() {
-const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-const manifestURL = URL.createObjectURL(manifestBlob);
-document.getElementById('manifest-placeholder').href = manifestURL;
-
-document.getElementById('icon-180').href = generateIcon(180);
-document.getElementById('icon-167').href = generateIcon(167);
-document.getElementById('icon-152').href = generateIcon(152);
-document.getElementById('icon-120').href = generateIcon(120);
-document.getElementById('favicon-32').href = generateIcon(32);
-document.getElementById('favicon-16').href = generateIcon(16);
-}
-
-// Service Worker
-if ('serviceWorker' in navigator) {
-window.addEventListener('load', () => {
-const swCode = `
-const CACHE_NAME = 'gym-trainer-v1';
-self.addEventListener('install', event => {
-self.skipWaiting();
-});
-self.addEventListener('fetch', event => {
-event.respondWith(
-caches.match(event.request).then(response => {
-return response || fetch(event.request);
-})
-);
-});
-`;
-
-const swBlob = new Blob([swCode], { type: 'application/javascript' });
-const swURL = URL.createObjectURL(swBlob);
-navigator.serviceWorker.register(swURL);
-});
-}
-
-// Programs with Russian names
+// Данные программ тренировок с направлениями движения
 const workoutPrograms = {
 'А': {
 name: 'Верх тела + Грудь-Плечи-Трицепс',
 exercises: [
-{ name: 'Жим в тренажере сидя', sets: 4, reps: '10-12', weight: 22.5, rest: 120 },
-{ name: 'Тяга верхнего блока к груди', sets: 3, reps: '10-12', weight: 25, rest: 90 },
-{ name: 'Жим на плечи в тренажере', sets: 4, reps: '10-12', weight: 17.5, rest: 90 },
+{ name: 'Жим в тренажере (вперед от груди)', sets: 4, reps: '10-12', weight: 22.5, rest: 120 },
+{ name: 'Тяга верхнего блока (сверху к груди)', sets: 3, reps: '10-12', weight: 25, rest: 90 },
+{ name: 'Жим на плечи (строго вверх)', sets: 4, reps: '10-12', weight: 17.5, rest: 90 },
 { name: 'Жим в машине Смита', sets: 4, reps: '10-12', weight: 20, rest: 120 },
 { name: 'Сведение рук в кроссовере', sets: 3, reps: '15', weight: 15, rest: 60 },
 { name: 'Махи гантелями в стороны', sets: 3, reps: '15', weight: 10, rest: 60 },
-{ name: 'Подъем на бицепс на блоке', sets: 3, reps: '12-15', weight: 10, rest: 60 },
-{ name: 'Французский жим на блоке', sets: 3, reps: '12-15', weight: 10, rest: 60 },
-{ name: 'Разгибание рук на блоке', sets: 3, reps: '15', weight: 10, rest: 60 },
-{ name: 'Скручивания на пресс', sets: 3, reps: '15-20', weight: 0, rest: 60 },
-{ name: 'Планка статическая', sets: 3, reps: '30-45с', weight: 0, rest: 60 }
+{ name: 'Подъем на бицепс (вверх к груди)', sets: 3, reps: '12-15', weight: 10, rest: 60 },
+{ name: 'Французский жим (к голове и обратно)', sets: 3, reps: '12-15', weight: 10, rest: 60 },
+{ name: 'Разгибание на блоке (строго вниз)', sets: 3, reps: '15', weight: 10, rest: 60 },
+{ name: 'Скручивания (вверх к коленям)', sets: 3, reps: '15-20', weight: 0, rest: 60 },
+{ name: 'Планка (статическое удержание)', sets: 3, reps: '30-45с', weight: 0, rest: 60 }
 ]
 },
 'Б': {
@@ -560,25 +493,25 @@ exercises: [
 { name: 'Беговая дорожка', sets: 1, reps: '10 мин', weight: 0, rest: 60 },
 { name: 'Гребной тренажер', sets: 1, reps: '8 мин', weight: 0, rest: 60 },
 { name: 'Степпер', sets: 1, reps: '5 мин', weight: 0, rest: 60 },
-{ name: 'Тяга верхнего блока', sets: 4, reps: '8-10', weight: 25, rest: 90 },
-{ name: 'Тяга штанги в наклоне', sets: 4, reps: '10-12', weight: 20, rest: 90 },
+{ name: 'Тяга верхнего блока (сверху к груди)', sets: 4, reps: '8-10', weight: 25, rest: 90 },
+{ name: 'Тяга штанги в наклоне (к животу)', sets: 4, reps: '10-12', weight: 20, rest: 90 },
 { name: 'Тяга гантели к поясу', sets: 3, reps: '12', weight: 15, rest: 90 },
-{ name: 'Подъем штанги на бицепс', sets: 4, reps: '10-12', weight: 15, rest: 60 },
+{ name: 'Подъем штанги на бицепс (вверх к груди)', sets: 4, reps: '10-12', weight: 15, rest: 60 },
 { name: 'Подъем гантелей на бицепс', sets: 3, reps: '12', weight: 12.5, rest: 60 },
-{ name: 'Молотковые подъемы', sets: 3, reps: '15', weight: 10, rest: 60 }
+{ name: 'Молотки (вверх вдоль тела)', sets: 3, reps: '15', weight: 10, rest: 60 }
 ]
 },
 'В': {
 name: 'Ноги-Пресс',
 exercises: [
-{ name: 'Приседания со штангой', sets: 4, reps: '10-12', weight: 30, rest: 120 },
-{ name: 'Жим ногами в тренажере', sets: 3, reps: '12-15', weight: 40, rest: 90 },
-{ name: 'Разгибания ног сидя', sets: 3, reps: '12-15', weight: 25, rest: 60 },
-{ name: 'Сгибания ног лежа', sets: 3, reps: '12-15', weight: 20, rest: 60 },
-{ name: 'Подъемы на носки стоя', sets: 4, reps: '20', weight: 20, rest: 60 },
-{ name: 'Планка классическая', sets: 3, reps: '60с', weight: 0, rest: 60 },
-{ name: 'Скручивания лежа', sets: 3, reps: '20', weight: 0, rest: 60 },
-{ name: 'Пресс в тренажере', sets: 3, reps: '12-15', weight: 10, rest: 60 }
+{ name: 'Приседания (вниз-назад и вверх)', sets: 4, reps: '10-12', weight: 30, rest: 120 },
+{ name: 'Жим ногами (от груди к ногам)', sets: 3, reps: '12-15', weight: 40, rest: 90 },
+{ name: 'Разгибания ног (вверх-вперед)', sets: 3, reps: '12-15', weight: 25, rest: 60 },
+{ name: 'Сгибания ног (к ягодицам)', sets: 3, reps: '12-15', weight: 20, rest: 60 },
+{ name: 'Подъемы на носки (строго вверх)', sets: 4, reps: '20', weight: 20, rest: 60 },
+{ name: 'Планка (статическое удержание)', sets: 3, reps: '60с', weight: 0, rest: 60 },
+{ name: 'Скручивания (вверх к коленям)', sets: 3, reps: '20', weight: 0, rest: 60 },
+{ name: 'Пресс в тренажере (вверх к коленям)', sets: 3, reps: '12-15', weight: 10, rest: 60 }
 ]
 },
 'Г': {
@@ -586,349 +519,294 @@ name: 'Функциональная + Силовая',
 exercises: [
 { name: 'Беговая дорожка разминка', sets: 1, reps: '10 мин', weight: 0, rest: 60 },
 { name: 'Эллиптический тренажер', sets: 1, reps: '10 мин', weight: 0, rest: 60 },
-{ name: 'Упражнения с петлями', sets: 3, reps: '30с', weight: 0, rest: 60 },
+{ name: 'Упражнения с петлями TRX', sets: 3, reps: '30с', weight: 0, rest: 60 },
 { name: 'Тренажер кинезис', sets: 3, reps: '12', weight: 10, rest: 60 },
-{ name: 'Баланс на полусфере', sets: 2, reps: '1 мин', weight: 0, rest: 60 },
-{ name: 'Приседания силовые', sets: 4, reps: '6-8', weight: 40, rest: 150 },
-{ name: 'Жим силовой в тренажере', sets: 4, reps: '6-8', weight: 30, rest: 150 },
-{ name: 'Тяга силовая верхнего блока', sets: 3, reps: '8-10', weight: 30, rest: 120 },
+{ name: 'Баланс на полусфере BOSU', sets: 2, reps: '1 мин', weight: 0, rest: 60 },
+{ name: 'Приседания силовые (вниз-назад и вверх)', sets: 4, reps: '6-8', weight: 40, rest: 150 },
+{ name: 'Жим силовой (вперед от груди)', sets: 4, reps: '6-8', weight: 30, rest: 150 },
+{ name: 'Тяга силовая (сверху к груди)', sets: 3, reps: '8-10', weight: 30, rest: 120 },
 { name: 'Растяжка всех групп мышц', sets: 1, reps: '5 мин', weight: 0, rest: 0 }
 ]
 }
 };
 
-// State
+// Состояние приложения
 let currentWorkout = 'А';
-let currentExercise = 0;
-let currentSet = 1;
-let completedSets = [];
-let timerSeconds = 90;
-let timerRunning = false;
 let timerInterval = null;
-let weights = {};
-let workoutHistory = [];
+let timerSeconds = 0;
+let isTimerRunning = false;
+let completedSets = JSON.parse(localStorage.getItem('completedSets') || '{}');
+let stats = JSON.parse(localStorage.getItem('gymStats') || '{"workouts": 0, "sets": 0, "tonnage": 0}');
 
-// Initialize
-function init() {
-setupPWA();
-loadData();
-renderWorkout();
-renderCalculator();
-renderSchedule();
-renderHistory();
+// Функции таймера
+function startTimer(seconds) {
+timerSeconds = seconds;
+isTimerRunning = true;
+
+document.getElementById('start-timer').disabled = true;
+document.getElementById('pause-timer').disabled = false;
+document.getElementById('stop-timer').disabled = false;
+
+timerInterval = setInterval(() => {
+timerSeconds--;
+updateTimerDisplay();
+
+if (timerSeconds <= 0) {
+stopTimer();
+vibrate();
+}
+}, 1000);
+
+updateTimerDisplay();
 }
 
-// Storage
-function loadData() {
-try {
-const saved = localStorage.getItem('gymTrainerData');
-if (saved) {
-const data = JSON.parse(saved);
-weights = data.weights || {};
-workoutHistory = data.history || [];
+function pauseTimer() {
+if (isTimerRunning) {
+clearInterval(timerInterval);
+isTimerRunning = false;
+document.getElementById('start-timer').disabled = false;
+document.getElementById('pause-timer').disabled = true;
+document.getElementById('start-timer').textContent = 'Продолжить';
+} else {
+timerInterval = setInterval(() => {
+timerSeconds--;
+updateTimerDisplay();
+
+if (timerSeconds <= 0) {
+stopTimer();
+vibrate();
 }
-} catch (e) {}
-updateHeader();
+}, 1000);
+isTimerRunning = true;
+document.getElementById('start-timer').disabled = true;
+document.getElementById('pause-timer').disabled = false;
+}
 }
 
-function saveData() {
-try {
-localStorage.setItem('gymTrainerData', JSON.stringify({
-weights: weights,
-history: workoutHistory
-}));
-} catch (e) {}
-}
+function stopTimer() {
+clearInterval(timerInterval);
+isTimerRunning = false;
+timerSeconds = 0;
+updateTimerDisplay();
 
-// Timer
-function formatTime(seconds) {
-const mins = Math.floor(seconds / 60);
-const secs = seconds % 60;
-return `${mins}:${secs.toString().padStart(2, '0')}`;
+document.getElementById('start-timer').disabled = false;
+document.getElementById('pause-timer').disabled = true;
+document.getElementById('stop-timer').disabled = true;
+document.getElementById('start-timer').textContent = 'Старт 90с';
 }
 
 function updateTimerDisplay() {
-const display = document.getElementById('timerDisplay');
-const btn = document.getElementById('timerBtn');
-display.textContent = formatTime(timerSeconds);
+const minutes = Math.floor(timerSeconds / 60);
+const seconds = timerSeconds % 60;
+const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+const timerElement = document.getElementById('timer-time');
+timerElement.textContent = display;
 
-if (timerSeconds <= 10 && timerRunning) {
-display.classList.add('warning');
+if (timerSeconds <= 10 && timerSeconds > 0) {
+timerElement.classList.add('warning');
 } else {
-display.classList.remove('warning');
+timerElement.classList.remove('warning');
+}
 }
 
-btn.innerHTML = timerRunning ? '⏸️ Пауза' : '▶️ Старт';
+function vibrate() {
+if (navigator.vibrate) {
+navigator.vibrate([500, 200, 500]);
+}
 }
 
-function toggleTimer() {
-if (timerRunning) {
-clearInterval(timerInterval);
-timerRunning = false;
-} else {
-timerRunning = true;
-timerInterval = setInterval(() => {
-timerSeconds--;
-if (timerSeconds <= 0) {
-timerSeconds = 0;
-clearInterval(timerInterval);
-timerRunning = false;
-if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-}
-updateTimerDisplay();
-}, 1000);
-}
-updateTimerDisplay();
-}
-
-function resetTimer() {
-clearInterval(timerInterval);
-timerRunning = false;
-timerSeconds = 90;
-updateTimerDisplay();
-}
-
-function setTimer(seconds) {
-clearInterval(timerInterval);
-timerRunning = false;
-timerSeconds = seconds;
-updateTimerDisplay();
-toggleTimer();
-}
-
-// Tabs
-function switchTab(tabName, btn) {
-document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-btn.classList.add('active');
-document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-document.getElementById(tabName).classList.add('active');
-}
-
-// Header
-function updateHeader() {
-document.getElementById('currentWorkout').textContent = currentWorkout;
-document.getElementById('workoutName').textContent = workoutPrograms[currentWorkout].name;
-}
-
-// Workout
-function selectWorkout(workout) {
-currentWorkout = workout;
-currentExercise = 0;
-currentSet = 1;
-completedSets = [];
-updateHeader();
-renderWorkout();
-saveData();
-}
-
-function completeSet() {
-const program = workoutPrograms[currentWorkout];
-const exercise = program.exercises[currentExercise];
-
-completedSets.push(`${currentWorkout}-${currentExercise}-${currentSet}`);
-
-workoutHistory.push({
-date: new Date().toLocaleDateString('ru-RU'),
-exercise: exercise.name,
-set: currentSet,
-weight: weights[exercise.name] || exercise.weight,
-reps: exercise.reps
+// Функции программ тренировок
+function showTab(tabName) {
+// Скрыть все вкладки
+document.querySelectorAll('.tab-content').forEach(tab => {
+tab.classList.remove('active');
+});
+document.querySelectorAll('.nav button').forEach(btn => {
+btn.classList.remove('active');
 });
 
-saveData();
+// Показать выбранную вкладку
+document.getElementById(tabName + '-tab').classList.add('active');
+event.target.classList.add('active');
 
-if (currentSet < exercise.sets) {
-currentSet++;
-} else {
-if (currentExercise < program.exercises.length - 1) {
-currentExercise++;
-currentSet = 1;
-} else {
-alert('🎉 Тренировка завершена!');
+// Загрузить контент для вкладки тренировок
+if (tabName === 'workouts') {
+loadWorkoutContent();
+} else if (tabName === 'stats') {
+updateStatsDisplay();
 }
 }
 
-renderWorkout();
-const restTime = exercise.rest || 90;
-setTimer(restTime);
-switchTab('timer', document.querySelector('.nav button'));
+function selectWorkout(workoutType) {
+currentWorkout = workoutType;
+
+// Обновить кнопки выбора
+document.querySelectorAll('.workout-btn').forEach(btn => {
+btn.classList.remove('active');
+});
+event.target.classList.add('active');
+
+// Переключиться на вкладку тренировок
+showTab('workouts');
+loadWorkoutContent();
 }
 
-function renderWorkout() {
-const selector = document.getElementById('workoutSelector');
-const exerciseCard = document.getElementById('currentExerciseCard');
-const exerciseList = document.getElementById('exerciseList');
-
-selector.innerHTML = Object.keys(workoutPrograms).map(key => 
-`<button class="workout-btn ${key === currentWorkout ? 'active' : ''}" 
-onclick="selectWorkout('${key}')">
-${key}: ${workoutPrograms[key].name.split(' ')[0]}
-</button>`
-).join('');
-
+function loadWorkoutContent() {
 const program = workoutPrograms[currentWorkout];
-const exercise = program.exercises[currentExercise];
+const content = document.getElementById('workout-content');
 
-exerciseCard.innerHTML = `
-<div class="exercise-card">
-<h3>${exercise.name}</h3>
-<p>Подход ${currentSet} из ${exercise.sets} • ${exercise.reps} повторений</p>
-<p style="color: #6b7280;">Вес: ${weights[exercise.name] || exercise.weight} кг • Отдых: ${exercise.rest}с</p>
+let html = `<h3>${program.name}</h3>`;
+
+program.exercises.forEach((exercise, index) => {
+const exerciseId = `${currentWorkout}-${index}`;
+const completedCount = completedSets[exerciseId] || 0;
+
+html += `
+<div class="exercise-item ${completedCount >= exercise.sets ? 'completed' : ''}">
+<div class="exercise-name">${exercise.name}</div>
+<div class="exercise-details">
+${exercise.sets} x ${exercise.reps} ${exercise.weight > 0 ? `(${exercise.weight}кг)` : ''} - Отдых: ${exercise.rest}с
+</div>
 <div class="set-dots">
-${Array.from({length: exercise.sets}, (_, i) => {
-const setNum = i + 1;
-const isCompleted = completedSets.includes(`${currentWorkout}-${currentExercise}-${setNum}`);
-return `<div class="set-dot ${isCompleted ? 'completed' : ''}">${setNum}</div>`;
-}).join('')}
+${Array.from({length: exercise.sets}, (_, i) => 
+`<div class="set-dot ${i < completedCount ? 'completed' : ''}" onclick="toggleSet('${exerciseId}', ${i + 1}, ${exercise.weight}, ${exercise.rest})">${i + 1}</div>`
+).join('')}
 </div>
-<button class="btn btn-primary" onclick="completeSet()" style="margin-top: 1rem; width: 100%;">
-✓ Подход выполнен
-</button>
-</div>
-`;
-
-exerciseList.innerHTML = program.exercises.map((ex, index) => {
-const isCurrent = index === currentExercise;
-const completedCount = completedSets.filter(s => s.startsWith(`${currentWorkout}-${index}-`)).length;
-const isCompleted = completedCount === ex.sets;
-return `
-<div class="exercise-item ${isCurrent ? 'current' : ''} ${isCompleted ? 'completed' : ''}">
-<div style="display: flex; justify-content: space-between; align-items: center;">
-<div>
-<strong>${ex.name}</strong>
-<div style="font-size: 0.75rem; color: #6b7280;">
-${ex.sets}×${ex.reps} • ${weights[ex.name] || ex.weight}кг • ${ex.rest}с
-</div>
-</div>
-<div style="color: ${isCompleted ? '#10b981' : isCurrent ? '#3b82f6' : '#6b7280'}; font-size: 1.25rem;">
-${isCompleted ? '✅' : isCurrent ? '🎯' : '⏳'}
-</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width: ${(completedCount / exercise.sets) * 100}%"></div>
 </div>
 </div>
 `;
-}).join('');
-}
-
-// Calculator
-function renderCalculator() {
-const calculatorList = document.getElementById('calculatorList');
-const allExercises = Object.values(workoutPrograms).flatMap(p => p.exercises);
-const uniqueExercises = [...new Set(allExercises.map(e => e.name))];
-
-calculatorList.innerHTML = uniqueExercises.map(name => {
-const defaultWeight = allExercises.find(e => e.name === name)?.weight || 0;
-const currentWeight = weights[name] || defaultWeight;
-return `
-<div class="exercise-item">
-<div style="display: flex; justify-content: space-between; align-items: center;">
-<div>
-<strong>${name}</strong>
-<div style="font-size: 0.75rem; color: #6b7280;">Рабочий вес</div>
-</div>
-<div style="display: flex; align-items: center; gap: 0.75rem;">
-<button class="btn btn-secondary" onclick="updateWeight('${name}', -2.5)" 
-style="padding: 0.5rem;">−</button>
-<span style="min-width: 60px; text-align: center; font-weight: 600;">${currentWeight}кг</span>
-<button class="btn btn-primary" onclick="updateWeight('${name}', 2.5)" 
-style="padding: 0.5rem;">+</button>
-</div>
-</div>
-</div>
-`;
-}).join('');
-}
-
-function updateWeight(exerciseName, delta) {
-const current = weights[exerciseName] || 0;
-weights[exerciseName] = Math.max(0, current + delta);
-saveData();
-renderCalculator();
-renderWorkout();
-}
-
-// Schedule
-function renderSchedule() {
-const scheduleList = document.getElementById('scheduleList');
-const today = new Date().getDay();
-
-const schedule = [
-{ day: 'Понедельник', program: 'А', focus: 'Верх тела', dayIndex: 1 },
-{ day: 'Вторник', program: 'В', focus: 'Ноги', dayIndex: 2 },
-{ day: 'Среда', program: null, focus: 'Отдых', dayIndex: 3 },
-{ day: 'Четверг', program: 'Б', focus: 'Спина + Кардио', dayIndex: 4 },
-{ day: 'Пятница', program: 'А', focus: 'Верх тела', dayIndex: 5 },
-{ day: 'Суббота', program: 'Г', focus: 'Функциональная', dayIndex: 6 },
-{ day: 'Воскресенье', program: null, focus: 'Отдых', dayIndex: 0 }
-];
-
-scheduleList.innerHTML = schedule.map(item => {
-const isToday = item.dayIndex === today;
-const isRest = !item.program;
-return `
-<div class="schedule-item ${isToday ? 'today' : ''} ${isRest ? 'rest' : ''}">
-<div style="display: flex; justify-content: space-between; align-items: center;">
-<div>
-<strong>${item.day}${isToday ? ' (Сегодня)' : ''}</strong>
-<div style="font-size: 0.875rem; opacity: 0.8;">${item.focus}</div>
-</div>
-<div style="font-size: 1.25rem;">
-${item.program ? `Программа ${item.program}` : '😴'}
-</div>
-</div>
-${item.program && !isRest ? `
-<button class="btn btn-info" onclick="selectWorkout('${item.program}'); switchTab('workout', document.querySelectorAll('.nav button')[1])" 
-style="margin-top: 0.75rem; width: 100%;">
-🎯 Начать тренировку
-</button>` : ''}
-</div>
-`;
-}).join('');
-}
-
-// History
-function renderHistory() {
-const totalSets = document.getElementById('totalSets');
-const totalDays = document.getElementById('totalDays');
-const totalWeight = document.getElementById('totalWeight');
-const historyList = document.getElementById('historyList');
-
-const uniqueDays = [...new Set(workoutHistory.map(h => h.date))].length;
-const totalTonnage = workoutHistory.reduce((sum, h) => {
-const weight = parseFloat(h.weight) || 0;
-const reps = parseFloat(h.reps) || 1;
-return sum + (weight * reps);
-}, 0);
-
-totalSets.textContent = workoutHistory.length;
-totalDays.textContent = uniqueDays;
-totalWeight.textContent = Math.round(totalTonnage);
-
-const recent = workoutHistory.slice(-10).reverse();
-historyList.innerHTML = recent.length ? recent.map(h => `
-<div class="exercise-item">
-<div style="display: flex; justify-content: space-between; align-items: center;">
-<div>
-<strong>${h.exercise}</strong>
-<div style="font-size: 0.75rem; color: #6b7280;">${h.date}</div>
-</div>
-<div style="text-align: right;">
-<div>${h.weight}кг × ${h.reps}</div>
-<div style="font-size: 0.75rem; color: #6b7280;">Подход ${h.set}</div>
-</div>
-</div>
-</div>
-`).join('') : '<div style="text-align: center; color: #6b7280; padding: 2rem;">История пока пуста</div>';
-}
-
-// Initialize
-init();
-
-// Events
-document.addEventListener('visibilitychange', () => {
-if (!document.hidden) { loadData(); renderHistory(); }
 });
 
-window.addEventListener('beforeunload', saveData);
+content.innerHTML = html;
+}
+
+function toggleSet(exerciseId, setNumber, weight, restTime) {
+if (!completedSets[exerciseId]) {
+completedSets[exerciseId] = 0;
+}
+
+if (setNumber <= completedSets[exerciseId]) {
+// Отменить подход
+completedSets[exerciseId] = setNumber - 1;
+} else {
+// Завершить подход
+completedSets[exerciseId] = setNumber;
+updateStats(1, weight);
+if (restTime > 0) {
+startTimer(restTime);
+showTab('timer');
+}
+}
+
+localStorage.setItem('completedSets', JSON.stringify(completedSets));
+loadWorkoutContent();
+}
+
+function updateStats(sets, weight) {
+stats.sets += sets;
+stats.tonnage += weight * 10; // Приблизительный расчет
+localStorage.setItem('gymStats', JSON.stringify(stats));
+}
+
+function updateStatsDisplay() {
+document.getElementById('total-workouts').textContent = stats.workouts;
+document.getElementById('total-sets').textContent = stats.sets;
+document.getElementById('total-tonnage').textContent = Math.round(stats.tonnage) + 'кг';
+}
+
+function resetStats() {
+if (confirm('Сбросить всю статистику?')) {
+stats = {workouts: 0, sets: 0, tonnage: 0};
+completedSets = {};
+localStorage.setItem('gymStats', JSON.stringify(stats));
+localStorage.setItem('completedSets', JSON.stringify(completedSets));
+updateStatsDisplay();
+loadWorkoutContent();
+}
+}
+
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+loadWorkoutContent();
+updateStatsDisplay();
+updateTimerDisplay();
+
+// Регистрация Service Worker для PWA
+if ('serviceWorker' in navigator) {
+navigator.serviceWorker.register('sw.js').catch(() => {
+// Игнорируем ошибки SW в разработке
+});
+}
+
+// Создание манифеста и иконок динамически
+createPWAManifest();
+createPWAIcons();
+});
+
+function createPWAManifest() {
+const manifest = {
+"name": "Gym Trainer - Персональный тренер",
+"short_name": "Gym Trainer",
+"description": "Персональный тренер для спортзала с таймером отдыха и программами тренировок",
+"start_url": "./",
+"display": "standalone",
+"background_color": "#ffffff",
+"theme_color": "#3b82f6",
+"orientation": "portrait",
+"icons": [
+{
+"src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==",
+"sizes": "192x192",
+"type": "image/png"
+},
+{
+"src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==",
+"sizes": "512x512",
+"type": "image/png"
+}
+],
+"categories": ["health", "fitness", "productivity"]
+};
+
+const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+const manifestURL = URL.createObjectURL(manifestBlob);
+document.getElementById('manifest-placeholder').href = manifestURL;
+}
+
+function createPWAIcons() {
+// Создаем простую иконку с помощью canvas
+const canvas = document.createElement('canvas');
+canvas.width = 512;
+canvas.height = 512;
+const ctx = canvas.getContext('2d');
+
+// Градиентный фон
+const gradient = ctx.createLinearGradient(0, 0, 512, 512);
+gradient.addColorStop(0, '#3b82f6');
+gradient.addColorStop(1, '#8b5cf6');
+ctx.fillStyle = gradient;
+ctx.fillRect(0, 0, 512, 512);
+
+// Иконка гантели
+ctx.fillStyle = '#ffffff';
+ctx.font = 'bold 200px Arial';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.fillText('💪', 256, 256);
+
+const iconURL = canvas.toDataURL();
+document.getElementById('icon-180').href = iconURL;
+document.getElementById('icon-167').href = iconURL;
+document.getElementById('icon-152').href = iconURL;
+document.getElementById('icon-120').href = iconURL;
+document.getElementById('favicon-32').href = iconURL;
+document.getElementById('favicon-16').href = iconURL;
+document.getElementById('ms-tile').content = iconURL;
+}
 </script>
 </body>
 </html>
+
+.
