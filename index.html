@@ -216,4 +216,24 @@ function save(){localStorage.setItem('gymStats',JSON.stringify(stats));localStor
 function init(){load();initWeights();setupNav();setupSel();render();renderStats();renderSched();showTab('workout');updateNavIndicator()}
 function initWeights(){Object.keys(data).forEach(workout=>{data[workout].ex.forEach((ex,i)=>{const key=`${workout}-${i}`;if(!weights[key]){weights[key]=ex.base||ex.w||0}})})}
 function setupNav(){document.querySelectorAll('.nav button').forEach(b=>{b.onclick=()=>{showTab(b.getAttribute('data-tab'));updateNavIndicator()}})}
-function updateNavIndicator(){const activeBtn=document.querySelector('.nav button.active');const indicator=document.getElementById('nav-indicator');if(activeBtn){const btnRect=activeBtn.getBoundingClientRect();const navRect=activeBtn.parentElement.getBoundingClientRect();
+function updateNavIndicator(){const activeBtn=document.querySelector('.nav button.active');const indicator=document.getElementById('nav-indicator');if(activeBtn){const btnRect=activeBtn.getBoundingClientRect();const navRect=activeBtn.parentElement.getBoundingClientRect();indicator.style.left=btnRect.left-navRect.left+'px';indicator.style.width=btnRect.width+'px'}}
+function setupSel(){const sel=document.getElementById('selector');sel.innerHTML='';Object.keys(data).forEach(key=>{const btn=document.createElement('div');btn.className='sbtn';btn.textContent=key;btn.onclick=()=>select(key);sel.appendChild(btn)})}
+function select(key){cur=key;curEx=0;document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('active'));document.querySelector('.sbtn:nth-child('+(Object.keys(data).indexOf(key)+1)+')').classList.add('active');document.getElementById('title').textContent=data[cur].n;render()}
+function render(){const list=document.getElementById('list');list.innerHTML='';data[cur].ex.forEach((ex,i)=>{const div=document.createElement('div');div.className='ex'+(i===curEx?' current':'');const weightKey=`${cur}-${i}`;const currentWeight=weights[weightKey]||0;const weightControl=currentWeight>0?`<div class="weight-control"><button class="weight-btn weight-easy" onclick="changeWeight('${weightKey}', -2.5)">-</button><div class="weight-display">${currentWeight}кг</div><button class="weight-btn weight-hard" onclick="changeWeight('${weightKey}', 2.5)">+</button></div>`:'';div.innerHTML=`<div class="name">${ex.n}</div><div class="det">${ex.s} подходов × ${ex.r} повторений</div>${weightControl}<button class="tech" onclick="showTech('${ex.n}','${ex.t.replace(/'/g,"\\'")}')">Техника выполнения</button><div class="dots">${Array(ex.s).fill().map((_,j)=>`<div class="dot${sets[cur+'-'+i+'-'+j]?' done':''}" onclick="toggleSet('${cur}',${i},${j})">${j+1}</div>`).join('')}</div>`;list.appendChild(div)})}
+function changeWeight(key,change){weights[key]=Math.max(0,(weights[key]||0)+change);save();render()}
+function toggleSet(workout,ex,set){const key=workout+'-'+ex+'-'+set;if(sets[key]){delete sets[key];stats.totalSets--}else{sets[key]=true;stats.totalSets++}save();render();renderStats()}
+function showTech(name,tech){document.getElementById('mtitle').textContent=name;document.getElementById('mcontent').innerHTML=tech;document.getElementById('modal').style.display='flex'}
+function closeModal(){document.getElementById('modal').style.display='none'}
+function showTab(tab){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.getElementById(tab+'-tab').classList.add('active');document.querySelector(`[data-tab="${tab}"]`).classList.add('active');updateNavIndicator()}
+function start(seconds){clearInterval(timer);time=seconds;run=1;updateTimer();timer=setInterval(()=>{if(time<=0){stop();document.getElementById('ready').style.display='inline-block';return}time--;updateTimer()},1000)}
+function updateTimer(){const m=Math.floor(time/60);const s=time%60;document.getElementById('display').textContent=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`}
+function stop(){clearInterval(timer);run=0;document.getElementById('ready').style.display='none'}
+function ready(){stop();if(curEx<data[cur].ex.length-1){curEx++;render()}else{alert('Тренировка завершена!')}}
+function complete(){if(confirm('Завершить тренировку?')){stats.totalWorkouts++;stats.totalExercises+=data[cur].ex.length;save();renderStats();alert('Тренировка завершена! Отличная работа!')}}
+function reset(){if(confirm('Сбросить всю статистику?')){stats={totalWorkouts:0,totalSets:0,totalExercises:0};sets={};save();renderStats();render()}}
+function renderStats(){document.getElementById('sw').textContent=stats.totalWorkouts;document.getElementById('se').textContent=stats.totalExercises;document.getElementById('ss').textContent=stats.totalSets}
+function renderSched(){const sched=document.getElementById('sched');const days=['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье'];const plan=['День А','День Б','Отдых','День В','День Г','Отдых','Отдых'];sched.innerHTML=days.map((day,i)=>`<div class="item"><h4>${day}</h4><p>${plan[i]}</p></div>`).join('')}
+window.onload=init;
+</script>
+</body>
+</html>
