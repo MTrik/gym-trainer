@@ -4,29 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
-<!-- Мета-теги для приложения -->
 <meta name="description" content="Персональный тренер для спортзала TechnoGym с программами тренировок">
-<meta name="keywords" content="фитнес, тренировки, спортзал, таймер, персональный тренер">
-<meta name="author" content="Gym Trainer">
-
-<!-- Манифест приложения встроенный -->
-<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkd5bSBUcmFpbmVyIFBybyIsCiAgInNob3J0X25hbWUiOiAiR3ltVHJhaW5lciIsCiAgImRlc2NyaXB0aW9uIjogItCf0LXRgNGB0L7QvdCw0LvRjNC90YvQuSDRgtGA0LXQvdC10YAg0LTQu9GPINGB0L/QvtGA0YLQt9Cw0LvQsCIsCiAgInN0YXJ0X3VybCI6ICIvaW5kZXguaHRtbCIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2ZmZmZmZiIsCiAgInRoZW1lX2NvbG9yIjogIiMzYjgyZjYiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBSUFBQUFDQUNBWUFBQURkZDBlOEFBQUFHWFJGV0hSVGIyWjBkMkZ5WlFCQlpHOWlaU0JKYldGblpWSmxZV1I1Y2NsbFBBQUFBM1pwVkZoMFdFMU1PbU52YlM1aFpHOWlaUzU0YlhBQUFBQUFBRHcvZUhCaFkydGxkQ0JpWldkcGJqMGk3N3UvSWlCcFpEMGlWelZOTUUxd1EyVm9hVWg2Y21WVGVrNVVZM3ByWXpsa0lqOCtJRHg0T25odGNHMWxkR0VnZUcxc2JuTTZlRDBpWVdSdmJtVTZibk02YldWMFlTOGlJSGc2ZUcxd2RHczlJa0ZrYjJKbElGaE5VQ0JEYjNKbElEVXVOaTFqTVRRMUlEYzVMakUyTXpRNU9Td2dNakF4T0M4d09DOHhNeTB4TmpvME1EbzlJaUE4Y21SbU9sSkVSaUI0Yld4dWN6cHlaR1k5SW1oMGRIQTZMeTkzZDNjdWR6TXViM0puTHpFNU9Ua3ZNREl2TWpJdGNtUm1MWE41Ym5SaGVDMXVjeU1pUGlBOGNtUm1PaVJsYzJOeWFYQjBhVzl1SUhKa1pqcGhZbTkxZEQwaUlpQjRiV3h1Y3pwNGJYQTlJbWgwZEhBNkx5OXVjeTVoWkc5aVpTNWpiMjB2ZUdGd0x6RXVNQzhpSUhodGJHNXpPbmh0Y0VGVElEMGlhSFIwY0RvdkwyNXpMbUZrYjJKbExtTnZiUzk0WVhBdU1TNHdMM05VZVhCbEwxSmxjMjkxY21ObFJYWmxiblFqSWlCNGJXeHVjenAxYzJWeWRIbHdaVDBpYUhSMGNEb3ZMMjV6TG1Ga2IySmxMbU52YlM5NGNHVnliV0YuIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9CiAgXQp9">
-
-<!-- Мета-теги для iOS -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Gym Trainer">
-
-<!-- Мета-теги для Android -->
-<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#667eea">
 
-<!-- Google Fonts для премиум типографики -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<title>💪 Gym Trainer Pro - Персональный тренер</title>
+<title>💪 Gym Trainer Pro</title>
 
 <style>
 * {
@@ -89,10 +74,6 @@ font-size: 1.75rem;
 margin-bottom: 0.5rem;
 font-weight: 800;
 text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-background: linear-gradient(45deg, #ffffff, #f3f4f6);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
 position: relative;
 z-index: 2;
 }
@@ -153,10 +134,6 @@ transform: scale(0.95);
 .nav button.active {
 color: #667eea;
 background: rgba(102, 126, 234, 0.1);
-}
-
-.nav button .nav-icon {
-font-size: 1.2rem;
 }
 
 .content {
@@ -261,21 +238,6 @@ letter-spacing: 0.5px;
 font-family: 'Inter', sans-serif;
 }
 
-.btn::before {
-content: '';
-position: absolute;
-top: 0;
-left: -100%;
-width: 100%;
-height: 100%;
-background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-transition: left 0.5s;
-}
-
-.btn:hover::before {
-left: 100%;
-}
-
 .btn:hover {
 transform: translateY(-3px);
 }
@@ -300,18 +262,10 @@ color: white;
 box-shadow: 0 8px 25px rgba(107, 114, 128, 0.4);
 }
 
-.btn-secondary:hover {
-box-shadow: 0 12px 35px rgba(107, 114, 128, 0.5);
-}
-
 .btn-info {
 background: linear-gradient(135deg, #667eea, #764ba2);
 color: white;
 box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-}
-
-.btn-info:hover {
-box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
 }
 
 .workout-selector {
@@ -356,10 +310,6 @@ z-index: 2;
 .workout-btn:hover {
 transform: translateY(-4px);
 box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-.workout-btn:active {
-transform: translateY(-2px);
 }
 
 .workout-btn.active::before {
@@ -407,10 +357,6 @@ border-color: #d1d5db;
 transform: scaleY(1);
 }
 
-.exercise-item:active {
-transform: translateY(-2px);
-}
-
 .exercise-item.current {
 border-color: #667eea;
 background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
@@ -446,7 +392,6 @@ margin-bottom: 0.75rem;
 font-weight: 500;
 }
 
-/* Стили для управления весами */
 .weight-control {
 display: flex;
 align-items: center;
@@ -485,27 +430,10 @@ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 display: flex;
 align-items: center;
 justify-content: center;
-position: relative;
-overflow: hidden;
-}
-
-.weight-btn::before {
-content: '';
-position: absolute;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-border-radius: 50%;
-box-shadow: inset 0 1px 3px rgba(255,255,255,0.3);
 }
 
 .weight-btn:hover {
 transform: translateY(-3px) scale(1.05);
-}
-
-.weight-btn:active {
-transform: translateY(-1px) scale(1.02);
 }
 
 .weight-easy {
@@ -514,18 +442,10 @@ color: white;
 box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
 }
 
-.weight-easy:hover {
-box-shadow: 0 12px 30px rgba(16, 185, 129, 0.5);
-}
-
 .weight-hard {
 background: linear-gradient(135deg, #ef4444, #dc2626);
 color: white;
 box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
-}
-
-.weight-hard:hover {
-box-shadow: 0 12px 30px rgba(239, 68, 68, 0.5);
 }
 
 .set-dots {
@@ -546,26 +466,19 @@ justify-content: center;
 font-size: 0.8rem;
 font-weight: 700;
 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-border: 2px solid transparent;
 cursor: pointer;
 box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .set-dot:hover {
 transform: scale(1.1);
-box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
 
 .set-dot.completed {
 background: linear-gradient(135deg, #10b981, #059669);
 color: white;
-border-color: #10b981;
 transform: scale(1.1);
 box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-}
-
-.set-dot.completed:hover {
-transform: scale(1.2);
 }
 
 .progress-bar {
@@ -598,7 +511,6 @@ padding: 1.5rem;
 background: white;
 border-radius: 20px;
 box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-border: 2px solid transparent;
 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 position: relative;
 overflow: hidden;
@@ -617,7 +529,6 @@ background: linear-gradient(90deg, #667eea, #764ba2);
 .stat-card:hover {
 transform: translateY(-4px);
 box-shadow: 0 12px 35px rgba(0,0,0,0.15);
-border-color: #667eea;
 }
 
 .stat-value {
@@ -672,10 +583,6 @@ box-shadow: 0 8px 30px rgba(0,0,0,0.12);
 transform: scaleY(1);
 }
 
-.schedule-item:active {
-transform: translateY(-2px);
-}
-
 .modal {
 position: fixed;
 top: 0;
@@ -689,12 +596,6 @@ display: none;
 align-items: center;
 justify-content: center;
 padding: 1.5rem;
-animation: modalFade 0.3s ease;
-}
-
-@keyframes modalFade {
-from { opacity: 0; }
-to { opacity: 1; }
 }
 
 .modal-content {
@@ -704,21 +605,8 @@ padding: 2rem;
 max-width: 500px;
 max-height: 80vh;
 overflow-y: auto;
--webkit-overflow-scrolling: touch;
 width: 100%;
 box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-animation: modalSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes modalSlideUp {
-from { 
-opacity: 0; 
-transform: translateY(50px) scale(0.95);
-}
-to { 
-opacity: 1; 
-transform: translateY(0) scale(1);
-}
 }
 
 .modal-header {
@@ -828,7 +716,6 @@ line-height: 1.4;
 color: #78350f;
 }
 
-/* Адаптивность */
 @media (max-width: 480px) {
 .header {
 padding: env(safe-area-inset-top, 15px) 1rem 1rem 1rem;
@@ -847,10 +734,6 @@ width: 180px;
 height: 180px;
 }
 
-.timer-time {
-font-size: 2.5rem;
-}
-
 .workout-selector {
 grid-template-columns: repeat(2, 1fr);
 }
@@ -866,31 +749,18 @@ grid-template-columns: 1fr;
 <div class="app">
 <header class="header">
 <h1>💪 Gym Trainer Pro</h1>
-<p>Премиум тренер с умными весами</p>
+<p>Персональный тренер с умными весами</p>
 </header>
 
 <nav class="nav">
 <div class="nav-indicator" id="nav-indicator"></div>
-<button data-tab="timer">
-<div class="nav-icon">⏱️</div>
-<div>Таймер</div>
-</button>
-<button data-tab="workout" class="active">
-<div class="nav-icon">🏋️</div>
-<div>Программа</div>
-</button>
-<button data-tab="stats">
-<div class="nav-icon">📊</div>
-<div>Статистика</div>
-</button>
-<button data-tab="schedule">
-<div class="nav-icon">📅</div>
-<div>План</div>
-</button>
+<button data-tab="timer">⏱️<br>Таймер</button>
+<button data-tab="workout" class="active">🏋️<br>Программа</button>
+<button data-tab="stats">📊<br>Статистика</button>
+<button data-tab="schedule">📅<br>План</button>
 </nav>
 
 <main class="content">
-<!-- Вкладка Таймер -->
 <div id="timer-tab" class="tab-content">
 <div class="timer-display">
 <div class="timer-circle">
@@ -907,7 +777,6 @@ grid-template-columns: 1fr;
 </div>
 </div>
 
-<!-- Вкладка Тренировка -->
 <div id="workout-tab" class="tab-content active">
 <h2 id="workout-title" style="font-size: 1.3rem; margin-bottom: 1.5rem; text-align: center; font-weight: 700;">Выберите программу тренировки</h2>
 <div id="workout-selector" class="workout-selector"></div>
@@ -917,7 +786,6 @@ grid-template-columns: 1fr;
 </div>
 </div>
 
-<!-- Вкладка Статистика -->
 <div id="stats-tab" class="tab-content">
 <div class="stats-grid">
 <div class="stat-card">
@@ -938,7 +806,6 @@ grid-template-columns: 1fr;
 </div>
 </div>
 
-<!-- Вкладка Расписание -->
 <div id="schedule-tab" class="tab-content">
 <h2 style="font-size: 1.3rem; margin-bottom: 1.5rem; font-weight: 700;">Недельный план тренировок</h2>
 <div id="schedule-list"></div>
@@ -946,7 +813,6 @@ grid-template-columns: 1fr;
 </main>
 </div>
 
-<!-- Модальное окно техники -->
 <div id="technique-modal" class="modal">
 <div class="modal-content">
 <div class="modal-header">
@@ -958,44 +824,21 @@ grid-template-columns: 1fr;
 </div>
 
 <script>
-// Service Worker для офлайн работы
-if ('serviceWorker' in navigator) {
-navigator.serviceWorker.register('data:text/javascript,' + encodeURIComponent(`
-self.addEventListener('install', e => {
-e.waitUntil(
-caches.open('gym-v1').then(cache => {
-return cache.addAll(['/']);
-})
-);
-});
-self.addEventListener('fetch', e => {
-e.respondWith(
-caches.match(e.request).then(response => {
-return response || fetch(e.request);
-})
-);
-});
-`));
-}
-
 // Система управления весами
 let exerciseWeights = {};
 
-// Базовые веса для упражнений (кг)
 const baseWeights = {
-'А': [20, 25, 15, 30, 10, 4, 8, 8, 10, 15, 0], // День А  
-'Б': [0, 0, 0, 30, 20, 10, 15, 8, 8], // День Б
-'В': [20, 50, 20, 15, 25, 0, 0, 0, 15], // День В
-'Г': [0, 0, 0, 0, 40, 30, 30, 0] // День Г
+'А': [20, 25, 15, 30, 10, 4, 8, 8, 10, 15, 0],
+'Б': [0, 0, 0, 30, 20, 10, 15, 8, 8],
+'В': [20, 50, 20, 15, 25, 0, 0, 0, 15],
+'Г': [0, 0, 0, 0, 40, 30, 30, 0]
 };
 
-// Загружаем веса из localStorage или устанавливаем базовые
 function loadWeights() {
 const savedWeights = localStorage.getItem('gymTrainerWeights');
 if (savedWeights) {
 exerciseWeights = JSON.parse(savedWeights);
 } else {
-// Инициализируем базовые веса
 Object.keys(baseWeights).forEach(workout => {
 baseWeights[workout].forEach((weight, index) => {
 const key = `${workout}-${index}`;
@@ -1006,33 +849,27 @@ saveWeights();
 }
 }
 
-// Сохраняем веса в localStorage
 function saveWeights() {
 localStorage.setItem('gymTrainerWeights', JSON.stringify(exerciseWeights));
 }
 
-// Получаем текущий вес для упражнения
 function getExerciseWeight(workout, exerciseIndex) {
 const key = `${workout}-${exerciseIndex}`;
 return exerciseWeights[key] || 0;
 }
 
-// Изменяем вес упражнения
 function adjustWeight(workout, exerciseIndex, adjustment) {
 const key = `${workout}-${exerciseIndex}`;
 const currentWeight = exerciseWeights[key] || 0;
-const newWeight = Math.max(0, currentWeight + adjustment); // Не даем уйти в минус
+const newWeight = Math.max(0, currentWeight + adjustment);
 exerciseWeights[key] = newWeight;
 saveWeights();
-renderWorkoutView(); // Перерисовываем список упражнений
+renderWorkoutView();
 }
 
-// Создаем HTML для управления весами
 function createWeightControl(workout, exerciseIndex, hasWeight) {
 if (!hasWeight) return '';
-
 const currentWeight = getExerciseWeight(workout, exerciseIndex);
-
 return `
 <div class="weight-control">
 <button class="weight-btn weight-easy" onclick="adjustWeight('${workout}', ${exerciseIndex}, -2.5)">−</button>
@@ -1042,7 +879,7 @@ return `
 `;
 }
 
-// Данные о программах тренировок с расширенной базой
+// Данные программ тренировок
 const workoutPrograms = {
 'А': {
 name: 'День А: Грудь-Плечи-Трицепс',
@@ -1323,30 +1160,7 @@ name: 'Пресс в тренажере',
 sets: 3,
 reps: '15-20',
 weight: '15-20кг',
-direction: 'Вперед к коленям',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Вперед к коленям (скручивание)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Сядьте в тренажер, спина к спинке</li>
-<li>Зафиксируйте ноги валиками</li>
-<li>На выдохе скрутитесь вперед</li>
-<li>На вдохе медленно вернитесь назад</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Движение за счет скручивания позвоночника</li>
-<li>Не тяните руками</li>
-<li>Полный контроль в обеих фазах</li>
-</ul>
-</div>
-</div>
-`
+direction: 'Вперед к коленям'
 }
 ]
 },
@@ -1359,270 +1173,63 @@ name: 'Беговая дорожка',
 sets: 1,
 reps: '10 мин',
 weight: '',
-direction: 'Вперед (кардио)',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Вперед (кардионагрузка)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Начните с медленной ходьбы для разминки</li>
-<li>Постепенно увеличьте скорость до комфортной</li>
-<li>Держите умеренный темп 10 минут</li>
-<li>В конце замедлитесь до ходьбы</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Следите за пульсом (130-150 уд/мин)</li>
-<li>Дышите ритмично</li>
-<li>Держитесь за поручни только при необходимости</li>
-</ul>
-</div>
-</div>
-`
+direction: 'Вперед (кардио)'
 },
 {
 name: 'Гребной тренажер',
 sets: 1,
 reps: '8 мин',
 weight: '',
-direction: 'К себе и от себя',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">К себе и от себя (тяга и возврат)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Сядьте, ноги зафиксируйте ремнями</li>
-<li>Возьмитесь за рукоятку обеими руками</li>
-<li>Тяните к животу, отклоняясь назад</li>
-<li>Медленно возвращайтесь в исходное положение</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Сначала работают ноги, потом спина и руки</li>
-<li>Спина прямая на протяжении всего движения</li>
-<li>Плавный ритм без рывков</li>
-</ul>
-</div>
-</div>
-`
+direction: 'К себе и от себя'
 },
 {
 name: 'Эллиптический тренажер',
 sets: 1,
 reps: '5 мин',
 weight: '',
-direction: 'Овальная траектория',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Овальная траектория (эллипс)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Встаньте на педали, возьмитесь за рукоятки</li>
-<li>Начните плавное движение вперед</li>
-<li>Поддерживайте равномерный темп</li>
-<li>Работайте всем телом синхронно</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Корпус прямой, не наклоняйтесь</li>
-<li>Стопы полностью на педалях</li>
-<li>Плавные движения без рывков</li>
-</ul>
-</div>
-</div>
-`
+direction: 'Овальная траектория'
 },
 {
 name: 'Тяга верхнего блока',
 sets: 4,
 reps: '8-10',
 weight: '30-35кг',
-direction: 'Сверху к груди',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Сверху к груди (вертикальная тяга)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Сядьте, зафиксируйте ноги валиками</li>
-<li>Широкий хват за рукоятку</li>
-<li>Тяните к верху груди</li>
-<li>Медленный возврат в исходное положение</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Сводите лопатки при тяге</li>
-<li>Полная амплитуда движения</li>
-<li>Не используйте инерцию</li>
-</ul>
-</div>
-</div>
-`
+direction: 'Сверху к груди'
 },
 {
 name: 'Тяга штанги в наклоне',
 sets: 4,
 reps: '10-12',
 weight: '20-30кг',
-direction: 'К животу в наклоне',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">К животу в наклоне (горизонтальная тяга)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Наклонитесь вперед под углом 45°</li>
-<li>Спина прямая, колени слегка согнуты</li>
-<li>Тяните штангу к нижней части живота</li>
-<li>Опускайте контролируемо</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Тянуть локтями назад вдоль корпуса</li>
-<li>Сохранять прогиб в пояснице</li>
-<li>Горизонтальная траектория движения</li>
-</ul>
-</div>
-</div>
-`
+direction: 'К животу в наклоне'
 },
 {
 name: 'Тяга гантели к поясу',
 sets: 3,
 reps: '12',
 weight: '10-15кг',
-direction: 'К поясу в наклоне',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">К поясу в наклоне (одной рукой)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Упритесь коленом и рукой в скамью</li>
-<li>Возьмите гантель в свободную руку</li>
-<li>Тяните к поясу по дугообразной траектории</li>
-<li>Медленно опускайте в исходное положение</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Локоть движется вдоль корпуса</li>
-<li>Сводите лопатку в верхней точке</li>
-<li>Корпус параллелен полу</li>
-</ul>
-</div>
-</div>
-`
+direction: 'К поясу в наклоне'
 },
 {
 name: 'Подъем штанги на бицепс',
 sets: 4,
 reps: '10-12',
 weight: '15-20кг',
-direction: 'Вверх к груди',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Вверх к груди (сгибание в локтях)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Встаньте прямо, штанга в руках</li>
-<li>Локти прижмите к корпусу</li>
-<li>Сгибайте руки к груди</li>
-<li>Медленно опускайте штангу</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Корпус неподвижен</li>
-<li>Локти не выносите вперед</li>
-<li>Полная амплитуда движения</li>
-</ul>
-</div>
-</div>
-`
+direction: 'Вверх к груди'
 },
 {
 name: 'Подъем гантелей на бицепс',
 sets: 3,
 reps: '12',
 weight: '8-12кг',
-direction: 'К плечам',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">К плечам (попеременно или вместе)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Встаньте прямо, гантели в руках</li>
-<li>Поднимайте поочередно или синхронно</li>
-<li>Сгибайте к плечу с супинацией</li>
-<li>Контролируйте опускание</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Поворачивайте кисть при подъеме</li>
-<li>Пиковое сокращение в верхней точке</li>
-<li>Избегайте раскачивания</li>
-</ul>
-</div>
-</div>
-`
+direction: 'К плечам'
 },
 {
 name: 'Молотки',
 sets: 3,
 reps: '15',
 weight: '8-10кг',
-direction: 'Вверх вдоль тела',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Вверх вдоль тела (нейтральный хват)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Нейтральный хват гантелей (ладони друг к другу)</li>
-<li>Руки вдоль тела</li>
-<li>Сгибайте строго вверх</li>
-<li>Выполняйте поочередно или вместе</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Ладони смотрят друг на друга всегда</li>
-<li>Траектория строго вертикальная</li>
-<li>Контролируйте движение в обеих фазах</li>
-</ul>
-</div>
-</div>
-`
+direction: 'Вверх вдоль тела'
 }
 ]
 },
@@ -1635,220 +1242,455 @@ name: 'Приседания',
 sets: 4,
 reps: '10-12',
 weight: '20-30кг',
-direction: 'Вниз-назад и вверх',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Вниз-назад и вверх (приседание)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Поставьте ноги на ширине плеч</li>
-<li>На вдохе отводите таз назад и вниз</li>
-<li>Опускайтесь до параллели бедер с полом</li>
-<li>На выдохе мощно поднимайтесь вверх</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Колени направлены по линии носков</li>
-<li>Спина прямая с естественным прогибом</li>
-<li>Вес тела на пятках</li>
-</ul>
-</div>
-</div>
-`
+direction: 'Вниз-назад и вверх'
 },
 {
 name: 'Жим ногами',
 sets: 3,
 reps: '12-15',
 weight: '40-60кг',
-direction: 'От груди вперед',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Отталкивание платформы от себя</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Лягте в тренажер, спина плотно к спинке</li>
-<li>Поставьте ноги на платформу</li>
-<li>Сгибайте ноги к груди</li>
-<li>Мощно выжимайте платформу от себя</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Сгибайте до 90° в коленных суставах</li>
-<li>Не блокируйте колени полностью</li>
-<li>Колени не сводите внутрь</li>
-</ul>
-</div>
-</div>
-`
+direction: 'От груди вперед'
 },
 {
 name: 'Разгибания ног',
 sets: 3,
 reps: '12-15',
 weight: '20-25кг',
-direction: 'Вверх-вперед',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Вверх-вперед (разгибание в коленях)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Сядьте в тренажер, спина к спинке</li>
-<li>Валики расположите над голеностопами</li>
-<li>На выдохе разгибайте ноги</li>
-<li>На вдохе медленно сгибайте</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Полное разгибание с задержкой</li>
-<li>Медленное сгибание с контролем</li>
-<li>Не откидывайтесь назад</li>
-</ul>
-</div>
-</div>
-`
+direction: 'Вверх-вперед'
 },
 {
 name: 'Сгибания ног',
 sets: 3,
 reps: '12-15',
 weight: '15-20кг',
-direction: 'К ягодицам',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">К ягодицам (сгибание в коленях)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Лягте лицом вниз в тренажер</li>
-<li>Валики расположите над пятками</li>
-<li>На выдохе сгибайте ноги к ягодицам</li>
-<li>На вдохе медленно разгибайте</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Максимальное сгибание с задержкой</li>
-<li>Таз прижат к скамье</li>
-<li>Контролируйте разгибание</li>
-</ul>
-</div>
-</div>
-`
+direction: 'К ягодицам'
 },
 {
 name: 'Подъемы на носки',
 sets: 4,
 reps: '20',
 weight: '20-30кг',
-direction: 'Строго вверх',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Строго вверх (на носки)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Встаньте носками на платформу</li>
-<li>Пятки опустите вниз для растяжения</li>
-<li>На выдохе поднимитесь на носки</li>
-<li>Задержитесь и медленно опуститесь</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Полная амплитуда движения</li>
-<li>Задержка в верхней точке</li>
-<li>Медленное опускание для растяжения</li>
-</ul>
-</div>
-</div>
-`
+direction: 'Строго вверх'
 },
 {
 name: 'Планка',
 sets: 3,
 reps: '60сек',
 weight: '',
-direction: 'Статическое удержание',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Статическое удержание позиции</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Примите упор на предплечьях</li>
-<li>Локти точно под плечами</li>
-<li>Тело в прямой линии</li>
-<li>Удерживайте позицию указанное время</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Не провисайте в пояснице</li>
-<li>Напрягите пресс и ягодицы</li>
-<li>Равномерное дыхание</li>
-</ul>
-</div>
-</div>
-`
+direction: 'Статическое удержание'
 },
 {
 name: 'Скручивания',
 sets: 3,
 reps: '20',
 weight: '',
-direction: 'Вверх к коленям',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Вверх к коленям (скручивание)</p>
-</div>
-<h4 class="section-title">Техника выполнения:</h4>
-<div class="section-content">
-<ol>
-<li>Лягте на спину, колени согнуты</li>
-<li>Руки за головой или скрещены на груди</li>
-<li>На выдохе скрутитесь вперед</li>
-<li>На вдохе медленно опуститесь</li>
-</ol>
-<div class="important-points">
-<strong>Важные моменты:</strong>
-<ul>
-<li>Скручивание, а не подъем корпуса</li>
-<li>Не тяните за голову руками</li>
-<li>Поясница остается на полу</li>
-</ul>
-</div>
-</div>
-`
+direction: 'Вверх к коленям'
+},
+{
+name: 'Велосипед',
+sets: 3,
+reps: '30',
+weight: '',
+direction: 'Диагональное скручивание'
 },
 {
 name: 'Пресс в тренажере',
 sets: 3,
 reps: '12-15',
 weight: '15-20кг',
-direction: 'Вперед к коленям',
-technique: `
-<div class="direction-box">
-<h4 class="direction-title">Направление движения:</h4>
-<p class="direction-text">Вперед к коленям (скручивание)</p>
+direction: 'Вперед к коленям'
+}
+]
+},
+'Г': {
+name: 'День Г: Функциональная + Силовая',
+color: '#f97316',
+exercises: [
+{
+name: 'Беговая дорожка разминка',
+sets: 1,
+reps: '10 мин',
+weight: '',
+direction: 'Вперед'
+},
+{
+name: 'Эллиптический тренажер',
+sets: 1,
+reps: '10 мин',
+weight: '',
+direction: 'Овальная траектория'
+},
+{
+name: 'Упражнения с петлями TRX',
+sets: 3,
+reps: '30сек',
+weight: 'Собственный вес',
+direction: 'Многоплоскостные'
+},
+{
+name: 'Упражнения на баланс',
+sets: 2,
+reps: '1 мин',
+weight: '',
+direction: 'Статическое удержание'
+},
+{
+name: 'Приседания силовые',
+sets: 4,
+reps: '6-8',
+weight: '40-50кг',
+direction: 'Вниз-назад и вверх'
+},
+{
+name: 'Жим силовой',
+sets: 4,
+reps: '6-8',
+weight: '30-40кг',
+direction: 'Вперед от груди'
+},
+{
+name: 'Тяга силовая',
+sets: 3,
+reps: '8-10',
+weight: '30-35кг',
+direction: 'Сверху к груди'
+},
+{
+name: 'Растяжка всех групп мышц',
+sets: 1,
+reps: '5 мин',
+weight: '',
+direction: 'Медленное растягивание'
+}
+]
+}
+};
+
+// Состояние приложения
+let currentWorkout = 'А';
+let currentExerciseIndex = 0;
+let completedSets = {};
+let timerInterval = null;
+let timeRemaining = 0;
+let isTimerRunning = false;
+let stats = {
+totalWorkouts: 0,
+totalSets: 0,
+totalExercises: 0
+};
+
+function loadData() {
+const savedStats = localStorage.getItem('gymTrainerStats');
+if (savedStats) {
+stats = JSON.parse(savedStats);
+}
+const savedCompletedSets = localStorage.getItem('gymTrainerSets');
+if (savedCompletedSets) {
+completedSets = JSON.parse(savedCompletedSets);
+}
+}
+
+function saveData() {
+localStorage.setItem('gymTrainerStats', JSON.stringify(stats));
+localStorage.setItem('gymTrainerSets', JSON.stringify(completedSets));
+}
+
+function init() {
+loadData();
+loadWeights();
+setupNavigation();
+setupWorkoutSelector();
+setupTimer();
+renderWorkoutView();
+renderStatsView();
+renderScheduleView();
+showTab('workout');
+updateNavIndicator();
+}
+
+function updateNavIndicator() {
+const activeBtn = document.querySelector('.nav button.active');
+const indicator = document.getElementById('nav-indicator');
+if (activeBtn && indicator) {
+const navButtons = document.querySelectorAll('.nav button');
+const activeIndex = Array.from(navButtons).indexOf(activeBtn);
+const btnWidth = activeBtn.offsetWidth;
+indicator.style.width = btnWidth + 'px';
+indicator.style.left = (activeIndex * btnWidth) + 'px';
+}
+}
+
+function setupNavigation() {
+const navButtons = document.querySelectorAll('.nav button');
+navButtons.forEach(button => {
+button.addEventListener('click', () => {
+const tab = button.getAttribute('data-tab');
+showTab(tab);
+});
+});
+}
+
+function showTab(tabName) {
+document.querySelectorAll('.nav button').forEach(btn => btn.classList.remove('active'));
+document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+document.getElementById(`${tabName}-tab`).classList.add('active');
+updateNavIndicator();
+}
+
+function setupWorkoutSelector() {
+const selector = document.getElementById('workout-selector');
+Object.keys(workoutPrograms).forEach(key => {
+const button = document.createElement('button');
+button.className = 'workout-btn';
+button.innerHTML = `<span>${key}</span>`;
+button.addEventListener('click', () => selectWorkout(key));
+selector.appendChild(button);
+});
+selectWorkout('А');
+}
+
+function selectWorkout(workout) {
+currentWorkout = workout;
+currentExerciseIndex = 0;
+
+document.querySelectorAll('.workout-btn').forEach(btn => {
+btn.classList.remove('active');
+if (btn.textContent.trim() === workout) {
+btn.classList.add('active');
+}
+});
+
+renderWorkoutView();
+}
+
+function renderWorkoutView() {
+const program = workoutPrograms[currentWorkout];
+const container = document.getElementById('exercise-list');
+
+document.getElementById('workout-title').textContent = program.name;
+document.getElementById('workout-title').style.color = program.color;
+
+container.innerHTML = '';
+
+program.exercises.forEach((exercise, index) => {
+const exerciseDiv = document.createElement('div');
+exerciseDiv.className = 'exercise-item';
+
+if (index === currentExerciseIndex) {
+exerciseDiv.classList.add('current');
+}
+
+const exerciseKey = `${currentWorkout}-${index}`;
+const completedCount = completedSets[exerciseKey] || 0;
+if (completedCount >= exercise.sets) {
+exerciseDiv.classList.add('completed');
+}
+
+const hasWeight = exercise.weight && exercise.weight !== '' && !exercise.weight.includes('сек') && !exercise.weight.includes('мин');
+const weightDisplay = hasWeight ? getExerciseWeight(currentWorkout, index) + 'кг' : '';
+
+exerciseDiv.innerHTML = `
+<div class="exercise-name">${exercise.name}</div>
+<div class="exercise-details">${exercise.sets}×${exercise.reps} ${weightDisplay ? '(' + weightDisplay + ')' : ''}</div>
+<div class="exercise-details" style="color: ${program.color}; font-weight: 600;">
+${exercise.direction}
 </div>
-<h4 
+${createWeightControl(currentWorkout, index, hasWeight)}
+<div class="set-dots">
+${Array(exercise.sets).fill().map((_, setIndex) => {
+const isCompleted = setIndex < completedCount;
+return `<div class="set-dot ${isCompleted ? 'completed' : ''}" onclick="toggleSet('${exerciseKey}', ${setIndex}, ${exercise.sets})">${setIndex + 1}</div>`;
+}).join('')}
+</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width: ${(completedCount / exercise.sets) * 100}%"></div>
+</div>
+`;
+
+if (exercise.technique) {
+exerciseDiv.addEventListener('click', (e) => {
+if (!e.target.classList.contains('weight-btn')) {
+showTechnique(exercise);
+}
+});
+}
+
+container.appendChild(exerciseDiv);
+});
+}
+
+function toggleSet(exerciseKey, setIndex, totalSets) {
+event.stopPropagation();
+const currentCount = completedSets[exerciseKey] || 0;
+
+if (setIndex < currentCount) {
+completedSets[exerciseKey] = setIndex;
+} else if (setIndex === currentCount) {
+completedSets[exerciseKey] = setIndex + 1;
+stats.totalSets++;
+
+if (setIndex + 1 >= totalSets) {
+stats.totalExercises++;
+currentExerciseIndex++;
+}
+
+if (setIndex + 1 < totalSets) {
+startRestTimer();
+}
+}
+
+saveData();
+renderWorkoutView();
+renderStatsView();
+}
+
+function showTechnique(exercise) {
+if (!exercise.technique) return;
+
+const modal = document.getElementById('technique-modal');
+const content = document.getElementById('technique-content');
+
+document.getElementById('technique-title').textContent = exercise.name;
+content.innerHTML = exercise.technique;
+
+modal.style.display = 'flex';
+}
+
+function closeTechniqueModal() {
+document.getElementById('technique-modal').style.display = 'none';
+}
+
+function setupTimer() {
+document.getElementById('timer-60').addEventListener('click', () => startTimer(60));
+document.getElementById('timer-90').addEventListener('click', () => startTimer(90));
+document.getElementById('timer-120').addEventListener('click', () => startTimer(120));
+document.getElementById('timer-stop').addEventListener('click', stopTimer);
+
+document.getElementById('modal-close').addEventListener('click', closeTechniqueModal);
+
+document.getElementById('technique-modal').addEventListener('click', (e) => {
+if (e.target.id === 'technique-modal') {
+closeTechniqueModal();
+}
+});
+}
+
+function startTimer(seconds) {
+stopTimer();
+timeRemaining = seconds;
+isTimerRunning = true;
+
+timerInterval = setInterval(() => {
+timeRemaining--;
+updateTimerDisplay();
+
+if (timeRemaining <= 0) {
+stopTimer();
+if (navigator.vibrate) {
+navigator.vibrate([200, 100, 200]);
+}
+}
+}, 1000);
+
+updateTimerDisplay();
+}
+
+function startRestTimer() {
+startTimer(90);
+}
+
+function stopTimer() {
+if (timerInterval) {
+clearInterval(timerInterval);
+timerInterval = null;
+}
+isTimerRunning = false;
+timeRemaining = 0;
+updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+const display = document.getElementById('timer-display');
+const minutes = Math.floor(Math.abs(timeRemaining) / 60);
+const seconds = Math.abs(timeRemaining) % 60;
+
+display.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+if (timeRemaining <= 10 && timeRemaining > 0) {
+display.classList.add('warning');
+} else {
+display.classList.remove('warning');
+}
+}
+
+function renderStatsView() {
+document.getElementById('stat-workouts').textContent = stats.totalWorkouts;
+document.getElementById('stat-exercises').textContent = stats.totalExercises;
+document.getElementById('stat-sets').textContent = stats.totalSets;
+}
+
+function resetStats() {
+if (confirm('Вы уверены, что хотите сбросить всю статистику?')) {
+stats = { totalWorkouts: 0, totalSets: 0, totalExercises: 0 };
+completedSets = {};
+currentExerciseIndex = 0;
+saveData();
+renderStatsView();
+renderWorkoutView();
+}
+}
+
+function renderScheduleView() {
+const schedule = [
+{ day: 'Понедельник', workout: 'А', description: 'Грудь-Плечи-Трицепс' },
+{ day: 'Вторник', workout: 'В', description: 'Ноги-Пресс' },
+{ day: 'Среда', workout: 'Отдых', description: 'Восстановление' },
+{ day: 'Четверг', workout: 'Б', description: 'Спина-Бицепс + Кардио' },
+{ day: 'Пятница', workout: 'А', description: 'Грудь-Плечи-Трицепс' },
+{ day: 'Суббота', workout: 'Г', description: 'Функциональная + Силовая' },
+{ day: 'Воскресенье', workout: 'Отдых', description: 'Восстановление' }
+];
+
+const container = document.getElementById('schedule-list');
+container.innerHTML = '';
+
+schedule.forEach(item => {
+const scheduleDiv = document.createElement('div');
+scheduleDiv.className = 'schedule-item';
+
+scheduleDiv.innerHTML = `
+<div style="font-weight: 700; margin-bottom: 0.5rem; font-size: 1.1rem;">${item.day}</div>
+<div style="color: ${item.workout !== 'Отдых' ? workoutPrograms[item.workout]?.color || '#6b7280' : '#6b7280'}; font-weight: 600; margin-bottom: 0.25rem;">
+Программа ${item.workout}
+</div>
+<div style="font-size: 0.9rem; color: #6b7280;">${item.description}</div>
+`;
+
+if (item.workout !== 'Отдых' && workoutPrograms[item.workout]) {
+scheduleDiv.addEventListener('click', () => {
+selectWorkout(item.workout);
+showTab('workout');
+});
+}
+
+container.appendChild(scheduleDiv);
+});
+}
+
+function completeWorkout() {
+stats.totalWorkouts++;
+completedSets = {};
+currentExerciseIndex = 0;
+saveData();
+renderStatsView();
+renderWorkoutView();
+
+alert('🎉 Тренировка завершена! Отличная работа! 💪');
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
