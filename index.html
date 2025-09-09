@@ -2,23 +2,17 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Gym App</title>
 <style>
-body{font-family:Arial;background:#667eea;margin:0;padding:20px}
+body{font-family:Arial;background:#667eea;padding:20px}
 .app{max-width:400px;margin:0 auto;background:white;border-radius:20px;padding:20px}
-h1{text-align:center;color:#333;margin-bottom:30px}
-.ex{background:#f8f9fa;border-radius:12px;padding:15px;margin:10px 0;border:1px solid #ddd}
-.name{font-weight:bold;font-size:16px;margin-bottom:5px}
-.det{color:#666;font-size:14px;margin-bottom:10px}
-.btn{background:#ff6b35;color:white;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:12px}
-.btn:hover{background:#e55a2b}
+.ex{background:#f8f9fa;border-radius:12px;padding:15px;margin:10px 0}
+.name{font-weight:bold;font-size:16px}
+.btn{background:#ff6b35;color:white;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;margin:5px 0}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000}
 .modal-content{background:white;margin:50px auto;padding:20px;width:90%;max-width:500px;border-radius:10px;position:relative}
-.close{position:absolute;top:10px;right:20px;font-size:30px;cursor:pointer;color:#666}
-.close:hover{color:#000}
+.close{position:absolute;top:10px;right:20px;font-size:30px;cursor:pointer}
 .direction{background:#e3f2fd;border:2px solid #2196f3;border-radius:8px;padding:10px;margin:10px 0}
 .technique{background:#e8f5e8;border:2px solid #4caf50;border-radius:8px;padding:10px;margin:10px 0}
-.important{background:#fff3e0;border:2px solid #ff9800;border-radius:8px;padding:10px;margin:10px 0}
 </style>
 </head>
 <body>
@@ -27,55 +21,39 @@ h1{text-align:center;color:#333;margin-bottom:30px}
 
 <div class="ex">
 <div class="name">Жим в тренажере</div>
-<div class="det">4 подхода × 10-12 повторений</div>
-<button class="btn" onclick="showModal('Жим в тренажере', '<div class=&quot;direction&quot;><strong>Направление:</strong> Вперед от груди</div><div class=&quot;technique&quot;><strong>Техника:</strong><ol><li>Сядьте в тренажер, спина к спинке</li><li>Возьмитесь за рукоятки хватом чуть шире плеч</li><li>На выдохе выжмите вперед от груди</li><li>На вдохе медленно верните в исходное положение</li></ol></div><div class=&quot;important&quot;><strong>Важно:</strong><br>• Локти слегка опущены вниз<br>• Контролируйте движение в обеих фазах<br>• Не отрывайте спину от спинки</div>')">Техника выполнения</button>
-</div>
-
-<div class="ex">
-<div class="name">Тяга верхнего блока</div>
-<div class="det">3 подхода × 10-12 повторений</div>
-<button class="btn" onclick="showModal('Тяга верхнего блока', '<div class=&quot;direction&quot;><strong>Направление:</strong> Сверху к груди</div><div class=&quot;technique&quot;><strong>Техника:</strong><ol><li>Сядьте в тренажер, зафиксируйте ноги</li><li>Возьмитесь за рукоятку широким хватом</li><li>На выдохе тяните к верхней части груди</li><li>На вдохе медленно возвращайте вверх</li></ol></div><div class=&quot;important&quot;><strong>Важно:</strong><br>• Тянуть локтями назад, сводя лопатки<br>• Не наклоняйтесь назад<br>• Спина прямая с небольшим прогибом</div>')">Техника выполнения</button>
+<div>4 подхода × 10-12 повторений</div>
+<button class="btn" onclick="show1()">Техника</button>
 </div>
 
 <div class="ex">
 <div class="name">Приседания</div>
-<div class="det">4 подхода × 10-12 повторений</div>
-<button class="btn" onclick="showModal('Приседания', '<div class=&quot;direction&quot;><strong>Направление:</strong> Вниз-назад и вверх</div><div class=&quot;technique&quot;><strong>Техника:</strong><ol><li>Ноги на ширине плеч</li><li>На вдохе отводите таз назад</li><li>До параллели бедер с полом</li><li>На выдохе мощный подъем</li></ol></div><div class=&quot;important&quot;><strong>Важно:</strong><br>• Колени по линии носков<br>• Спина прямая<br>• Вес на пятках</div>')">Техника выполнения</button>
-</div>
-
-<div class="ex">
-<div class="name">Планка</div>
-<div class="det">3 подхода × 30-45 сек</div>
-<button class="btn" onclick="showModal('Планка', '<div class=&quot;direction&quot;><strong>Направение:</strong> Статическое удержание</div><div class=&quot;technique&quot;><strong>Техника:</strong><ol><li>Примите упор на предплечьях</li><li>Локти под плечами</li><li>Тело в прямой линии</li><li>Держите позицию указанное время</li></ol></div><div class=&quot;important&quot;><strong>Важно:</strong><br>• Не поднимайте таз вверх<br>• Не прогибайтесь в пояснице<br>• Напрягите пресс и ягодицы</div>')">Техника выполнения</button>
+<div>4 подхода × 10-12 повторений</div>
+<button class="btn" onclick="show2()">Техника</button>
 </div>
 
 </div>
 
 <div id="modal" class="modal">
 <div class="modal-content">
-<span class="close" onclick="closeModal()">&times;</span>
-<h2 id="modal-title">Техника выполнения</h2>
-<div id="modal-body"></div>
+<span class="close" onclick="hide()">&times;</span>
+<h2 id="title">Техника</h2>
+<div id="body"></div>
 </div>
 </div>
 
 <script>
-function showModal(title, content) {
-    document.getElementById('modal-title').innerHTML = title;
-    document.getElementById('modal-body').innerHTML = content;
-    document.getElementById('modal').style.display = 'block';
+function show1(){
+document.getElementById('title').innerHTML='Жим в тренажере';
+document.getElementById('body').innerHTML='<div class="direction"><b>Направление:</b> Вперед от груди</div><div class="technique"><b>Техника:</b><ol><li>Сядьте в тренажер</li><li>Возьмитесь за рукоятки</li><li>Выжмите вперед</li></ol></div>';
+document.getElementById('modal').style.display='block';
 }
-
-function closeModal() {
-    document.getElementById('modal').style.display = 'none';
+function show2(){
+document.getElementById('title').innerHTML='Приседания';
+document.getElementById('body').innerHTML='<div class="direction"><b>Направление:</b> Вниз и вверх</div><div class="technique"><b>Техника:</b><ol><li>Ноги на ширине плеч</li><li>Отводите таз назад</li><li>Мощный подъем</li></ol></div>';
+document.getElementById('modal').style.display='block';
 }
-
-// Закрытие модального окна при клике вне его
-window.onclick = function(event) {
-    var modal = document.getElementById('modal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
+function hide(){
+document.getElementById('modal').style.display='none';
 }
 </script>
 </body>
