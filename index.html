@@ -3,32 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <style>
-body{font-family:Arial;background:#667eea;padding:20px}
+body{font-family:Arial;background:#667eea;padding:15px;margin:0}
 .app{max-width:400px;margin:0 auto;background:white;border-radius:20px;padding:20px}
-.ex{background:#f8f9fa;border-radius:12px;padding:15px;margin:10px 0}
-.name{font-weight:bold;font-size:16px}
-.btn{background:#ff6b35;color:white;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;margin:5px 0}
+.title{text-align:center;font-size:1.4rem;font-weight:bold;margin-bottom:20px;color:#333}
+.program{background:#f8fafc;border-radius:16px;padding:15px;margin:15px 0;border:2px solid #e2e8f0}
+.program h3{color:#667eea;margin-bottom:10px;font-size:1.1rem}
+.ex{background:#fff;border-radius:12px;padding:12px;margin:8px 0;border:1px solid #ddd;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.name{font-weight:bold;font-size:14px;color:#333;margin-bottom:3px}
+.det{color:#666;font-size:12px;margin-bottom:8px}
+.btn{background:#ff6b35;color:white;border:none;padding:6px 12px;border-radius:15px;cursor:pointer;font-size:11px;transition:all 0.2s}
+.btn:hover{background:#e55a2b;transform:translateY(-1px)}
 .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:1000}
-.modal-content{background:white;margin:50px auto;padding:20px;width:90%;max-width:500px;border-radius:10px;position:relative}
-.close{position:absolute;top:10px;right:20px;font-size:30px;cursor:pointer}
-.direction{background:#e3f2fd;border:2px solid #2196f3;border-radius:8px;padding:10px;margin:10px 0}
-.technique{background:#e8f5e8;border:2px solid #4caf50;border-radius:8px;padding:10px;margin:10px 0}
+.modal-content{background:white;margin:30px auto;padding:20px;width:95%;max-width:500px;border-radius:15px;position:relative;max-height:85vh;overflow-y:auto}
+.close{position:absolute;top:10px;right:15px;font-size:25px;cursor:pointer;color:#666}
+.close:hover{color:#000}
+.direction{background:#e3f2fd;border:2px solid #2196f3;border-radius:8px;padding:10px;margin:8px 0}
+.technique{background:#e8f5e8;border:2px solid #4caf50;border-radius:8px;padding:10px;margin:8px 0}
+.important{background:#fff3e0;border:2px solid #ff9800;border-radius:8px;padding:10px;margin:8px 0}
 </style>
 </head>
 <body>
 <div class="app">
-<h1>💪 Gym Trainer</h1>
+<h1 class="title">💪 Gym Trainer Pro</h1>
 
+<div class="program">
+<h3>📋 ПРОГРАММА A - Грудь-Плечи-Трицепс</h3>
 <div class="ex">
 <div class="name">Жим в тренажере</div>
-<div>4 подхода × 10-12 повторений</div>
-<button class="btn" onclick="show1()">Техника</button>
+<div class="det">4 подхода × 10-12 (20-22.5кг)</div>
+<button class="btn" onclick="show('Жим в тренажере','<div class=&quot;direction&quot;><b>Направление:</b> Вперед от груди</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Сядьте в тренажер, плотно прижмите спину к спинке</li><li>Возьмитесь за рукоятки хватом чуть шире плеч</li><li>На выдохе выжмите вес вперед от груди</li><li>На вдохе медленно верните руки в исходное положение</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Локти слегка опущены вниз, контролируйте движение в обеих фазах</div>')">Техника</button>
 </div>
 
 <div class="ex">
+<div class="name">Тяга верхнего блока</div>
+<div class="det">3 подхода × 10-12 (25кг)</div>
+<button class="btn" onclick="show('Тяга верхнего блока','<div class=&quot;direction&quot;><b>Направление:</b> Сверху к груди</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Сядьте в тренажер, зафиксируйте ноги под валиками</li><li>Возьмитесь за рукоятку широким хватом</li><li>На выдохе тяните рукоятку к верхней части груди</li><li>На вдохе медленно возвращайте в исходное положение</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Тянуть локтями назад, сводя лопатки, не наклоняйтесь назад</div>')">Техника</button>
+</div>
+
+<div class="ex">
+<div class="name">Жим на плечи</div>
+<div class="det">4 подхода × 10-12 (15-17.5кг)</div>
+<button class="btn" onclick="show('Жим на плечи','<div class=&quot;direction&quot;><b>Направление:</b> Строго вверх</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Сядьте в тренажер, спина прямая</li><li>Возьмитесь за рукоятки на уровне плеч</li><li>На выдохе выжмите вес строго вверх над головой</li><li>На вдохе опустите в исходное положение</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Траектория четко вертикально вверх, не выжимайте до полного разгибания</div>')">Техника</button>
+</div>
+
+<div class="ex">
+<div class="name">Подъем на бицепс</div>
+<div class="det">3 подхода × 12-15 (10кг)</div>
+<button class="btn" onclick="show('Подъем на бицепс','<div class=&quot;direction&quot;><b>Направление:</b> Вверх к груди</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Встаньте прямо, гантели в руках</li><li>Локти прижаты к корпусу</li><li>На выдохе сгибайте руки к груди</li><li>На вдохе медленно опускайте</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Локти неподвижны, полная амплитуда движения, избегайте читинга</div>')">Техника</button>
+</div>
+
+<div class="ex">
+<div class="name">Французский жим</div>
+<div class="det">3 подхода × 12-15 (10кг)</div>
+<button class="btn" onclick="show('Французский жим','<div class=&quot;direction&quot;><b>Направление:</b> К голове и обратно</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Лягте на скамью, возьмите гантель или штангу</li><li>Руки вертикально вверх, локти зафиксированы</li><li>На вдохе сгибайте руки в локтях, опуская вес к голове</li><li>На выдохе разгибайте руки в исходное положение</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Работают только предплечья, локти не расходятся в стороны</div>')">Техника</button>
+</div>
+
+<div class="ex">
+<div class="name">Планка</div>
+<div class="det">3 подхода × 30-45сек</div>
+<button class="btn" onclick="show('Планка','<div class=&quot;direction&quot;><b>Направление:</b> Статическое удержание</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Примите упор лежа на предплечьях</li><li>Локти под плечами, тело в прямой линии</li><li>Держите позицию указанное время</li><li>Дышите равномерно</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Не поднимайте таз вверх, не прогибайтесь в пояснице</div>')">Техника</button>
+</div>
+</div>
+
+<div class="program">
+<h3>📋 ПРОГРАММА B - Спина-Бицепс + Кардио</h3>
+<div class="ex">
+<div class="name">Беговая дорожка</div>
+<div class="det">1 подход × 10 мин</div>
+<button class="btn" onclick="show('Беговая дорожка','<div class=&quot;direction&quot;><b>Направление:</b> Вперед (циклическое)</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Встаньте на дорожку, начните с медленной скорости</li><li>Корпус прямой, взгляд вперед</li><li>Естественный шаг с приземлением на среднюю часть стопы</li><li>Руки работают в такт с ногами</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Начинайте с разминочной скорости, дышите ритмично</div>')">Техника</button>
+</div>
+
+<div class="ex">
+<div class="name">Тяга штанги в наклоне</div>
+<div class="det">4 подхода × 10-12</div>
+<button class="btn" onclick="show('Тяга штанги в наклоне','<div class=&quot;direction&quot;><b>Направление:</b> К животу в наклоне</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Встаньте, ноги на ширине плеч, возьмите штангу</li><li>Наклонитесь вперед (угол 45°), спина прямая</li><li>На выдохе тяните штангу к животу</li><li>На вдохе опускайте в исходное положение</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Тянуть локтями назад вдоль тела, держите прогиб в спине</div>')">Техника</button>
+</div>
+
+<div class="ex">
+<div class="name">Молотки</div>
+<div class="det">3 подхода × 15 (10кг)</div>
+<button class="btn" onclick="show('Молотки','<div class=&quot;direction&quot;><b>Направление:</b> Вверх вдоль тела</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Встаньте прямо, гантели в руках нейтральным хватом</li><li>Руки вдоль тела, локти прижаты</li><li>На выдохе сгибайте руки поочередно или одновременно вверх</li><li>На вдохе медленно опускайте</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Ладони смотрят друг на друга, траектория строго вертикальная</div>')">Техника</button>
+</div>
+</div>
+
+<div class="program">
+<h3>📋 ПРОГРАММА C - Ноги-Пресс</h3>
+<div class="ex">
 <div class="name">Приседания</div>
-<div>4 подхода × 10-12 повторений</div>
-<button class="btn" onclick="show2()">Техника</button>
+<div class="det">4 подхода × 10-12 (20-30кг)</div>
+<button class="btn" onclick="show('Приседания','<div class=&quot;direction&quot;><b>Направление:</b> Вниз-назад и вверх</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Встаньте прямо, ноги на ширине плеч</li><li>Носки слегка развернуты наружу</li><li>На вдохе приседайте, отводя таз назад и вниз</li><li>На выдохе поднимайтесь в исходное положение</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Колени по линии носков, спина прямая, вес на пятках</div>')">Техника</button>
+</div>
+
+<div class="ex">
+<div class="name">Жим ногами</div>
+<div class="det">3 подхода × 12-15</div>
+<button class="btn" onclick="show('Жим ногами','<div class=&quot;direction&quot;><b>Направление:</b> От груди к ногам</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Сядьте в тренажер, спина плотно прижата</li><li>Ноги на платформе на ширине плеч</li><li>На вдохе сгибайте ноги, приближая платформу к груди</li><li>На выдохе выжимайте платформу от себя</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Колени не сводите внутрь, опускайте до 90° в коленях</div>')">Техника</button>
+</div>
+
+<div class="ex">
+<div class="name">Подъемы на носки</div>
+<div class="det">4 подхода × 20</div>
+<button class="btn" onclick="show('Подъемы на носки','<div class=&quot;direction&quot;><b>Направление:</b> Строго вверх</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Встаньте на платформу носками, пятки в воздухе</li><li>Держитесь за опору для равновесия</li><li>На выдохе поднимайтесь на носки максимально высоко</li><li>На вдохе опускайтесь, растягивая икры</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Полная амплитуда движения, пауза в верхней точке</div>')">Техника</button>
+</div>
+</div>
+
+<div class="program">
+<h3>📋 ПРОГРАММА TRX - Функциональная</h3>
+<div class="ex">
+<div class="name">TRX Отжимания</div>
+<div class="det">3 подхода × 12-15</div>
+<button class="btn" onclick="show('TRX Отжимания','<div class=&quot;direction&quot;><b>Направление:</b> С наклоном вперед</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Возьмитесь за рукоятки, лицом от точки крепления</li><li>Руки прямые, тело в планке</li><li>Отжимайтесь, опуская грудь к рукам</li><li>Выжимайте себя в исходное положение</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Чем ближе к креплению = сложнее, корпус напряжен</div>')">Техника</button>
+</div>
+
+<div class="ex">
+<div class="name">TRX Приседания</div>
+<div class="det">3 подхода × 15-20</div>
+<button class="btn" onclick="show('TRX Приседания','<div class=&quot;direction&quot;><b>Направление:</b> С поддержкой петель</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Лицом к точке крепления</li><li>Возьмитесь за рукоятки, руки прямые</li><li>Приседайте, отводя таз назад, используя петли для поддержки</li><li>Поднимайтесь в исходное положение</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Петли для равновесия, колени по линии носков</div>')">Техника</button>
+</div>
+
+<div class="ex">
+<div class="name">TRX Тяга к груди</div>
+<div class="det">3 подхода × 12-15</div>
+<button class="btn" onclick="show('TRX Тяга к груди','<div class=&quot;direction&quot;><b>Направление:</b> Тяга себя к петлям</div><div class=&quot;technique&quot;><b>Техника:</b><ol><li>Возьмитесь за рукоятки, откиньтесь назад</li><li>Тело прямое, руки вытянуты</li><li>Тяните себя к петлям, сводя лопатки</li><li>Медленно возвращайтесь в исходное положение</li></ol></div><div class=&quot;important&quot;><b>Важно:</b> Больше наклон = сложнее, тянуть локтями назад</div>')">Техника</button>
+</div>
 </div>
 
 </div>
@@ -36,24 +133,23 @@ body{font-family:Arial;background:#667eea;padding:20px}
 <div id="modal" class="modal">
 <div class="modal-content">
 <span class="close" onclick="hide()">&times;</span>
-<h2 id="title">Техника</h2>
+<h2 id="title">Техника выполнения</h2>
 <div id="body"></div>
 </div>
 </div>
 
 <script>
-function show1(){
-document.getElementById('title').innerHTML='Жим в тренажере';
-document.getElementById('body').innerHTML='<div class="direction"><b>Направление:</b> Вперед от груди</div><div class="technique"><b>Техника:</b><ol><li>Сядьте в тренажер</li><li>Возьмитесь за рукоятки</li><li>Выжмите вперед</li></ol></div>';
-document.getElementById('modal').style.display='block';
-}
-function show2(){
-document.getElementById('title').innerHTML='Приседания';
-document.getElementById('body').innerHTML='<div class="direction"><b>Направление:</b> Вниз и вверх</div><div class="technique"><b>Техника:</b><ol><li>Ноги на ширине плеч</li><li>Отводите таз назад</li><li>Мощный подъем</li></ol></div>';
+function show(title, content){
+document.getElementById('title').innerHTML=title;
+document.getElementById('body').innerHTML=content;
 document.getElementById('modal').style.display='block';
 }
 function hide(){
 document.getElementById('modal').style.display='none';
+}
+window.onclick=function(event){
+var modal=document.getElementById('modal');
+if(event.target==modal){modal.style.display='none';}
 }
 </script>
 </body>
