@@ -50,7 +50,6 @@ body{font-family:system-ui;background:linear-gradient(135deg,#667eea,#764ba2);mi
 .weight-easy:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(5,150,105,0.4)}
 .weight-hard{background:linear-gradient(135deg,#dc2626,#b91c1c);color:white;box-shadow:0 4px 12px rgba(220,38,38,0.3)}
 .weight-hard:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(220,38,38,0.4)}
-.weight-labels{display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-top:4px}
 .tech{background:linear-gradient(135deg,#f97316,#ea580c);color:white;padding:10px 20px;border:none;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;margin:12px 0;transition:all 0.3s;box-shadow:0 6px 20px rgba(249,115,22,0.3)}
 .tech:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(249,115,22,0.4)}
 .dots{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
@@ -75,8 +74,8 @@ body{font-family:system-ui;background:linear-gradient(135deg,#667eea,#764ba2);mi
 .close:hover{background:#f3f4f6;color:#1f2937}
 .dbox{background:linear-gradient(135deg,#eff6ff,#f0f9ff);border-radius:12px;padding:16px;margin-bottom:16px;border-left:4px solid #667eea}
 .dtitle{color:#1e40af;font-size:14px;margin-bottom:8px;font-weight:600}
-.stitle{color:#059669;font-size:14px;margin:16px 0 8px 0;font-weight:600}
-.imp{background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:8px;padding:12px;margin-top:8px;border-left:4px solid #f59e0b}
+.stitle{background:linear-gradient(135deg,#dcfce7,#bbf7d0);border:2px solid #059669;border-radius:12px;padding:16px;margin:16px 0 8px 0;box-shadow:0 4px 12px rgba(5,150,105,0.2);color:#059669;font-size:14px;font-weight:600}
+.imp{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #f59e0b;border-radius:12px;padding:16px;margin-top:8px;box-shadow:0 4px 12px rgba(245,158,11,0.2)}
 </style>
 </head>
 <body>
@@ -217,29 +216,4 @@ function save(){localStorage.setItem('gymStats',JSON.stringify(stats));localStor
 function init(){load();initWeights();setupNav();setupSel();render();renderStats();renderSched();showTab('workout');updateNavIndicator()}
 function initWeights(){Object.keys(data).forEach(workout=>{data[workout].ex.forEach((ex,i)=>{const key=`${workout}-${i}`;if(!weights[key]){weights[key]=ex.base||ex.w||0}})})}
 function setupNav(){document.querySelectorAll('.nav button').forEach(b=>{b.onclick=()=>{showTab(b.getAttribute('data-tab'));updateNavIndicator()}})}
-function updateNavIndicator(){const activeBtn=document.querySelector('.nav button.active');const indicator=document.getElementById('nav-indicator');if(activeBtn){const btnRect=activeBtn.getBoundingClientRect();const navRect=activeBtn.parentElement.getBoundingClientRect();indicator.style.left=(btnRect.left-navRect.left)+'px';indicator.style.width=btnRect.width+'px'}}
-function showTab(t){document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab').forEach(c=>c.classList.remove('active'));document.querySelector(`[data-tab="${t}"]`).classList.add('active');document.getElementById(`${t}-tab`).classList.add('active');setTimeout(updateNavIndicator,50)}
-function setupSel(){const s=document.getElementById('selector');s.innerHTML='';Object.keys(data).forEach(k=>{const b=document.createElement('button');b.className='sbtn';b.textContent=k;b.onclick=()=>select(k);s.appendChild(b)});select('А')}
-function select(workout){cur=workout;curEx=0;document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('active'));const buttons=document.querySelectorAll('.sbtn');const i=Object.keys(data).indexOf(workout);if(buttons[i])buttons[i].classList.add('active');render()}
-function adjustWeight(workout,exIndex,delta){const key=`${workout}-${exIndex}`;const currentWeight=weights[key]||0;weights[key]=Math.max(0,currentWeight+delta);save();render()}
-function render(){const p=data[cur];document.getElementById('title').textContent=p.n;const list=document.getElementById('list');list.innerHTML='';p.ex.forEach((e,i)=>{const weightKey=`${cur}-${i}`;const currentWeight=weights[weightKey]||e.base||e.w||0;const div=document.createElement('div');div.className='ex';if(i===curEx)div.classList.add('current');const weightControl=currentWeight>0?`<div class="weight-control">
-<button class="weight-btn weight-easy" onclick="adjustWeight('${cur}',${i},-2.5)">-</button>
-<div class="weight-display">${currentWeight}кг</div>
-<button class="weight-btn weight-hard" onclick="adjustWeight('${cur}',${i},2.5)">+</button>
-<div class="weight-labels"><span>Легко</span><span>Тяжело</span></div></div>`:'';div.innerHTML=`<div class="name">${e.n}</div><div class="det">${e.s} подходов × ${e.r} ${currentWeight>0?'('+currentWeight+'кг)':''}</div>${weightControl}<button class="tech" onclick="showTech('${cur}',${i})">📖 Техника</button><div class="dots">${Array.from({length:e.s},(_, j)=>`<div class="dot ${getStat(cur,i,j)}" onclick="toggle('${cur}',${i},${j})">${j+1}</div>`).join('')}</div>`;list.appendChild(div)})}
-function getStat(w,e,s){return sets[`${w}-${e}-${s}`]?'done':''}
-function toggle(w,e,s){const k=`${w}-${e}-${s}`;const p=data[w];const ex=p.ex[e];if(sets[k]){delete sets[k];stats.totalSets=Math.max(0,stats.totalSets-1)}else{sets[k]=1;stats.totalSets++;const last=s===ex.s-1;const lastEx=e===p.ex.length-1;if(!last||!lastEx){if(run)stop();start(90);showTab('timer')}if(s<ex.s-1){curEx=e}else if(e<p.ex.length-1){curEx=e+1}}save();render();renderStats()}
-function showTech(w,e){const ex=data[w].ex[e];document.getElementById('mtitle').textContent=ex.n;document.getElementById('mcontent').innerHTML=ex.t;document.getElementById('modal').style.display='flex'}
-function closeModal(){document.getElementById('modal').style.display='none'}
-function start(s){if(timer)clearInterval(timer);time=s;run=1;updateTimer();timer=setInterval(()=>{time--;updateTimer();if(time<=0)stop()},1000)}
-function stop(){if(timer)clearInterval(timer);run=0;time=0;updateTimer()}
-function ready(){stop();showTab('workout')}
-function updateTimer(){const m=Math.floor(time/60);const s=time%60;document.getElementById('display').textContent=`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;document.getElementById('ready').style.display=(run&&time>0)?'inline-block':'none'}
-function complete(){stats.totalWorkouts++;stats.totalExercises+=data[cur].ex.length;Object.keys(sets).forEach(k=>{if(k.startsWith(cur))delete sets[k]});save();renderStats();render();alert(`🎉 Тренировка завершена!\\nВсего: ${stats.totalWorkouts}`)}
-function reset(){if(confirm('Сбросить статистику?')){stats={totalWorkouts:0,totalSets:0,totalExercises:0};sets={};save();renderStats();render()}}
-function renderStats(){document.getElementById('sw').textContent=stats.totalWorkouts;document.getElementById('se').textContent=stats.totalExercises;document.getElementById('ss').textContent=stats.totalSets}
-function renderSched(){const sch=[{d:'Понедельник',w:'А',n:'Грудь-Плечи-Трицепс'},{d:'Вторник',w:'В',n:'Ноги-Пресс'},{d:'Среда',w:'',n:'Отдых'},{d:'Четверг',w:'Б',n:'Спина-Бицепс + Кардио'},{d:'Пятница',w:'А',n:'Грудь-Плечи-Трицепс'},{d:'Суббота',w:'Г',n:'Функциональная + Силовая'},{d:'Воскресенье',w:'',n:'Отдых'}];const list=document.getElementById('sched');list.innerHTML='';sch.forEach(i=>{const div=document.createElement('div');div.className='item';if(i.w)div.onclick=()=>{select(i.w);showTab('workout')};div.innerHTML=`<h3>${i.d}</h3><p>${i.w?`День ${i.w}: ${i.n}`:i.n}</p>`;list.appendChild(div)})}
-window.addEventListener('resize',updateNavIndicator);document.addEventListener('DOMContentLoaded',init)
-</script>
-</body>
-</html>
+function updateNavIndicator(){const activeBtn=document.querySelector('.nav button.active');const indicator=document.getElementById('nav-indicator');if(activeBtn){const btnRect=activeBtn.getBoundingClientRect();const navRect=activeBtn.parentElement.getBoundingClientRect();
