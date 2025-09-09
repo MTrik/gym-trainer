@@ -1,947 +1,930 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.1">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px}
-    span.s1 {font-kerning: none}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+<!-- SEO Meta Tags -->
+<meta name="description" content="Персональный тренер для спортзала с таймером отдыха, программами тренировок и отслеживанием прогресса">
+<meta name="keywords" content="фитнес, тренировки, спортзал, таймер, PWA, персональный тренер">
+<meta name="author" content="Gym Trainer App">
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="#" id="manifest-placeholder">
+
+<!-- Apple PWA Meta Tags -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gym Trainer">
+<meta name="apple-touch-fullscreen" content="yes">
+
+<!-- iOS Icons -->
+<link rel="apple-touch-icon" sizes="180x180" href="#" id="icon-180">
+<link rel="apple-touch-icon" sizes="167x167" href="#" id="icon-167">
+<link rel="apple-touch-icon" sizes="152x152" href="#" id="icon-152">
+<link rel="apple-touch-icon" sizes="120x120" href="#" id="icon-120">
+
+<!-- Android PWA -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#3b82f6">
+<meta name="background-color" content="#ffffff">
+
+<!-- Microsoft Tiles -->
+<meta name="msapplication-TileColor" content="#3b82f6">
+<meta name="msapplication-TileImage" content="#" id="ms-tile">
+
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="32x32" href="#" id="favicon-32">
+<link rel="icon" type="image/png" sizes="16x16" href="#" id="favicon-16">
+
+<title>Gym Trainer - Персональный тренер</title>
+
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+-webkit-tap-highlight-color: transparent;
+}
+
+body {
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+background: #f3f4f6;
+color: #111827;
+overflow-x: hidden;
+-webkit-user-select: none;
+user-select: none;
+-webkit-touch-callout: none;
+position: fixed;
+width: 100%;
+height: 100vh;
+height: 100dvh;
+}
+
+.app {
+width: 100%;
+height: 100vh;
+height: 100dvh;
+display: flex;
+flex-direction: column;
+background: white;
+max-width: 768px;
+margin: 0 auto;
+}
+
+.header {
+background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+color: white;
+padding: env(safe-area-inset-top, 20px) 1rem 1rem 1rem;
+flex-shrink: 0;
+}
+
+.header h1 {
+font-size: 1.5rem;
+margin-bottom: 0.25rem;
+font-weight: 700;
+}
+
+.header p {
+font-size: 0.875rem;
+opacity: 0.9;
+}
+
+.nav {
+background: white;
+display: flex;
+border-bottom: 1px solid #e5e7eb;
+flex-shrink: 0;
+}
+
+.nav button {
+flex: 1;
+padding: 0.75rem 0.5rem;
+background: none;
+border: none;
+font-size: 0.7rem;
+font-weight: 600;
+color: #6b7280;
+cursor: pointer;
+position: relative;
+transition: all 0.2s ease;
+}
+
+.nav button:active {
+transform: scale(0.95);
+}
+
+.nav button.active {
+color: #3b82f6;
+background: #eff6ff;
+}
+
+.nav button.active::after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+height: 3px;
+background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+border-radius: 2px 2px 0 0;
+}
+
+.content {
+flex: 1;
+overflow-y: auto;
+-webkit-overflow-scrolling: touch;
+padding: 1rem;
+padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+
+.tab-content {
+display: none;
+animation: fadeIn 0.3s ease-in-out;
+}
+
+.tab-content.active {
+display: block;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(10px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.timer-display {
+text-align: center;
+padding: 2rem 0;
+}
+
+.timer-time {
+font-size: clamp(3rem, 8vw, 4.5rem);
+font-weight: 700;
+font-family: 'SF Mono', Monaco, monospace;
+margin-bottom: 1rem;
+background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.timer-time.warning {
+background: linear-gradient(135deg, #ef4444, #dc2626);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+0%, 100% { opacity: 1; transform: scale(1); }
+50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.btn {
+padding: 0.875rem 1.5rem;
+border: none;
+border-radius: 12px;
+font-weight: 600;
+font-size: 0.875rem;
+cursor: pointer;
+margin: 0.25rem;
+touch-action: manipulation;
+transition: all 0.2s ease;
+}
+
+.btn:active {
+transform: scale(0.95);
+}
+
+.btn-primary {
+background: linear-gradient(135deg, #10b981, #059669);
+color: white;
+box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-secondary {
+background: linear-gradient(135deg, #6b7280, #4b5563);
+color: white;
+box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+}
+
+.btn-info {
+background: linear-gradient(135deg, #3b82f6, #2563eb);
+color: white;
+box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.workout-selector {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 0.5rem;
+margin-bottom: 1.5rem;
+}
+
+.workout-btn {
+padding: 0.75rem 0.5rem;
+border: 2px solid #e5e7eb;
+border-radius: 12px;
+background: white;
+cursor: pointer;
+text-align: center;
+font-size: 0.75rem;
+font-weight: 600;
+transition: all 0.2s ease;
+box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.workout-btn:active {
+transform: scale(0.95);
+}
+
+.workout-btn.active {
+background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+color: white;
+border-color: transparent;
+box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.exercise-card {
+background: linear-gradient(135deg, #eff6ff 0%, #f3e8ff 100%);
+border-radius: 16px;
+padding: 1.5rem;
+margin-bottom: 1rem;
+border: 1px solid #c7d2fe;
+box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+}
+
+.exercise-item {
+padding: 1rem;
+background: white;
+border: 2px solid #e5e7eb;
+border-radius: 12px;
+margin-bottom: 0.75rem;
+transition: all 0.2s ease;
+box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.exercise-item:active {
+transform: scale(0.98);
+}
+
+.exercise-item.current {
+border-color: #3b82f6;
+background: linear-gradient(135deg, #eff6ff, #f0f9ff);
+box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
+}
+
+.exercise-item.completed {
+border-color: #10b981;
+background: linear-gradient(135deg, #d1fae5, #ecfdf5);
+box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15);
+}
+
+.set-dots {
+display: flex;
+gap: 0.375rem;
+margin-top: 0.75rem;
+flex-wrap: wrap;
+}
+
+.set-dot {
+width: 28px;
+height: 28px;
+border-radius: 50%;
+background: #e5e7eb;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 0.75rem;
+font-weight: 600;
+transition: all 0.2s ease;
+border: 2px solid transparent;
+}
+
+.set-dot.completed {
+background: linear-gradient(135deg, #10b981, #059669);
+color: white;
+border-color: #10b981;
+transform: scale(1.05);
+}
+
+.stats-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 0.75rem;
+margin-bottom: 1.5rem;
+}
+
+.stat-card {
+text-align: center;
+padding: 1rem;
+background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+border-radius: 12px;
+border: 1px solid #e5e7eb;
+}
+
+.stat-value {
+font-size: 1.75rem;
+font-weight: 700;
+background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.stat-label {
+font-size: 0.75rem;
+color: #6b7280;
+font-weight: 500;
+margin-top: 0.25rem;
+}
+
+.schedule-item {
+background: white;
+border: 1px solid #e5e7eb;
+border-radius: 12px;
+padding: 1rem;
+margin-bottom: 0.75rem;
+transition: all 0.2s ease;
+box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.schedule-item:active {
+transform: scale(0.98);
+}
+
+.schedule-item.today {
+border-color: #3b82f6;
+background: linear-gradient(135deg, #eff6ff, #f0f9ff);
+box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
+}
+
+.schedule-item.rest {
+background: linear-gradient(135deg, #f3f4f6, #f9fafb);
+color: #6b7280;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+body { background: #111827; color: #f9fafb; }
+.app { background: #1f2937; }
+.nav { background: #1f2937; border-color: #374151; }
+.exercise-item { background: #374151; border-color: #4b5563; color: #f9fafb; }
+.schedule-item { background: #374151; border-color: #4b5563; color: #f9fafb; }
+}
+</style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="ru"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;!-- SEO Meta Tags --&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="description" content="Персональный тренер для спортзала с таймером отдыха, программами тренировок и отслеживанием прогресса"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="keywords" content="фитнес, тренировки, спортзал, таймер, PWA, персональный тренер"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="author" content="Gym Trainer App"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;!-- PWA Manifest --&gt;</span></p>
-<p class="p1"><span class="s1">&lt;link rel="manifest" href="#" id="manifest-placeholder"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;!-- Apple PWA Meta Tags --&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="apple-mobile-web-app-capable" content="yes"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="apple-mobile-web-app-title" content="Gym Trainer"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="apple-touch-fullscreen" content="yes"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;!-- iOS Icons --&gt;</span></p>
-<p class="p1"><span class="s1">&lt;link rel="apple-touch-icon" sizes="180x180" href="#" id="icon-180"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;link rel="apple-touch-icon" sizes="167x167" href="#" id="icon-167"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;link rel="apple-touch-icon" sizes="152x152" href="#" id="icon-152"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;link rel="apple-touch-icon" sizes="120x120" href="#" id="icon-120"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;!-- Android PWA --&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="mobile-web-app-capable" content="yes"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="theme-color" content="#3b82f6"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="background-color" content="#ffffff"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;!-- Microsoft Tiles --&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="msapplication-TileColor" content="#3b82f6"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;meta name="msapplication-TileImage" content="#" id="ms-tile"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;!-- Favicons --&gt;</span></p>
-<p class="p1"><span class="s1">&lt;link rel="icon" type="image/png" sizes="32x32" href="#" id="favicon-32"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;link rel="icon" type="image/png" sizes="16x16" href="#" id="favicon-16"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;title&gt;Gym Trainer - Персональный тренер&lt;/title&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;style&gt;</span></p>
-<p class="p1"><span class="s1">* {</span></p>
-<p class="p1"><span class="s1">margin: 0;</span></p>
-<p class="p1"><span class="s1">padding: 0;</span></p>
-<p class="p1"><span class="s1">box-sizing: border-box;</span></p>
-<p class="p1"><span class="s1">-webkit-tap-highlight-color: transparent;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">body {</span></p>
-<p class="p1"><span class="s1">font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;</span></p>
-<p class="p1"><span class="s1">background: #f3f4f6;</span></p>
-<p class="p1"><span class="s1">color: #111827;</span></p>
-<p class="p1"><span class="s1">overflow-x: hidden;</span></p>
-<p class="p1"><span class="s1">-webkit-user-select: none;</span></p>
-<p class="p1"><span class="s1">user-select: none;</span></p>
-<p class="p1"><span class="s1">-webkit-touch-callout: none;</span></p>
-<p class="p1"><span class="s1">position: fixed;</span></p>
-<p class="p1"><span class="s1">width: 100%;</span></p>
-<p class="p1"><span class="s1">height: 100vh;</span></p>
-<p class="p1"><span class="s1">height: 100dvh;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.app {</span></p>
-<p class="p1"><span class="s1">width: 100%;</span></p>
-<p class="p1"><span class="s1">height: 100vh;</span></p>
-<p class="p1"><span class="s1">height: 100dvh;</span></p>
-<p class="p1"><span class="s1">display: flex;</span></p>
-<p class="p1"><span class="s1">flex-direction: column;</span></p>
-<p class="p1"><span class="s1">background: white;</span></p>
-<p class="p1"><span class="s1">max-width: 768px;</span></p>
-<p class="p1"><span class="s1">margin: 0 auto;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.header {</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);</span></p>
-<p class="p1"><span class="s1">color: white;</span></p>
-<p class="p1"><span class="s1">padding: env(safe-area-inset-top, 20px) 1rem 1rem 1rem;</span></p>
-<p class="p1"><span class="s1">flex-shrink: 0;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.header h1 {</span></p>
-<p class="p1"><span class="s1">font-size: 1.5rem;</span></p>
-<p class="p1"><span class="s1">margin-bottom: 0.25rem;</span></p>
-<p class="p1"><span class="s1">font-weight: 700;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.header p {</span></p>
-<p class="p1"><span class="s1">font-size: 0.875rem;</span></p>
-<p class="p1"><span class="s1">opacity: 0.9;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.nav {</span></p>
-<p class="p1"><span class="s1">background: white;</span></p>
-<p class="p1"><span class="s1">display: flex;</span></p>
-<p class="p1"><span class="s1">border-bottom: 1px solid #e5e7eb;</span></p>
-<p class="p1"><span class="s1">flex-shrink: 0;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.nav button {</span></p>
-<p class="p1"><span class="s1">flex: 1;</span></p>
-<p class="p1"><span class="s1">padding: 0.75rem 0.5rem;</span></p>
-<p class="p1"><span class="s1">background: none;</span></p>
-<p class="p1"><span class="s1">border: none;</span></p>
-<p class="p1"><span class="s1">font-size: 0.7rem;</span></p>
-<p class="p1"><span class="s1">font-weight: 600;</span></p>
-<p class="p1"><span class="s1">color: #6b7280;</span></p>
-<p class="p1"><span class="s1">cursor: pointer;</span></p>
-<p class="p1"><span class="s1">position: relative;</span></p>
-<p class="p1"><span class="s1">transition: all 0.2s ease;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.nav button:active {</span></p>
-<p class="p1"><span class="s1">transform: scale(0.95);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.nav button.active {</span></p>
-<p class="p1"><span class="s1">color: #3b82f6;</span></p>
-<p class="p1"><span class="s1">background: #eff6ff;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.nav button.active::after {</span></p>
-<p class="p1"><span class="s1">content: '';</span></p>
-<p class="p1"><span class="s1">position: absolute;</span></p>
-<p class="p1"><span class="s1">bottom: 0;</span></p>
-<p class="p1"><span class="s1">left: 0;</span></p>
-<p class="p1"><span class="s1">right: 0;</span></p>
-<p class="p1"><span class="s1">height: 3px;</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(90deg, #3b82f6, #8b5cf6);</span></p>
-<p class="p1"><span class="s1">border-radius: 2px 2px 0 0;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.content {</span></p>
-<p class="p1"><span class="s1">flex: 1;</span></p>
-<p class="p1"><span class="s1">overflow-y: auto;</span></p>
-<p class="p1"><span class="s1">-webkit-overflow-scrolling: touch;</span></p>
-<p class="p1"><span class="s1">padding: 1rem;</span></p>
-<p class="p1"><span class="s1">padding-bottom: calc(1rem + env(safe-area-inset-bottom));</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.tab-content {</span></p>
-<p class="p1"><span class="s1">display: none;</span></p>
-<p class="p1"><span class="s1">animation: fadeIn 0.3s ease-in-out;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.tab-content.active {</span></p>
-<p class="p1"><span class="s1">display: block;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">@keyframes fadeIn {</span></p>
-<p class="p1"><span class="s1">from { opacity: 0; transform: translateY(10px); }</span></p>
-<p class="p1"><span class="s1">to { opacity: 1; transform: translateY(0); }</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.timer-display {</span></p>
-<p class="p1"><span class="s1">text-align: center;</span></p>
-<p class="p1"><span class="s1">padding: 2rem 0;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.timer-time {</span></p>
-<p class="p1"><span class="s1">font-size: clamp(3rem, 8vw, 4.5rem);</span></p>
-<p class="p1"><span class="s1">font-weight: 700;</span></p>
-<p class="p1"><span class="s1">font-family: 'SF Mono', Monaco, monospace;</span></p>
-<p class="p1"><span class="s1">margin-bottom: 1rem;</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #3b82f6, #8b5cf6);</span></p>
-<p class="p1"><span class="s1">-webkit-background-clip: text;</span></p>
-<p class="p1"><span class="s1">-webkit-text-fill-color: transparent;</span></p>
-<p class="p1"><span class="s1">background-clip: text;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.timer-time.warning {</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #ef4444, #dc2626);</span></p>
-<p class="p1"><span class="s1">-webkit-background-clip: text;</span></p>
-<p class="p1"><span class="s1">-webkit-text-fill-color: transparent;</span></p>
-<p class="p1"><span class="s1">background-clip: text;</span></p>
-<p class="p1"><span class="s1">animation: pulse 1s infinite;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">@keyframes pulse {</span></p>
-<p class="p1"><span class="s1">0%, 100% { opacity: 1; transform: scale(1); }</span></p>
-<p class="p1"><span class="s1">50% { opacity: 0.8; transform: scale(1.05); }</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.btn {</span></p>
-<p class="p1"><span class="s1">padding: 0.875rem 1.5rem;</span></p>
-<p class="p1"><span class="s1">border: none;</span></p>
-<p class="p1"><span class="s1">border-radius: 12px;</span></p>
-<p class="p1"><span class="s1">font-weight: 600;</span></p>
-<p class="p1"><span class="s1">font-size: 0.875rem;</span></p>
-<p class="p1"><span class="s1">cursor: pointer;</span></p>
-<p class="p1"><span class="s1">margin: 0.25rem;</span></p>
-<p class="p1"><span class="s1">touch-action: manipulation;</span></p>
-<p class="p1"><span class="s1">transition: all 0.2s ease;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.btn:active {</span></p>
-<p class="p1"><span class="s1">transform: scale(0.95);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.btn-primary {</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #10b981, #059669);</span></p>
-<p class="p1"><span class="s1">color: white;</span></p>
-<p class="p1"><span class="s1">box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.btn-secondary {</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #6b7280, #4b5563);</span></p>
-<p class="p1"><span class="s1">color: white;</span></p>
-<p class="p1"><span class="s1">box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.btn-info {</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #3b82f6, #2563eb);</span></p>
-<p class="p1"><span class="s1">color: white;</span></p>
-<p class="p1"><span class="s1">box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.workout-selector {</span></p>
-<p class="p1"><span class="s1">display: grid;</span></p>
-<p class="p1"><span class="s1">grid-template-columns: repeat(4, 1fr);</span></p>
-<p class="p1"><span class="s1">gap: 0.5rem;</span></p>
-<p class="p1"><span class="s1">margin-bottom: 1.5rem;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.workout-btn {</span></p>
-<p class="p1"><span class="s1">padding: 0.75rem 0.5rem;</span></p>
-<p class="p1"><span class="s1">border: 2px solid #e5e7eb;</span></p>
-<p class="p1"><span class="s1">border-radius: 12px;</span></p>
-<p class="p1"><span class="s1">background: white;</span></p>
-<p class="p1"><span class="s1">cursor: pointer;</span></p>
-<p class="p1"><span class="s1">text-align: center;</span></p>
-<p class="p1"><span class="s1">font-size: 0.75rem;</span></p>
-<p class="p1"><span class="s1">font-weight: 600;</span></p>
-<p class="p1"><span class="s1">transition: all 0.2s ease;</span></p>
-<p class="p1"><span class="s1">box-shadow: 0 2px 4px rgba(0,0,0,0.05);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.workout-btn:active {</span></p>
-<p class="p1"><span class="s1">transform: scale(0.95);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.workout-btn.active {</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #3b82f6, #8b5cf6);</span></p>
-<p class="p1"><span class="s1">color: white;</span></p>
-<p class="p1"><span class="s1">border-color: transparent;</span></p>
-<p class="p1"><span class="s1">box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.exercise-card {</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #eff6ff 0%, #f3e8ff 100%);</span></p>
-<p class="p1"><span class="s1">border-radius: 16px;</span></p>
-<p class="p1"><span class="s1">padding: 1.5rem;</span></p>
-<p class="p1"><span class="s1">margin-bottom: 1rem;</span></p>
-<p class="p1"><span class="s1">border: 1px solid #c7d2fe;</span></p>
-<p class="p1"><span class="s1">box-shadow: 0 4px 16px rgba(0,0,0,0.05);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.exercise-item {</span></p>
-<p class="p1"><span class="s1">padding: 1rem;</span></p>
-<p class="p1"><span class="s1">background: white;</span></p>
-<p class="p1"><span class="s1">border: 2px solid #e5e7eb;</span></p>
-<p class="p1"><span class="s1">border-radius: 12px;</span></p>
-<p class="p1"><span class="s1">margin-bottom: 0.75rem;</span></p>
-<p class="p1"><span class="s1">transition: all 0.2s ease;</span></p>
-<p class="p1"><span class="s1">box-shadow: 0 2px 8px rgba(0,0,0,0.05);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.exercise-item:active {</span></p>
-<p class="p1"><span class="s1">transform: scale(0.98);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.exercise-item.current {</span></p>
-<p class="p1"><span class="s1">border-color: #3b82f6;</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #eff6ff, #f0f9ff);</span></p>
-<p class="p1"><span class="s1">box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.exercise-item.completed {</span></p>
-<p class="p1"><span class="s1">border-color: #10b981;</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #d1fae5, #ecfdf5);</span></p>
-<p class="p1"><span class="s1">box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.set-dots {</span></p>
-<p class="p1"><span class="s1">display: flex;</span></p>
-<p class="p1"><span class="s1">gap: 0.375rem;</span></p>
-<p class="p1"><span class="s1">margin-top: 0.75rem;</span></p>
-<p class="p1"><span class="s1">flex-wrap: wrap;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.set-dot {</span></p>
-<p class="p1"><span class="s1">width: 28px;</span></p>
-<p class="p1"><span class="s1">height: 28px;</span></p>
-<p class="p1"><span class="s1">border-radius: 50%;</span></p>
-<p class="p1"><span class="s1">background: #e5e7eb;</span></p>
-<p class="p1"><span class="s1">display: flex;</span></p>
-<p class="p1"><span class="s1">align-items: center;</span></p>
-<p class="p1"><span class="s1">justify-content: center;</span></p>
-<p class="p1"><span class="s1">font-size: 0.75rem;</span></p>
-<p class="p1"><span class="s1">font-weight: 600;</span></p>
-<p class="p1"><span class="s1">transition: all 0.2s ease;</span></p>
-<p class="p1"><span class="s1">border: 2px solid transparent;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.set-dot.completed {</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #10b981, #059669);</span></p>
-<p class="p1"><span class="s1">color: white;</span></p>
-<p class="p1"><span class="s1">border-color: #10b981;</span></p>
-<p class="p1"><span class="s1">transform: scale(1.05);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.stats-grid {</span></p>
-<p class="p1"><span class="s1">display: grid;</span></p>
-<p class="p1"><span class="s1">grid-template-columns: repeat(3, 1fr);</span></p>
-<p class="p1"><span class="s1">gap: 0.75rem;</span></p>
-<p class="p1"><span class="s1">margin-bottom: 1.5rem;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.stat-card {</span></p>
-<p class="p1"><span class="s1">text-align: center;</span></p>
-<p class="p1"><span class="s1">padding: 1rem;</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #f9fafb, #f3f4f6);</span></p>
-<p class="p1"><span class="s1">border-radius: 12px;</span></p>
-<p class="p1"><span class="s1">border: 1px solid #e5e7eb;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.stat-value {</span></p>
-<p class="p1"><span class="s1">font-size: 1.75rem;</span></p>
-<p class="p1"><span class="s1">font-weight: 700;</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #3b82f6, #8b5cf6);</span></p>
-<p class="p1"><span class="s1">-webkit-background-clip: text;</span></p>
-<p class="p1"><span class="s1">-webkit-text-fill-color: transparent;</span></p>
-<p class="p1"><span class="s1">background-clip: text;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.stat-label {</span></p>
-<p class="p1"><span class="s1">font-size: 0.75rem;</span></p>
-<p class="p1"><span class="s1">color: #6b7280;</span></p>
-<p class="p1"><span class="s1">font-weight: 500;</span></p>
-<p class="p1"><span class="s1">margin-top: 0.25rem;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.schedule-item {</span></p>
-<p class="p1"><span class="s1">background: white;</span></p>
-<p class="p1"><span class="s1">border: 1px solid #e5e7eb;</span></p>
-<p class="p1"><span class="s1">border-radius: 12px;</span></p>
-<p class="p1"><span class="s1">padding: 1rem;</span></p>
-<p class="p1"><span class="s1">margin-bottom: 0.75rem;</span></p>
-<p class="p1"><span class="s1">transition: all 0.2s ease;</span></p>
-<p class="p1"><span class="s1">box-shadow: 0 2px 8px rgba(0,0,0,0.05);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.schedule-item:active {</span></p>
-<p class="p1"><span class="s1">transform: scale(0.98);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.schedule-item.today {</span></p>
-<p class="p1"><span class="s1">border-color: #3b82f6;</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #eff6ff, #f0f9ff);</span></p>
-<p class="p1"><span class="s1">box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">.schedule-item.rest {</span></p>
-<p class="p1"><span class="s1">background: linear-gradient(135deg, #f3f4f6, #f9fafb);</span></p>
-<p class="p1"><span class="s1">color: #6b7280;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">/* Dark mode support */</span></p>
-<p class="p1"><span class="s1">@media (prefers-color-scheme: dark) {</span></p>
-<p class="p1"><span class="s1">body { background: #111827; color: #f9fafb; }</span></p>
-<p class="p1"><span class="s1">.app { background: #1f2937; }</span></p>
-<p class="p1"><span class="s1">.nav { background: #1f2937; border-color: #374151; }</span></p>
-<p class="p1"><span class="s1">.exercise-item { background: #374151; border-color: #4b5563; color: #f9fafb; }</span></p>
-<p class="p1"><span class="s1">.schedule-item { background: #374151; border-color: #4b5563; color: #f9fafb; }</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p1"><span class="s1">&lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="app"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="header"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;h1&gt;🏋️ Gym Trainer&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1">&lt;p&gt;Персональный тренер&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.9;"&gt;</span></p>
-<p class="p1"><span class="s1">Программа &lt;span id="currentWorkout"&gt;А&lt;/span&gt;: &lt;span id="workoutName"&gt;Верх тела + Грудь-Плечи-Трицепс&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;nav class="nav"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button class="active" onclick="switchTab('timer', this)"&gt;⏱️&lt;br&gt;Таймер&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button onclick="switchTab('workout', this)"&gt;🎯&lt;br&gt;Тренировка&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button onclick="switchTab('calculator', this)"&gt;🧮&lt;br&gt;Веса&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button onclick="switchTab('schedule', this)"&gt;📅&lt;br&gt;План&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button onclick="switchTab('history', this)"&gt;📊&lt;br&gt;История&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/nav&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;div class="content"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;!-- Timer Tab --&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="timer" class="tab-content active"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="timer-display"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="timerDisplay" class="timer-time"&gt;1:30&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="color: #6b7280; margin-bottom: 1.5rem;"&gt;Отдых между подходами&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button id="timerBtn" class="btn btn-primary" onclick="toggleTimer()"&gt;▶️ Старт&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button class="btn btn-secondary" onclick="resetTimer()"&gt;🔄 Сброс&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="margin-top: 1.5rem;"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button class="btn btn-info" onclick="setTimer(60)"&gt;60с&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button class="btn btn-info" onclick="setTimer(90)"&gt;90с&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button class="btn btn-info" onclick="setTimer(120)"&gt;120с&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;!-- Workout Tab --&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="workout" class="tab-content"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="workout-selector" id="workoutSelector"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="currentExerciseCard"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="exerciseList"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;!-- Calculator Tab --&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="calculator" class="tab-content"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;h3 style="margin-bottom: 1.5rem;"&gt;Калькулятор весов&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="calculatorList"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;!-- Schedule Tab --&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="schedule" class="tab-content"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;h3 style="margin-bottom: 1.5rem;"&gt;Недельный план&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="scheduleList"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;!-- History Tab --&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="history" class="tab-content"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;h3 style="margin-bottom: 1.5rem;"&gt;История&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="stats-grid"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="stat-card"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="totalSets" class="stat-value"&gt;0&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="stat-label"&gt;Подходов&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="stat-card"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="totalDays" class="stat-value"&gt;0&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="stat-label"&gt;Дней&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="stat-card"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="totalWeight" class="stat-value"&gt;0&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="stat-label"&gt;Тоннаж&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div id="historyList"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">&lt;script&gt;</span></p>
-<p class="p1"><span class="s1">// PWA Features</span></p>
-<p class="p1"><span class="s1">let deferredPrompt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Generate PWA Manifest</span></p>
-<p class="p1"><span class="s1">const manifest = {</span></p>
-<p class="p1"><span class="s1">name: "Gym Trainer - Персональный тренер",</span></p>
-<p class="p1"><span class="s1">short_name: "Gym Trainer",</span></p>
-<p class="p1"><span class="s1">description: "Персональный тренер для спортзала",</span></p>
-<p class="p1"><span class="s1">start_url: "./",</span></p>
-<p class="p1"><span class="s1">display: "standalone",</span></p>
-<p class="p1"><span class="s1">background_color: "#ffffff",</span></p>
-<p class="p1"><span class="s1">theme_color: "#3b82f6",</span></p>
-<p class="p1"><span class="s1">orientation: "portrait",</span></p>
-<p class="p1"><span class="s1">icons: generateIcons()</span></p>
-<p class="p1"><span class="s1">};</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">function generateIcon(size) {</span></p>
-<p class="p1"><span class="s1">const canvas = document.createElement('canvas');</span></p>
-<p class="p1"><span class="s1">canvas.width = size;</span></p>
-<p class="p1"><span class="s1">canvas.height = size;</span></p>
-<p class="p1"><span class="s1">const ctx = canvas.getContext('2d');</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">const gradient = ctx.createLinearGradient(0, 0, size, size);</span></p>
-<p class="p1"><span class="s1">gradient.addColorStop(0, '#3b82f6');</span></p>
-<p class="p1"><span class="s1">gradient.addColorStop(1, '#8b5cf6');</span></p>
-<p class="p1"><span class="s1">ctx.fillStyle = gradient;</span></p>
-<p class="p1"><span class="s1">ctx.fillRect(0, 0, size, size);</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">ctx.font = `${size * 0.5}px system-ui`;</span></p>
-<p class="p1"><span class="s1">ctx.textAlign = 'center';</span></p>
-<p class="p1"><span class="s1">ctx.textBaseline = 'middle';</span></p>
-<p class="p1"><span class="s1">ctx.fillStyle = '#ffffff';</span></p>
-<p class="p1"><span class="s1">ctx.fillText('🏋️', size / 2, size / 2);</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">return canvas.toDataURL();</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">function generateIcons() {</span></p>
-<p class="p1"><span class="s1">const sizes = [72, 96, 128, 144, 152, 192, 384, 512];</span></p>
-<p class="p1"><span class="s1">return sizes.map(size =&gt; ({</span></p>
-<p class="p1"><span class="s1">src: generateIcon(size),</span></p>
-<p class="p1"><span class="s1">sizes: `${size}x${size}`,</span></p>
-<p class="p1"><span class="s1">type: "image/png"</span></p>
-<p class="p1"><span class="s1">}));</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Setup PWA</span></p>
-<p class="p1"><span class="s1">function setupPWA() {</span></p>
-<p class="p1"><span class="s1">const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });</span></p>
-<p class="p1"><span class="s1">const manifestURL = URL.createObjectURL(manifestBlob);</span></p>
-<p class="p1"><span class="s1">document.getElementById('manifest-placeholder').href = manifestURL;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">document.getElementById('icon-180').href = generateIcon(180);</span></p>
-<p class="p1"><span class="s1">document.getElementById('icon-167').href = generateIcon(167);</span></p>
-<p class="p1"><span class="s1">document.getElementById('icon-152').href = generateIcon(152);</span></p>
-<p class="p1"><span class="s1">document.getElementById('icon-120').href = generateIcon(120);</span></p>
-<p class="p1"><span class="s1">document.getElementById('favicon-32').href = generateIcon(32);</span></p>
-<p class="p1"><span class="s1">document.getElementById('favicon-16').href = generateIcon(16);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Service Worker</span></p>
-<p class="p1"><span class="s1">if ('serviceWorker' in navigator) {</span></p>
-<p class="p1"><span class="s1">window.addEventListener('load', () =&gt; {</span></p>
-<p class="p1"><span class="s1">const swCode = `</span></p>
-<p class="p1"><span class="s1">const CACHE_NAME = 'gym-trainer-v1';</span></p>
-<p class="p1"><span class="s1">self.addEventListener('install', event =&gt; {</span></p>
-<p class="p1"><span class="s1">self.skipWaiting();</span></p>
-<p class="p1"><span class="s1">});</span></p>
-<p class="p1"><span class="s1">self.addEventListener('fetch', event =&gt; {</span></p>
-<p class="p1"><span class="s1">event.respondWith(</span></p>
-<p class="p1"><span class="s1">caches.match(event.request).then(response =&gt; {</span></p>
-<p class="p1"><span class="s1">return response || fetch(event.request);</span></p>
-<p class="p1"><span class="s1">})</span></p>
-<p class="p1"><span class="s1">);</span></p>
-<p class="p1"><span class="s1">});</span></p>
-<p class="p1"><span class="s1">`;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">const swBlob = new Blob([swCode], { type: 'application/javascript' });</span></p>
-<p class="p1"><span class="s1">const swURL = URL.createObjectURL(swBlob);</span></p>
-<p class="p1"><span class="s1">navigator.serviceWorker.register(swURL);</span></p>
-<p class="p1"><span class="s1">});</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Programs</span></p>
-<p class="p1"><span class="s1">const workoutPrograms = {</span></p>
-<p class="p1"><span class="s1">'А': {</span></p>
-<p class="p1"><span class="s1">name: 'Верх тела + Грудь-Плечи-Трицепс',</span></p>
-<p class="p1"><span class="s1">exercises: [</span></p>
-<p class="p1"><span class="s1">{ name: 'Chest Press / Жим в тренажере', sets: 4, reps: '10-12', weight: 22.5, rest: 120 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Lat Machine / Тяга верхнего блока', sets: 3, reps: '10-12', weight: 25, rest: 90 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Shoulder Press / Жим на плечи', sets: 4, reps: '10-12', weight: 17.5, rest: 90 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Жим в Смите', sets: 4, reps: '10-12', weight: 20, rest: 120 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Сведение в кроссовере', sets: 3, reps: '15', weight: 15, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Махи в стороны', sets: 3, reps: '15', weight: 10, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Бицепс (Pulley)', sets: 3, reps: '12-15', weight: 10, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Трицепс (Pulley)', sets: 3, reps: '12-15', weight: 10, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Разгибание на блоке', sets: 3, reps: '15', weight: 10, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Планка', sets: 3, reps: '30-45с', weight: 0, rest: 60 }</span></p>
-<p class="p1"><span class="s1">]</span></p>
-<p class="p1"><span class="s1">},</span></p>
-<p class="p1"><span class="s1">'Б': {</span></p>
-<p class="p1"><span class="s1">name: 'Спина-Бицепс + Кардио',</span></p>
-<p class="p1"><span class="s1">exercises: [</span></p>
-<p class="p1"><span class="s1">{ name: 'Беговая дорожка', sets: 1, reps: '10 мин', weight: 0, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Гребной тренажер', sets: 1, reps: '8 мин', weight: 0, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Степпер', sets: 1, reps: '5 мин', weight: 0, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Подтягивания/Тяга блока', sets: 4, reps: '8-10', weight: 25, rest: 90 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Тяга штанги в наклоне', sets: 4, reps: '10-12', weight: 20, rest: 90 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Тяга гантели', sets: 3, reps: '12', weight: 15, rest: 90 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Подъем на бицепс', sets: 4, reps: '10-12', weight: 15, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Молотки', sets: 3, reps: '15', weight: 10, rest: 60 }</span></p>
-<p class="p1"><span class="s1">]</span></p>
-<p class="p1"><span class="s1">},</span></p>
-<p class="p1"><span class="s1">'В': {</span></p>
-<p class="p1"><span class="s1">name: 'Ноги-Пресс',</span></p>
-<p class="p1"><span class="s1">exercises: [</span></p>
-<p class="p1"><span class="s1">{ name: 'Приседания', sets: 4, reps: '10-12', weight: 30, rest: 120 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Жим ногами', sets: 3, reps: '12-15', weight: 40, rest: 90 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Разгибания ног', sets: 3, reps: '12-15', weight: 25, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Сгибания ног', sets: 3, reps: '12-15', weight: 20, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Подъемы на носки', sets: 4, reps: '20', weight: 20, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Планка', sets: 3, reps: '60с', weight: 0, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Скручивания', sets: 3, reps: '20', weight: 0, rest: 60 }</span></p>
-<p class="p1"><span class="s1">]</span></p>
-<p class="p1"><span class="s1">},</span></p>
-<p class="p1"><span class="s1">'Г': {</span></p>
-<p class="p1"><span class="s1">name: 'Функциональная + Силовая',</span></p>
-<p class="p1"><span class="s1">exercises: [</span></p>
-<p class="p1"><span class="s1">{ name: 'Беговая дорожка', sets: 1, reps: '10 мин', weight: 0, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Эллипс', sets: 1, reps: '10 мин', weight: 0, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'TRX', sets: 3, reps: '30с', weight: 0, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Кинезис', sets: 3, reps: '12', weight: 10, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Босу', sets: 2, reps: '1 мин', weight: 0, rest: 60 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Приседания силовые', sets: 4, reps: '6-8', weight: 40, rest: 150 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Chest Press силовой', sets: 4, reps: '6-8', weight: 30, rest: 150 },</span></p>
-<p class="p1"><span class="s1">{ name: 'Растяжка', sets: 1, reps: '5 мин', weight: 0, rest: 0 }</span></p>
-<p class="p1"><span class="s1">]</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p1"><span class="s1">};</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// State</span></p>
-<p class="p1"><span class="s1">let currentWorkout = 'А';</span></p>
-<p class="p1"><span class="s1">let currentExercise = 0;</span></p>
-<p class="p1"><span class="s1">let currentSet = 1;</span></p>
-<p class="p1"><span class="s1">let completedSets = [];</span></p>
-<p class="p1"><span class="s1">let timerSeconds = 90;</span></p>
-<p class="p1"><span class="s1">let timerRunning = false;</span></p>
-<p class="p1"><span class="s1">let timerInterval = null;</span></p>
-<p class="p1"><span class="s1">let weights = {};</span></p>
-<p class="p1"><span class="s1">let workoutHistory = [];</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Initialize</span></p>
-<p class="p1"><span class="s1">function init() {</span></p>
-<p class="p1"><span class="s1">setupPWA();</span></p>
-<p class="p1"><span class="s1">loadData();</span></p>
-<p class="p1"><span class="s1">renderWorkout();</span></p>
-<p class="p1"><span class="s1">renderCalculator();</span></p>
-<p class="p1"><span class="s1">renderSchedule();</span></p>
-<p class="p1"><span class="s1">renderHistory();</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Storage</span></p>
-<p class="p1"><span class="s1">function loadData() {</span></p>
-<p class="p1"><span class="s1">try {</span></p>
-<p class="p1"><span class="s1">const saved = localStorage.getItem('gymTrainerData');</span></p>
-<p class="p1"><span class="s1">if (saved) {</span></p>
-<p class="p1"><span class="s1">const data = JSON.parse(saved);</span></p>
-<p class="p1"><span class="s1">weights = data.weights || {};</span></p>
-<p class="p1"><span class="s1">workoutHistory = data.history || [];</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p1"><span class="s1">} catch (e) {}</span></p>
-<p class="p1"><span class="s1">updateHeader();</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">function saveData() {</span></p>
-<p class="p1"><span class="s1">try {</span></p>
-<p class="p1"><span class="s1">localStorage.setItem('gymTrainerData', JSON.stringify({</span></p>
-<p class="p1"><span class="s1">weights: weights,</span></p>
-<p class="p1"><span class="s1">history: workoutHistory</span></p>
-<p class="p1"><span class="s1">}));</span></p>
-<p class="p1"><span class="s1">} catch (e) {}</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Timer</span></p>
-<p class="p1"><span class="s1">function formatTime(seconds) {</span></p>
-<p class="p1"><span class="s1">const mins = Math.floor(seconds / 60);</span></p>
-<p class="p1"><span class="s1">const secs = seconds % 60;</span></p>
-<p class="p1"><span class="s1">return `${mins}:${secs.toString().padStart(2, '0')}`;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">function updateTimerDisplay() {</span></p>
-<p class="p1"><span class="s1">const display = document.getElementById('timerDisplay');</span></p>
-<p class="p1"><span class="s1">const btn = document.getElementById('timerBtn');</span></p>
-<p class="p1"><span class="s1">display.textContent = formatTime(timerSeconds);</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">if (timerSeconds &lt;= 10 &amp;&amp; timerRunning) {</span></p>
-<p class="p1"><span class="s1">display.classList.add('warning');</span></p>
-<p class="p1"><span class="s1">} else {</span></p>
-<p class="p1"><span class="s1">display.classList.remove('warning');</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">btn.innerHTML = timerRunning ? '⏸️ Пауза' : '▶️ Старт';</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">function toggleTimer() {</span></p>
-<p class="p1"><span class="s1">if (timerRunning) {</span></p>
-<p class="p1"><span class="s1">clearInterval(timerInterval);</span></p>
-<p class="p1"><span class="s1">timerRunning = false;</span></p>
-<p class="p1"><span class="s1">} else {</span></p>
-<p class="p1"><span class="s1">timerRunning = true;</span></p>
-<p class="p1"><span class="s1">timerInterval = setInterval(() =&gt; {</span></p>
-<p class="p1"><span class="s1">timerSeconds--;</span></p>
-<p class="p1"><span class="s1">if (timerSeconds &lt;= 0) {</span></p>
-<p class="p1"><span class="s1">timerSeconds = 0;</span></p>
-<p class="p1"><span class="s1">clearInterval(timerInterval);</span></p>
-<p class="p1"><span class="s1">timerRunning = false;</span></p>
-<p class="p1"><span class="s1">if (navigator.vibrate) navigator.vibrate([200, 100, 200]);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p1"><span class="s1">updateTimerDisplay();</span></p>
-<p class="p1"><span class="s1">}, 1000);</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p1"><span class="s1">updateTimerDisplay();</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">function resetTimer() {</span></p>
-<p class="p1"><span class="s1">clearInterval(timerInterval);</span></p>
-<p class="p1"><span class="s1">timerRunning = false;</span></p>
-<p class="p1"><span class="s1">timerSeconds = 90;</span></p>
-<p class="p1"><span class="s1">updateTimerDisplay();</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">function setTimer(seconds) {</span></p>
-<p class="p1"><span class="s1">clearInterval(timerInterval);</span></p>
-<p class="p1"><span class="s1">timerRunning = false;</span></p>
-<p class="p1"><span class="s1">timerSeconds = seconds;</span></p>
-<p class="p1"><span class="s1">updateTimerDisplay();</span></p>
-<p class="p1"><span class="s1">toggleTimer();</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Tabs</span></p>
-<p class="p1"><span class="s1">function switchTab(tabName, btn) {</span></p>
-<p class="p1"><span class="s1">document.querySelectorAll('.nav button').forEach(b =&gt; b.classList.remove('active'));</span></p>
-<p class="p1"><span class="s1">btn.classList.add('active');</span></p>
-<p class="p1"><span class="s1">document.querySelectorAll('.tab-content').forEach(tab =&gt; tab.classList.remove('active'));</span></p>
-<p class="p1"><span class="s1">document.getElementById(tabName).classList.add('active');</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Header</span></p>
-<p class="p1"><span class="s1">function updateHeader() {</span></p>
-<p class="p1"><span class="s1">document.getElementById('currentWorkout').textContent = currentWorkout;</span></p>
-<p class="p1"><span class="s1">document.getElementById('workoutName').textContent = workoutPrograms[currentWorkout].name;</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Workout</span></p>
-<p class="p1"><span class="s1">function selectWorkout(workout) {</span></p>
-<p class="p1"><span class="s1">currentWorkout = workout;</span></p>
-<p class="p1"><span class="s1">currentExercise = 0;</span></p>
-<p class="p1"><span class="s1">currentSet = 1;</span></p>
-<p class="p1"><span class="s1">completedSets = [];</span></p>
-<p class="p1"><span class="s1">updateHeader();</span></p>
-<p class="p1"><span class="s1">renderWorkout();</span></p>
-<p class="p1"><span class="s1">saveData();</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">function completeSet() {</span></p>
-<p class="p1"><span class="s1">const program = workoutPrograms[currentWorkout];</span></p>
-<p class="p1"><span class="s1">const exercise = program.exercises[currentExercise];</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">completedSets.push(`${currentWorkout}-${currentExercise}-${currentSet}`);</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">workoutHistory.push({</span></p>
-<p class="p1"><span class="s1">date: new Date().toLocaleDateString('ru-RU'),</span></p>
-<p class="p1"><span class="s1">exercise: exercise.name,</span></p>
-<p class="p1"><span class="s1">set: currentSet,</span></p>
-<p class="p1"><span class="s1">weight: weights[exercise.name] || exercise.weight,</span></p>
-<p class="p1"><span class="s1">reps: exercise.reps</span></p>
-<p class="p1"><span class="s1">});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">saveData();</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">if (currentSet &lt; exercise.sets) {</span></p>
-<p class="p1"><span class="s1">currentSet++;</span></p>
-<p class="p1"><span class="s1">} else {</span></p>
-<p class="p1"><span class="s1">if (currentExercise &lt; program.exercises.length - 1) {</span></p>
-<p class="p1"><span class="s1">currentExercise++;</span></p>
-<p class="p1"><span class="s1">currentSet = 1;</span></p>
-<p class="p1"><span class="s1">} else {</span></p>
-<p class="p1"><span class="s1">alert('🎉 Тренировка завершена!');</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">renderWorkout();</span></p>
-<p class="p1"><span class="s1">const restTime = exercise.rest || 90;</span></p>
-<p class="p1"><span class="s1">setTimer(restTime);</span></p>
-<p class="p1"><span class="s1">switchTab('timer', document.querySelector('.nav button'));</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">function renderWorkout() {</span></p>
-<p class="p1"><span class="s1">const selector = document.getElementById('workoutSelector');</span></p>
-<p class="p1"><span class="s1">const exerciseCard = document.getElementById('currentExerciseCard');</span></p>
-<p class="p1"><span class="s1">const exerciseList = document.getElementById('exerciseList');</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">selector.innerHTML = Object.keys(workoutPrograms).map(key =&gt;<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1">`&lt;button class="workout-btn ${key === currentWorkout ? 'active' : ''}"<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1">onclick="selectWorkout('${key}')"&gt;</span></p>
-<p class="p1"><span class="s1">${key}: ${workoutPrograms[key].name.split(' ')[0]}</span></p>
-<p class="p1"><span class="s1">&lt;/button&gt;`</span></p>
-<p class="p1"><span class="s1">).join('');</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">const program = workoutPrograms[currentWorkout];</span></p>
-<p class="p1"><span class="s1">const exercise = program.exercises[currentExercise];</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">exerciseCard.innerHTML = `</span></p>
-<p class="p1"><span class="s1">&lt;div class="exercise-card"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;h3&gt;${exercise.name}&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1">&lt;p&gt;Подход ${currentSet} из ${exercise.sets} • ${exercise.reps} повторений&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">&lt;p style="color: #6b7280;"&gt;Вес: ${weights[exercise.name] || exercise.weight} кг • Отдых: ${exercise.rest}с&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div class="set-dots"&gt;</span></p>
-<p class="p1"><span class="s1">${Array.from({length: exercise.sets}, (_, i) =&gt; {</span></p>
-<p class="p1"><span class="s1">const setNum = i + 1;</span></p>
-<p class="p1"><span class="s1">const isCompleted = completedSets.includes(`${currentWorkout}-${currentExercise}-${setNum}`);</span></p>
-<p class="p1"><span class="s1">return `&lt;div class="set-dot ${isCompleted ? 'completed' : ''}"&gt;${setNum}&lt;/div&gt;`;</span></p>
-<p class="p1"><span class="s1">}).join('')}</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button class="btn btn-primary" onclick="completeSet()" style="margin-top: 1rem; width: 100%;"&gt;</span></p>
-<p class="p1"><span class="s1">✓ Подход выполнен</span></p>
-<p class="p1"><span class="s1">&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">`;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">exerciseList.innerHTML = program.exercises.map((ex, index) =&gt; {</span></p>
-<p class="p1"><span class="s1">const isCurrent = index === currentExercise;</span></p>
-<p class="p1"><span class="s1">const completedCount = completedSets.filter(s =&gt; s.startsWith(`${currentWorkout}-${index}-`)).length;</span></p>
-<p class="p1"><span class="s1">const isCompleted = completedCount === ex.sets;</span></p>
-<p class="p1"><span class="s1">return `</span></p>
-<p class="p1"><span class="s1">&lt;div class="exercise-item ${isCurrent ? 'current' : ''} ${isCompleted ? 'completed' : ''}"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;strong&gt;${ex.name}&lt;/strong&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="font-size: 0.75rem; color: #6b7280;"&gt;</span></p>
-<p class="p1"><span class="s1">${ex.sets}×${ex.reps} • ${weights[ex.name] || ex.weight}кг • ${ex.rest}с</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="color: ${isCompleted ? '#10b981' : isCurrent ? '#3b82f6' : '#6b7280'}; font-size: 1.25rem;"&gt;</span></p>
-<p class="p1"><span class="s1">${isCompleted ? '✅' : isCurrent ? '🎯' : '⏳'}</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">`;</span></p>
-<p class="p1"><span class="s1">}).join('');</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Calculator</span></p>
-<p class="p1"><span class="s1">function renderCalculator() {</span></p>
-<p class="p1"><span class="s1">const calculatorList = document.getElementById('calculatorList');</span></p>
-<p class="p1"><span class="s1">const allExercises = Object.values(workoutPrograms).flatMap(p =&gt; p.exercises);</span></p>
-<p class="p1"><span class="s1">const uniqueExercises = [...new Set(allExercises.map(e =&gt; e.name))];</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">calculatorList.innerHTML = uniqueExercises.map(name =&gt; {</span></p>
-<p class="p1"><span class="s1">const defaultWeight = allExercises.find(e =&gt; e.name === name)?.weight || 0;</span></p>
-<p class="p1"><span class="s1">const currentWeight = weights[name] || defaultWeight;</span></p>
-<p class="p1"><span class="s1">return `</span></p>
-<p class="p1"><span class="s1">&lt;div class="exercise-item"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;strong&gt;${name}&lt;/strong&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="font-size: 0.75rem; color: #6b7280;"&gt;Рабочий вес&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="display: flex; align-items: center; gap: 0.75rem;"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button class="btn btn-secondary" onclick="updateWeight('${name}', -2.5)"<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1">style="padding: 0.5rem;"&gt;−&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;span style="min-width: 60px; text-align: center; font-weight: 600;"&gt;${currentWeight}кг&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1">&lt;button class="btn btn-primary" onclick="updateWeight('${name}', 2.5)"<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1">style="padding: 0.5rem;"&gt;+&lt;/button&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">`;</span></p>
-<p class="p1"><span class="s1">}).join('');</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">function updateWeight(exerciseName, delta) {</span></p>
-<p class="p1"><span class="s1">const current = weights[exerciseName] || 0;</span></p>
-<p class="p1"><span class="s1">weights[exerciseName] = Math.max(0, current + delta);</span></p>
-<p class="p1"><span class="s1">saveData();</span></p>
-<p class="p1"><span class="s1">renderCalculator();</span></p>
-<p class="p1"><span class="s1">renderWorkout();</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Schedule</span></p>
-<p class="p1"><span class="s1">function renderSchedule() {</span></p>
-<p class="p1"><span class="s1">const scheduleList = document.getElementById('scheduleList');</span></p>
-<p class="p1"><span class="s1">const today = new Date().getDay();</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">const schedule = [</span></p>
-<p class="p1"><span class="s1">{ day: 'Понедельник', program: 'А', focus: 'Верх тела', dayIndex: 1 },</span></p>
-<p class="p1"><span class="s1">{ day: 'Вторник', program: 'В', focus: 'Ноги', dayIndex: 2 },</span></p>
-<p class="p1"><span class="s1">{ day: 'Среда', program: null, focus: 'Отдых', dayIndex: 3 },</span></p>
-<p class="p1"><span class="s1">{ day: 'Четверг', program: 'Б', focus: 'Спина + Кардио', dayIndex: 4 },</span></p>
-<p class="p1"><span class="s1">{ day: 'Пятница', program: 'А', focus: 'Верх тела', dayIndex: 5 },</span></p>
-<p class="p1"><span class="s1">{ day: 'Суббота', program: 'Г', focus: 'Функциональная', dayIndex: 6 },</span></p>
-<p class="p1"><span class="s1">{ day: 'Воскресенье', program: null, focus: 'Отдых', dayIndex: 0 }</span></p>
-<p class="p1"><span class="s1">];</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">scheduleList.innerHTML = schedule.map(item =&gt; {</span></p>
-<p class="p1"><span class="s1">const isToday = item.dayIndex === today;</span></p>
-<p class="p1"><span class="s1">const isRest = !item.program;</span></p>
-<p class="p1"><span class="s1">return `</span></p>
-<p class="p1"><span class="s1">&lt;div class="schedule-item ${isToday ? 'today' : ''} ${isRest ? 'rest' : ''}"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;strong&gt;${item.day}${isToday ? ' (Сегодня)' : ''}&lt;/strong&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="font-size: 0.875rem; opacity: 0.8;"&gt;${item.focus}&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="font-size: 1.25rem;"&gt;</span></p>
-<p class="p1"><span class="s1">${item.program ? `Программа ${item.program}` : '😴'}</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">${item.program &amp;&amp; !isRest ? `</span></p>
-<p class="p1"><span class="s1">&lt;button class="btn btn-info" onclick="selectWorkout('${item.program}'); switchTab('workout', document.querySelectorAll('.nav button')[1])"<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1">style="margin-top: 0.75rem; width: 100%;"&gt;</span></p>
-<p class="p1"><span class="s1">🎯 Начать тренировку</span></p>
-<p class="p1"><span class="s1">&lt;/button&gt;` : ''}</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">`;</span></p>
-<p class="p1"><span class="s1">}).join('');</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// History</span></p>
-<p class="p1"><span class="s1">function renderHistory() {</span></p>
-<p class="p1"><span class="s1">const totalSets = document.getElementById('totalSets');</span></p>
-<p class="p1"><span class="s1">const totalDays = document.getElementById('totalDays');</span></p>
-<p class="p1"><span class="s1">const totalWeight = document.getElementById('totalWeight');</span></p>
-<p class="p1"><span class="s1">const historyList = document.getElementById('historyList');</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">const uniqueDays = [...new Set(workoutHistory.map(h =&gt; h.date))].length;</span></p>
-<p class="p1"><span class="s1">const totalTonnage = workoutHistory.reduce((sum, h) =&gt; {</span></p>
-<p class="p1"><span class="s1">const weight = parseFloat(h.weight) || 0;</span></p>
-<p class="p1"><span class="s1">const reps = parseFloat(h.reps) || 1;</span></p>
-<p class="p1"><span class="s1">return sum + (weight * reps);</span></p>
-<p class="p1"><span class="s1">}, 0);</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">totalSets.textContent = workoutHistory.length;</span></p>
-<p class="p1"><span class="s1">totalDays.textContent = uniqueDays;</span></p>
-<p class="p1"><span class="s1">totalWeight.textContent = Math.round(totalTonnage);</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">const recent = workoutHistory.slice(-10).reverse();</span></p>
-<p class="p1"><span class="s1">historyList.innerHTML = recent.length ? recent.map(h =&gt; `</span></p>
-<p class="p1"><span class="s1">&lt;div class="exercise-item"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="display: flex; justify-content: space-between; align-items: center;"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;strong&gt;${h.exercise}&lt;/strong&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="font-size: 0.75rem; color: #6b7280;"&gt;${h.date}&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="text-align: right;"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div&gt;${h.weight}кг × ${h.reps}&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;div style="font-size: 0.75rem; color: #6b7280;"&gt;Подход ${h.set}&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1">`).join('') : '&lt;div style="text-align: center; color: #6b7280; padding: 2rem;"&gt;История пока пуста&lt;/div&gt;';</span></p>
-<p class="p1"><span class="s1">}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Initialize</span></p>
-<p class="p1"><span class="s1">init();</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">// Events</span></p>
-<p class="p1"><span class="s1">document.addEventListener('visibilitychange', () =&gt; {</span></p>
-<p class="p1"><span class="s1">if (!document.hidden) { loadData(); renderHistory(); }</span></p>
-<p class="p1"><span class="s1">});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1">window.addEventListener('beforeunload', saveData);</span></p>
-<p class="p1"><span class="s1">&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+<div class="app">
+<div class="header">
+<h1>🏋️ Gym Trainer</h1>
+<p>Персональный тренер</p>
+<div style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.9;">
+Программа <span id="currentWorkout">А</span>: <span id="workoutName">Верх тела + Грудь-Плечи-Трицепс</span>
+</div>
+</div>
+
+<nav class="nav">
+<button class="active" onclick="switchTab('timer', this)">⏱️<br>Таймер</button>
+<button onclick="switchTab('workout', this)">🎯<br>Тренировка</button>
+<button onclick="switchTab('calculator', this)">🧮<br>Веса</button>
+<button onclick="switchTab('schedule', this)">📅<br>План</button>
+<button onclick="switchTab('history', this)">📊<br>История</button>
+</nav>
+
+<div class="content">
+<!-- Timer Tab -->
+<div id="timer" class="tab-content active">
+<div class="timer-display">
+<div id="timerDisplay" class="timer-time">1:30</div>
+<div style="color: #6b7280; margin-bottom: 1.5rem;">Отдых между подходами</div>
+<div>
+<button id="timerBtn" class="btn btn-primary" onclick="toggleTimer()">▶️ Старт</button>
+<button class="btn btn-secondary" onclick="resetTimer()">🔄 Сброс</button>
+</div>
+<div style="margin-top: 1.5rem;">
+<button class="btn btn-info" onclick="setTimer(60)">60с</button>
+<button class="btn btn-info" onclick="setTimer(90)">90с</button>
+<button class="btn btn-info" onclick="setTimer(120)">120с</button>
+</div>
+</div>
+</div>
+
+<!-- Workout Tab -->
+<div id="workout" class="tab-content">
+<div class="workout-selector" id="workoutSelector"></div>
+<div id="currentExerciseCard"></div>
+<div id="exerciseList"></div>
+</div>
+
+<!-- Calculator Tab -->
+<div id="calculator" class="tab-content">
+<h3 style="margin-bottom: 1.5rem;">Калькулятор весов</h3>
+<div id="calculatorList"></div>
+</div>
+
+<!-- Schedule Tab -->
+<div id="schedule" class="tab-content">
+<h3 style="margin-bottom: 1.5rem;">Недельный план</h3>
+<div id="scheduleList"></div>
+</div>
+
+<!-- History Tab -->
+<div id="history" class="tab-content">
+<h3 style="margin-bottom: 1.5rem;">История</h3>
+<div class="stats-grid">
+<div class="stat-card">
+<div id="totalSets" class="stat-value">0</div>
+<div class="stat-label">Подходов</div>
+</div>
+<div class="stat-card">
+<div id="totalDays" class="stat-value">0</div>
+<div class="stat-label">Дней</div>
+</div>
+<div class="stat-card">
+<div id="totalWeight" class="stat-value">0</div>
+<div class="stat-label">Тоннаж</div>
+</div>
+</div>
+<div id="historyList"></div>
+</div>
+</div>
+</div>
+
+<script>
+// PWA Features
+let deferredPrompt;
+
+// Generate PWA Manifest
+const manifest = {
+name: "Gym Trainer - Персональный тренер",
+short_name: "Gym Trainer",
+description: "Персональный тренер для спортзала",
+start_url: "./",
+display: "standalone",
+background_color: "#ffffff",
+theme_color: "#3b82f6",
+orientation: "portrait",
+icons: generateIcons()
+};
+
+function generateIcon(size) {
+const canvas = document.createElement('canvas');
+canvas.width = size;
+canvas.height = size;
+const ctx = canvas.getContext('2d');
+
+const gradient = ctx.createLinearGradient(0, 0, size, size);
+gradient.addColorStop(0, '#3b82f6');
+gradient.addColorStop(1, '#8b5cf6');
+ctx.fillStyle = gradient;
+ctx.fillRect(0, 0, size, size);
+
+ctx.font = `${size * 0.5}px system-ui`;
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.fillStyle = '#ffffff';
+ctx.fillText('🏋️', size / 2, size / 2);
+
+return canvas.toDataURL();
+}
+
+function generateIcons() {
+const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+return sizes.map(size => ({
+src: generateIcon(size),
+sizes: `${size}x${size}`,
+type: "image/png"
+}));
+}
+
+// Setup PWA
+function setupPWA() {
+const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+const manifestURL = URL.createObjectURL(manifestBlob);
+document.getElementById('manifest-placeholder').href = manifestURL;
+
+document.getElementById('icon-180').href = generateIcon(180);
+document.getElementById('icon-167').href = generateIcon(167);
+document.getElementById('icon-152').href = generateIcon(152);
+document.getElementById('icon-120').href = generateIcon(120);
+document.getElementById('favicon-32').href = generateIcon(32);
+document.getElementById('favicon-16').href = generateIcon(16);
+}
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+window.addEventListener('load', () => {
+const swCode = `
+const CACHE_NAME = 'gym-trainer-v1';
+self.addEventListener('install', event => {
+self.skipWaiting();
+});
+self.addEventListener('fetch', event => {
+event.respondWith(
+caches.match(event.request).then(response => {
+return response || fetch(event.request);
+})
+);
+});
+`;
+
+const swBlob = new Blob([swCode], { type: 'application/javascript' });
+const swURL = URL.createObjectURL(swBlob);
+navigator.serviceWorker.register(swURL);
+});
+}
+
+// Programs
+const workoutPrograms = {
+'А': {
+name: 'Верх тела + Грудь-Плечи-Трицепс',
+exercises: [
+{ name: 'Chest Press / Жим в тренажере', sets: 4, reps: '10-12', weight: 22.5, rest: 120 },
+{ name: 'Lat Machine / Тяга верхнего блока', sets: 3, reps: '10-12', weight: 25, rest: 90 },
+{ name: 'Shoulder Press / Жим на плечи', sets: 4, reps: '10-12', weight: 17.5, rest: 90 },
+{ name: 'Жим в Смите', sets: 4, reps: '10-12', weight: 20, rest: 120 },
+{ name: 'Сведение в кроссовере', sets: 3, reps: '15', weight: 15, rest: 60 },
+{ name: 'Махи в стороны', sets: 3, reps: '15', weight: 10, rest: 60 },
+{ name: 'Бицепс (Pulley)', sets: 3, reps: '12-15', weight: 10, rest: 60 },
+{ name: 'Трицепс (Pulley)', sets: 3, reps: '12-15', weight: 10, rest: 60 },
+{ name: 'Разгибание на блоке', sets: 3, reps: '15', weight: 10, rest: 60 },
+{ name: 'Планка', sets: 3, reps: '30-45с', weight: 0, rest: 60 }
+]
+},
+'Б': {
+name: 'Спина-Бицепс + Кардио',
+exercises: [
+{ name: 'Беговая дорожка', sets: 1, reps: '10 мин', weight: 0, rest: 60 },
+{ name: 'Гребной тренажер', sets: 1, reps: '8 мин', weight: 0, rest: 60 },
+{ name: 'Степпер', sets: 1, reps: '5 мин', weight: 0, rest: 60 },
+{ name: 'Подтягивания/Тяга блока', sets: 4, reps: '8-10', weight: 25, rest: 90 },
+{ name: 'Тяга штанги в наклоне', sets: 4, reps: '10-12', weight: 20, rest: 90 },
+{ name: 'Тяга гантели', sets: 3, reps: '12', weight: 15, rest: 90 },
+{ name: 'Подъем на бицепс', sets: 4, reps: '10-12', weight: 15, rest: 60 },
+{ name: 'Молотки', sets: 3, reps: '15', weight: 10, rest: 60 }
+]
+},
+'В': {
+name: 'Ноги-Пресс',
+exercises: [
+{ name: 'Приседания', sets: 4, reps: '10-12', weight: 30, rest: 120 },
+{ name: 'Жим ногами', sets: 3, reps: '12-15', weight: 40, rest: 90 },
+{ name: 'Разгибания ног', sets: 3, reps: '12-15', weight: 25, rest: 60 },
+{ name: 'Сгибания ног', sets: 3, reps: '12-15', weight: 20, rest: 60 },
+{ name: 'Подъемы на носки', sets: 4, reps: '20', weight: 20, rest: 60 },
+{ name: 'Планка', sets: 3, reps: '60с', weight: 0, rest: 60 },
+{ name: 'Скручивания', sets: 3, reps: '20', weight: 0, rest: 60 }
+]
+},
+'Г': {
+name: 'Функциональная + Силовая',
+exercises: [
+{ name: 'Беговая дорожка', sets: 1, reps: '10 мин', weight: 0, rest: 60 },
+{ name: 'Эллипс', sets: 1, reps: '10 мин', weight: 0, rest: 60 },
+{ name: 'TRX', sets: 3, reps: '30с', weight: 0, rest: 60 },
+{ name: 'Кинезис', sets: 3, reps: '12', weight: 10, rest: 60 },
+{ name: 'Босу', sets: 2, reps: '1 мин', weight: 0, rest: 60 },
+{ name: 'Приседания силовые', sets: 4, reps: '6-8', weight: 40, rest: 150 },
+{ name: 'Chest Press силовой', sets: 4, reps: '6-8', weight: 30, rest: 150 },
+{ name: 'Растяжка', sets: 1, reps: '5 мин', weight: 0, rest: 0 }
+]
+}
+};
+
+// State
+let currentWorkout = 'А';
+let currentExercise = 0;
+let currentSet = 1;
+let completedSets = [];
+let timerSeconds = 90;
+let timerRunning = false;
+let timerInterval = null;
+let weights = {};
+let workoutHistory = [];
+
+// Initialize
+function init() {
+setupPWA();
+loadData();
+renderWorkout();
+renderCalculator();
+renderSchedule();
+renderHistory();
+}
+
+// Storage
+function loadData() {
+try {
+const saved = localStorage.getItem('gymTrainerData');
+if (saved) {
+const data = JSON.parse(saved);
+weights = data.weights || {};
+workoutHistory = data.history || [];
+}
+} catch (e) {}
+updateHeader();
+}
+
+function saveData() {
+try {
+localStorage.setItem('gymTrainerData', JSON.stringify({
+weights: weights,
+history: workoutHistory
+}));
+} catch (e) {}
+}
+
+// Timer
+function formatTime(seconds) {
+const mins = Math.floor(seconds / 60);
+const secs = seconds % 60;
+return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function updateTimerDisplay() {
+const display = document.getElementById('timerDisplay');
+const btn = document.getElementById('timerBtn');
+display.textContent = formatTime(timerSeconds);
+
+if (timerSeconds <= 10 && timerRunning) {
+display.classList.add('warning');
+} else {
+display.classList.remove('warning');
+}
+
+btn.innerHTML = timerRunning ? '⏸️ Пауза' : '▶️ Старт';
+}
+
+function toggleTimer() {
+if (timerRunning) {
+clearInterval(timerInterval);
+timerRunning = false;
+} else {
+timerRunning = true;
+timerInterval = setInterval(() => {
+timerSeconds--;
+if (timerSeconds <= 0) {
+timerSeconds = 0;
+clearInterval(timerInterval);
+timerRunning = false;
+if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+}
+updateTimerDisplay();
+}, 1000);
+}
+updateTimerDisplay();
+}
+
+function resetTimer() {
+clearInterval(timerInterval);
+timerRunning = false;
+timerSeconds = 90;
+updateTimerDisplay();
+}
+
+function setTimer(seconds) {
+clearInterval(timerInterval);
+timerRunning = false;
+timerSeconds = seconds;
+updateTimerDisplay();
+toggleTimer();
+}
+
+// Tabs
+function switchTab(tabName, btn) {
+document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+btn.classList.add('active');
+document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+document.getElementById(tabName).classList.add('active');
+}
+
+// Header
+function updateHeader() {
+document.getElementById('currentWorkout').textContent = currentWorkout;
+document.getElementById('workoutName').textContent = workoutPrograms[currentWorkout].name;
+}
+
+// Workout
+function selectWorkout(workout) {
+currentWorkout = workout;
+currentExercise = 0;
+currentSet = 1;
+completedSets = [];
+updateHeader();
+renderWorkout();
+saveData();
+}
+
+function completeSet() {
+const program = workoutPrograms[currentWorkout];
+const exercise = program.exercises[currentExercise];
+
+completedSets.push(`${currentWorkout}-${currentExercise}-${currentSet}`);
+
+workoutHistory.push({
+date: new Date().toLocaleDateString('ru-RU'),
+exercise: exercise.name,
+set: currentSet,
+weight: weights[exercise.name] || exercise.weight,
+reps: exercise.reps
+});
+
+saveData();
+
+if (currentSet < exercise.sets) {
+currentSet++;
+} else {
+if (currentExercise < program.exercises.length - 1) {
+currentExercise++;
+currentSet = 1;
+} else {
+alert('🎉 Тренировка завершена!');
+}
+}
+
+renderWorkout();
+const restTime = exercise.rest || 90;
+setTimer(restTime);
+switchTab('timer', document.querySelector('.nav button'));
+}
+
+function renderWorkout() {
+const selector = document.getElementById('workoutSelector');
+const exerciseCard = document.getElementById('currentExerciseCard');
+const exerciseList = document.getElementById('exerciseList');
+
+selector.innerHTML = Object.keys(workoutPrograms).map(key => 
+`<button class="workout-btn ${key === currentWorkout ? 'active' : ''}" 
+onclick="selectWorkout('${key}')">
+${key}: ${workoutPrograms[key].name.split(' ')[0]}
+</button>`
+).join('');
+
+const program = workoutPrograms[currentWorkout];
+const exercise = program.exercises[currentExercise];
+
+exerciseCard.innerHTML = `
+<div class="exercise-card">
+<h3>${exercise.name}</h3>
+<p>Подход ${currentSet} из ${exercise.sets} • ${exercise.reps} повторений</p>
+<p style="color: #6b7280;">Вес: ${weights[exercise.name] || exercise.weight} кг • Отдых: ${exercise.rest}с</p>
+<div class="set-dots">
+${Array.from({length: exercise.sets}, (_, i) => {
+const setNum = i + 1;
+const isCompleted = completedSets.includes(`${currentWorkout}-${currentExercise}-${setNum}`);
+return `<div class="set-dot ${isCompleted ? 'completed' : ''}">${setNum}</div>`;
+}).join('')}
+</div>
+<button class="btn btn-primary" onclick="completeSet()" style="margin-top: 1rem; width: 100%;">
+✓ Подход выполнен
+</button>
+</div>
+`;
+
+exerciseList.innerHTML = program.exercises.map((ex, index) => {
+const isCurrent = index === currentExercise;
+const completedCount = completedSets.filter(s => s.startsWith(`${currentWorkout}-${index}-`)).length;
+const isCompleted = completedCount === ex.sets;
+return `
+<div class="exercise-item ${isCurrent ? 'current' : ''} ${isCompleted ? 'completed' : ''}">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<div>
+<strong>${ex.name}</strong>
+<div style="font-size: 0.75rem; color: #6b7280;">
+${ex.sets}×${ex.reps} • ${weights[ex.name] || ex.weight}кг • ${ex.rest}с
+</div>
+</div>
+<div style="color: ${isCompleted ? '#10b981' : isCurrent ? '#3b82f6' : '#6b7280'}; font-size: 1.25rem;">
+${isCompleted ? '✅' : isCurrent ? '🎯' : '⏳'}
+</div>
+</div>
+</div>
+`;
+}).join('');
+}
+
+// Calculator
+function renderCalculator() {
+const calculatorList = document.getElementById('calculatorList');
+const allExercises = Object.values(workoutPrograms).flatMap(p => p.exercises);
+const uniqueExercises = [...new Set(allExercises.map(e => e.name))];
+
+calculatorList.innerHTML = uniqueExercises.map(name => {
+const defaultWeight = allExercises.find(e => e.name === name)?.weight || 0;
+const currentWeight = weights[name] || defaultWeight;
+return `
+<div class="exercise-item">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<div>
+<strong>${name}</strong>
+<div style="font-size: 0.75rem; color: #6b7280;">Рабочий вес</div>
+</div>
+<div style="display: flex; align-items: center; gap: 0.75rem;">
+<button class="btn btn-secondary" onclick="updateWeight('${name}', -2.5)" 
+style="padding: 0.5rem;">−</button>
+<span style="min-width: 60px; text-align: center; font-weight: 600;">${currentWeight}кг</span>
+<button class="btn btn-primary" onclick="updateWeight('${name}', 2.5)" 
+style="padding: 0.5rem;">+</button>
+</div>
+</div>
+</div>
+`;
+}).join('');
+}
+
+function updateWeight(exerciseName, delta) {
+const current = weights[exerciseName] || 0;
+weights[exerciseName] = Math.max(0, current + delta);
+saveData();
+renderCalculator();
+renderWorkout();
+}
+
+// Schedule
+function renderSchedule() {
+const scheduleList = document.getElementById('scheduleList');
+const today = new Date().getDay();
+
+const schedule = [
+{ day: 'Понедельник', program: 'А', focus: 'Верх тела', dayIndex: 1 },
+{ day: 'Вторник', program: 'В', focus: 'Ноги', dayIndex: 2 },
+{ day: 'Среда', program: null, focus: 'Отдых', dayIndex: 3 },
+{ day: 'Четверг', program: 'Б', focus: 'Спина + Кардио', dayIndex: 4 },
+{ day: 'Пятница', program: 'А', focus: 'Верх тела', dayIndex: 5 },
+{ day: 'Суббота', program: 'Г', focus: 'Функциональная', dayIndex: 6 },
+{ day: 'Воскресенье', program: null, focus: 'Отдых', dayIndex: 0 }
+];
+
+scheduleList.innerHTML = schedule.map(item => {
+const isToday = item.dayIndex === today;
+const isRest = !item.program;
+return `
+<div class="schedule-item ${isToday ? 'today' : ''} ${isRest ? 'rest' : ''}">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<div>
+<strong>${item.day}${isToday ? ' (Сегодня)' : ''}</strong>
+<div style="font-size: 0.875rem; opacity: 0.8;">${item.focus}</div>
+</div>
+<div style="font-size: 1.25rem;">
+${item.program ? `Программа ${item.program}` : '😴'}
+</div>
+</div>
+${item.program && !isRest ? `
+<button class="btn btn-info" onclick="selectWorkout('${item.program}'); switchTab('workout', document.querySelectorAll('.nav button')[1])" 
+style="margin-top: 0.75rem; width: 100%;">
+🎯 Начать тренировку
+</button>` : ''}
+</div>
+`;
+}).join('');
+}
+
+// History
+function renderHistory() {
+const totalSets = document.getElementById('totalSets');
+const totalDays = document.getElementById('totalDays');
+const totalWeight = document.getElementById('totalWeight');
+const historyList = document.getElementById('historyList');
+
+const uniqueDays = [...new Set(workoutHistory.map(h => h.date))].length;
+const totalTonnage = workoutHistory.reduce((sum, h) => {
+const weight = parseFloat(h.weight) || 0;
+const reps = parseFloat(h.reps) || 1;
+return sum + (weight * reps);
+}, 0);
+
+totalSets.textContent = workoutHistory.length;
+totalDays.textContent = uniqueDays;
+totalWeight.textContent = Math.round(totalTonnage);
+
+const recent = workoutHistory.slice(-10).reverse();
+historyList.innerHTML = recent.length ? recent.map(h => `
+<div class="exercise-item">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<div>
+<strong>${h.exercise}</strong>
+<div style="font-size: 0.75rem; color: #6b7280;">${h.date}</div>
+</div>
+<div style="text-align: right;">
+<div>${h.weight}кг × ${h.reps}</div>
+<div style="font-size: 0.75rem; color: #6b7280;">Подход ${h.set}</div>
+</div>
+</div>
+</div>
+`).join('') : '<div style="text-align: center; color: #6b7280; padding: 2rem;">История пока пуста</div>';
+}
+
+// Initialize
+init();
+
+// Events
+document.addEventListener('visibilitychange', () => {
+if (!document.hidden) { loadData(); renderHistory(); }
+});
+
+window.addEventListener('beforeunload', saveData);
+</script>
 </body>
 </html>
