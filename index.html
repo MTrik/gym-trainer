@@ -54,10 +54,11 @@
     }
     
     .nav button {
-        flex: 1; padding: 1rem;
+        flex: 1; padding: 1rem 0.5rem;
         background: none; border: none;
         cursor: pointer; transition: var(--transition-normal);
-        color: #6b7280; font-weight: 600;
+        color: #6b7280; font-weight: 600; font-size: 0.75rem;
+        display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
     }
     
     .nav button.active { color: #667eea; background: rgba(102, 126, 234, 0.1); }
@@ -184,7 +185,7 @@
         padding: 1rem 2rem; border: none;
         border-radius: 16px; font-weight: 700;
         cursor: pointer; transition: var(--transition-normal);
-        text-transform: uppercase;
+        text-transform: uppercase; margin: 0.5rem;
     }
     
     .btn-primary {
@@ -224,6 +225,45 @@
     .stat-label {
         font-size: 0.8rem; color: #6b7280;
         font-weight: 600; text-transform: uppercase;
+    }
+    
+    .technique-list {
+        display: grid;
+        gap: 1rem;
+    }
+    
+    .technique-item {
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 1.5rem;
+        cursor: pointer;
+        transition: var(--transition-normal);
+    }
+    
+    .technique-item:hover {
+        transform: translateY(-4px);
+        border-color: #667eea;
+    }
+    
+    .technique-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: var(--color-text);
+    }
+    
+    .technique-direction {
+        font-size: 0.85rem;
+        color: #667eea;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+    
+    .technique-preview {
+        font-size: 0.8rem;
+        color: #6b7280;
+        line-height: 1.4;
     }
     
     .modal {
@@ -289,10 +329,30 @@
     
     .notification.active { display: block; }
     
+    .workout-filter {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem; margin-bottom: 2rem;
+    }
+    
+    .filter-btn {
+        padding: 0.75rem; border: 2px solid #e5e7eb;
+        border-radius: 12px; background: white;
+        cursor: pointer; text-align: center;
+        font-weight: 600; font-size: 0.8rem;
+        transition: var(--transition-normal);
+    }
+    
+    .filter-btn.active {
+        background: var(--primary-gradient);
+        color: white; border-color: transparent;
+    }
+    
     @media (max-width: 480px) {
         .timer-circle { width: 180px; height: 180px; }
         .workout-selector { grid-template-columns: repeat(2, 1fr); }
         .stats-grid { grid-template-columns: 1fr; }
+        .workout-filter { grid-template-columns: repeat(2, 1fr); }
     }
     </style>
 </head>
@@ -301,16 +361,17 @@
         <header class="header">
             <div>
                 <h1>💪 Gym Trainer Pro</h1>
-                <p>Техника для всех дней</p>
+                <p>Полный функционал тренировок</p>
             </div>
             <button id="theme-toggle">🌙</button>
         </header>
 
         <nav class="nav">
-            <button data-tab="timer">⏱️ Таймер</button>
-            <button data-tab="workout" class="active">🏋️ Программа</button>
-            <button data-tab="stats">📊 Статистика</button>
-            <button data-tab="schedule">📅 План</button>
+            <button data-tab="timer">⏱️<br>Таймер</button>
+            <button data-tab="workout" class="active">🏋️<br>Программа</button>
+            <button data-tab="technique">📖<br>Техника</button>
+            <button data-tab="stats">📊<br>Статистика</button>
+            <button data-tab="schedule">📅<br>План</button>
         </nav>
 
         <main class="content">
@@ -337,6 +398,19 @@
                 <div style="text-align: center; margin-top: 2rem;">
                     <button id="complete-workout" class="btn btn-info">Завершить тренировку</button>
                 </div>
+            </div>
+
+            <div id="technique-tab" class="tab-content">
+                <h2 style="text-align: center; margin-bottom: 1.5rem;">Техника выполнения</h2>
+                
+                <div class="workout-filter">
+                    <button class="filter-btn active" data-filter="all">Все</button>
+                    <button class="filter-btn" data-filter="День 1">День 1</button>
+                    <button class="filter-btn" data-filter="День 2">День 2</button>
+                    <button class="filter-btn" data-filter="День 3">День 3</button>
+                </div>
+                
+                <div id="technique-list" class="technique-list"></div>
             </div>
 
             <div id="stats-tab" class="tab-content">
@@ -373,10 +447,10 @@
     <div id="technique-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="technique-title">Техника выполнения</h3>
+                <h3 id="technique-modal-title">Техника выполнения</h3>
                 <button class="modal-close">×</button>
             </div>
-            <div id="technique-content"></div>
+            <div id="technique-modal-content"></div>
         </div>
     </div>
 
@@ -395,7 +469,8 @@
             exerciseWeights: {},
             stats: { totalWorkouts: 0, totalSets: 0, totalExercises: 0, totalTonnage: 0 },
             timer: { interval: null, timeRemaining: 0, isRunning: false },
-            theme: 'light'
+            theme: 'light',
+            currentTechniqueFilter: 'all'
         };
 
         const baseWeights = {
@@ -410,63 +485,60 @@
                 name: 'День 1: Грудь-Плечи-Трицепс',
                 color: '#ef4444',
                 exercises: [
-                    { 
-                        name: 'Жим в тренажере', sets: 4, reps: '10-12', weight: '20кг', direction: 'Вперед от груди',
-                        technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вперед от груди (горизонтальная плоскость)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сядьте в тренажер, спина к спинке</li><li>Хват чуть шире плеч</li><li>Выдох - жим вперед</li><li>Вдох - медленно назад</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Локти слегка вниз</li><li>Руки не до конца</li><li>Контроль движения</li></ul></div>'
-                    },
-                    { name: 'Тяга верхнего блока', sets: 3, reps: '10-12', weight: '25кг', direction: 'Сверху к груди', technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Сверху к груди (вертикальная тяга)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сядьте, ноги под валики</li><li>Широкий хват</li><li>Выдох - к груди</li><li>Вдох - вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Тянуть локтями</li><li>Сводить лопатки</li><li>Спина прямая</li></ul></div>' },
-                    { name: 'Жим на плечи', sets: 4, reps: '10-12', weight: '15кг', direction: 'Строго вверх' },
-                    { name: 'Жим в Смите', sets: 4, reps: '10-12', weight: '30кг', direction: 'Строго вверх' },
-                    { name: 'Сведение в кроссовере', sets: 3, reps: '15', weight: '10кг', direction: 'Навстречу' },
-                    { name: 'Махи в стороны', sets: 3, reps: '15', weight: '4кг', direction: 'До плеч' },
-                    { name: 'Подъем на бицепс', sets: 3, reps: '12-15', weight: '8кг', direction: 'К груди' },
-                    { name: 'Французский жим', sets: 3, reps: '12-15', weight: '8кг', direction: 'К голове' },
-                    { name: 'Разгибание на блоке', sets: 3, reps: '15', weight: '10кг', direction: 'Вниз' },
-                    { name: 'Скручивания', sets: 3, reps: '15-20', weight: '', direction: 'К коленям' }
+                    { name: 'Жим в тренажере', sets: 4, reps: '10-12', weight: '20кг', direction: 'Вперед от груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вперед от груди (горизонтальная плоскость)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сядьте в тренажер, спина к спинке</li><li>Хват чуть шире плеч</li><li>Выдох - жим вперед</li><li>Вдох - медленно назад</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Локти слегка вниз</li><li>Руки не до конца</li><li>Контроль движения</li></ul></div>' },
+                    { name: 'Тяга верхнего блока', sets: 3, reps: '10-12', weight: '25кг', direction: 'Сверху к груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Сверху к груди (вертикальная тяга)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сядьте, ноги под валики</li><li>Широкий хват</li><li>Выдох - к груди</li><li>Вдох - вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Тянуть локтями</li><li>Сводить лопатки</li><li>Спина прямая</li></ul></div>' },
+                    { name: 'Жим на плечи', sets: 4, reps: '10-12', weight: '15кг', direction: 'Строго вверх', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Строго вверх (вертикальный жим)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сидя, спина прямая</li><li>Рукоятки на уровне плеч</li><li>Выдох - жим вверх</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Четко вверх</li><li>Не до конца</li><li>Корпус неподвижен</li></ul></div>' },
+                    { name: 'Жим в Смите', sets: 4, reps: '10-12', weight: '30кг', direction: 'Строго вверх', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Строго вверх (в направляющих)</p></div><h4 class="section-title">Техника:</h4><ol><li>Лягте под штангу</li><li>Хват шире плеч</li><li>Выдох - жим вверх</li><li>Вдох - к груди</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Лопатки сведены</li><li>Ноги на полу</li><li>Контроль опускания</li></ul></div>' },
+                    { name: 'Сведение в кроссовере', sets: 3, reps: '15', weight: '10кг', direction: 'Навстречу', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Навстречу друг другу (дугой)</p></div><h4 class="section-title">Техника:</h4><ol><li>В центре кроссовера</li><li>Руки слегка согнуты</li><li>Выдох - сводить</li><li>Вдох - развести</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Корпус неподвижен</li><li>Широкая дуга</li><li>Пауза в сведении</li></ul></div>' },
+                    { name: 'Махи в стороны', sets: 3, reps: '15', weight: '4кг', direction: 'До плеч', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>В стороны до уровня плеч</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, гантели внизу</li><li>Руки слегка согнуты</li><li>Выдох - в стороны</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>До уровня плеч</li><li>Мизинцы выше больших</li><li>Без раскачивания</li></ul></div>' },
+                    { name: 'Подъем на бицепс', sets: 3, reps: '12-15', weight: '8кг', direction: 'К груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх к груди (сгибание рук)</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, гантели внизу</li><li>Локти к корпусу</li><li>Выдох - к груди</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Корпус неподвижен</li><li>Локти не вперед</li><li>Полная амплитуда</li></ul></div>' },
+                    { name: 'Французский жим', sets: 3, reps: '12-15', weight: '8кг', direction: 'К голове', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>К голове и обратно (дуга)</p></div><h4 class="section-title">Техника:</h4><ol><li>Лежа, руки вертикально</li><li>Локти зафиксированы</li><li>Вдох - к голове</li><li>Выдох - вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Только предплечья</li><li>Локти не расходятся</li><li>Плавное движение</li></ul></div>' },
+                    { name: 'Разгибание на блоке', sets: 3, reps: '15', weight: '10кг', direction: 'Вниз', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Строго вниз (разгибание предплечий)</p></div><h4 class="section-title">Техника:</h4><ol><li>У блока, рукоятка в руках</li><li>Локти к корпусу</li><li>Выдох - разгибать вниз</li><li>Вдох - сгибать</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Локти неподвижны</li><li>Четко вниз</li><li>Пауза внизу</li></ul></div>' },
+                    { name: 'Скручивания', sets: 3, reps: '15-20', weight: '', direction: 'К коленям', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх к коленям (подъем лопаток)</p></div><h4 class="section-title">Техника:</h4><ol><li>Лежа, ноги согнуты</li><li>Руки за голову</li><li>Выдох - лопатки вверх</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Не тянуть шею</li><li>Подбородок не к груди</li><li>Только верх корпуса</li></ul></div>' }
                 ]
             },
             'День 2': {
                 name: 'День 2: Спина-Бицепс + Кардио',
                 color: '#10b981',
                 exercises: [
-                    { name: 'Беговая дорожка', sets: 1, reps: '10 мин', weight: '', direction: 'Вперед' },
-                    { name: 'Гребной тренажер', sets: 1, reps: '8 мин', weight: '', direction: 'К себе' },
-                    { name: 'Степпер', sets: 1, reps: '5 мин', weight: '', direction: 'Вверх' },
-                    { name: 'Тяга верхнего блока', sets: 4, reps: '8-10', weight: '30кг', direction: 'К груди' },
-                    { name: 'Тяга штанги в наклоне', sets: 4, reps: '10-12', weight: '20кг', direction: 'К животу' },
-                    { name: 'Тяга гантели к поясу', sets: 3, reps: '12', weight: '10кг', direction: 'К поясу' },
-                    { name: 'Подъем штанги на бицепс', sets: 4, reps: '10-12', weight: '15кг', direction: 'К груди' },
-                    { name: 'Подъем гантелей на бицепс', sets: 3, reps: '12', weight: '8кг', direction: 'К плечам' },
-                    { name: 'Молотки', sets: 3, reps: '15', weight: '8кг', direction: 'Вверх' }
+                    { name: 'Беговая дорожка', sets: 1, reps: '10 мин', weight: '', direction: 'Вперед', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вперед (естественный бег)</p></div><h4 class="section-title">Техника:</h4><ol><li>Встаньте на дорожку</li><li>Начните с медленной скорости</li><li>Корпус прямой, взгляд вперед</li><li>Естественный шаг</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Не держитесь за поручни</li><li>Ритмичное дыхание</li><li>Постепенно увеличивайте скорость</li></ul></div>' },
+                    { name: 'Гребной тренажер', sets: 1, reps: '8 мин', weight: '', direction: 'К себе', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>К себе и от себя (имитация гребли)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сядьте, ноги в упоры</li><li>Начинайте с разгибания ног</li><li>Затем тянуть к животу</li><li>Возвращайтесь в обратном порядке</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Спина прямая</li><li>Основная работа ногами</li><li>Не сутультесь</li></ul></div>' },
+                    { name: 'Степпер', sets: 1, reps: '5 мин', weight: '', direction: 'Вверх', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх-вниз (подъем по ступеням)</p></div><h4 class="section-title">Техника:</h4><ol><li>Встаньте на педали</li><li>Корпус прямой</li><li>Поочередно нажимайте педали</li><li>Руки на поручнях для равновесия</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Полная амплитуда</li><li>Не весь вес на руки</li><li>Равномерный ритм</li></ul></div>' },
+                    { name: 'Тяга верхнего блока', sets: 4, reps: '8-10', weight: '30кг', direction: 'К груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Сверху к груди (тяжелая тяга)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сядьте, широкий хват</li><li>Грудь вперед, спина прямая</li><li>Выдох - к груди</li><li>Вдох - контролируемо вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Тянуть локтями</li><li>Сводить лопатки внизу</li><li>Не отклоняться назад</li></ul></div>' },
+                    { name: 'Тяга штанги в наклоне', sets: 4, reps: '10-12', weight: '20кг', direction: 'К животу', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>К животу в наклоне</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, ноги на ширине плеч</li><li>Наклон 45°, спина прямая</li><li>Выдох - штанга к животу</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Колени слегка согнуты</li><li>Тянуть локтями назад</li><li>Естественный прогиб в спине</li></ul></div>' },
+                    { name: 'Тяга гантели к поясу', sets: 3, reps: '12', weight: '10кг', direction: 'К поясу', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>К поясу в наклоне</p></div><h4 class="section-title">Техника:</h4><ol><li>Колено и рука на скамье</li><li>Нога на полу, гантель в свободной руке</li><li>Выдох - к поясу</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Спина прямая</li><li>Локоть назад, не в сторону</li><li>Сводить лопатку вверху</li></ul></div>' },
+                    { name: 'Подъем штанги на бицепс', sets: 4, reps: '10-12', weight: '15кг', direction: 'К груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх к груди (со штангой)</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, штанга внизу</li><li>Хват на ширине плеч</li><li>Выдох - к груди</li><li>Вдох - медленно опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Не раскачиваться</li><li>Локти не выносить</li><li>Полная амплитуда</li></ul></div>' },
+                    { name: 'Подъем гантелей на бицепс', sets: 3, reps: '12', weight: '8кг', direction: 'К плечам', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>К плечам (поочередно или вместе)</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, гантели внизу</li><li>Локти к корпусу</li><li>Выдох - к плечам</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Можно поочередно</li><li>Разворачивать кисти</li><li>Избегать раскачиваний</li></ul></div>' },
+                    { name: 'Молотки', sets: 3, reps: '15', weight: '8кг', direction: 'Вверх', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх вдоль тела (нейтральный хват)</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, гантели нейтральным хватом</li><li>Руки вдоль тела</li><li>Выдох - поочередно вверх</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Ладони друг к другу</li><li>Локти неподвижны</li><li>Строго вдоль туловища</li></ul></div>' }
                 ]
             },
             'День 3': {
                 name: 'День 3: Ноги-Пресс',
                 color: '#3b82f6',
                 exercises: [
-                    { name: 'Приседания', sets: 4, reps: '10-12', weight: '20кг', direction: 'Вниз-назад' },
-                    { name: 'Жим ногами', sets: 3, reps: '12-15', weight: '50кг', direction: 'От груди' },
-                    { name: 'Разгибания ног', sets: 3, reps: '12-15', weight: '20кг', direction: 'Вперед' },
-                    { name: 'Сгибания ног', sets: 3, reps: '12-15', weight: '15кг', direction: 'К ягодицам' },
-                    { name: 'Подъемы на носки', sets: 4, reps: '20', weight: '25кг', direction: 'Вверх' },
-                    { name: 'Планка', sets: 3, reps: '60сек', weight: '', direction: 'Статика' },
-                    { name: 'Скручивания', sets: 3, reps: '20', weight: '', direction: 'К коленям' },
-                    { name: 'Велосипед', sets: 3, reps: '30', weight: '', direction: 'Диагональ' },
-                    { name: 'Пресс в тренажере', sets: 3, reps: '12-15', weight: '15кг', direction: 'К коленям' }
+                    { name: 'Приседания', sets: 4, reps: '10-12', weight: '20кг', direction: 'Вниз-назад', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вниз-назад и вверх (отведение таза)</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, ноги на ширине плеч</li><li>Носки слегка наружу</li><li>Вдох - таз назад и вниз</li><li>Выдох - вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Колени по линии носков</li><li>Спина прямая</li><li>Вес на пятках</li></ul></div>' },
+                    { name: 'Жим ногами', sets: 3, reps: '12-15', weight: '50кг', direction: 'От груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>От груди к ногам (отталкивание)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сидя в тренажере</li><li>Ноги на платформе</li><li>Вдох - к груди</li><li>Выдох - от себя</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Колени не сводить</li><li>До угла 90°</li><li>Не разгибать полностью</li></ul></div>' },
+                    { name: 'Разгибания ног', sets: 3, reps: '12-15', weight: '20кг', direction: 'Вперед', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх-вперед (разгибание голеней)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сидя в тренажере</li><li>Голени за валиками</li><li>Выдох - разгибать вперед</li><li>Вдох - сгибать</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Не резко до конца</li><li>Контроль опускания</li><li>Держаться за рукоятки</li></ul></div>' },
+                    { name: 'Сгибания ног', sets: 3, reps: '12-15', weight: '15кг', direction: 'К ягодицам', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>К ягодицам (сгибание голеней)</p></div><h4 class="section-title">Техника:</h4><ol><li>Лежа лицом вниз</li><li>Пятки под валиками</li><li>Выдох - к ягодицам</li><li>Вдох - разгибать</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Таз к скамье</li><li>Не поднимать бедра</li><li>Плавное движение</li></ul></div>' },
+                    { name: 'Подъемы на носки', sets: 4, reps: '20', weight: '25кг', direction: 'Вверх', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Строго вверх (подъем на носках)</p></div><h4 class="section-title">Техника:</h4><ol><li>Носки на платформе</li><li>Пятки в воздухе</li><li>Выдох - максимально высоко</li><li>Вдох - опустить с растяжкой</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Полная амплитуда</li><li>Пауза вверху</li><li>Медленное опускание</li></ul></div>' },
+                    { name: 'Планка', sets: 3, reps: '60сек', weight: '', direction: 'Статика', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Статическое удержание</p></div><h4 class="section-title">Техника:</h4><ol><li>Упор на предплечьях</li><li>Локти под плечами</li><li>Тело в линию</li><li>Держать время</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Не поднимать таз</li><li>Не прогибаться</li><li>Напрягать пресс и ягодицы</li></ul></div>' },
+                    { name: 'Скручивания', sets: 3, reps: '20', weight: '', direction: 'К коленям', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх к коленям</p></div><h4 class="section-title">Техника:</h4><ol><li>Лежа, ноги согнуты</li><li>Руки за голову</li><li>Выдох - лопатки вверх</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Не тянуть шею</li><li>Работает верх корпуса</li><li>Небольшая амплитуда</li></ul></div>' },
+                    { name: 'Велосипед', sets: 3, reps: '30', weight: '', direction: 'Диагональ', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Диагональное скручивание</p></div><h4 class="section-title">Техника:</h4><ol><li>Лежа, руки за голову</li><li>Ноги на весу</li><li>Локоть к противоположному колену</li><li>Поочередно</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Скручивание корпуса</li><li>Не тянуть шею</li><li>Контролируемое движение</li></ul></div>' },
+                    { name: 'Пресс в тренажере', sets: 3, reps: '12-15', weight: '15кг', direction: 'К коленям', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх к коленям (в тренажере)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сидя в тренажере</li><li>Спина к спинке</li><li>Выдох - сгибать корпус</li><li>Вдох - медленно назад</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Работает пресс, не шея</li><li>Полная амплитуда</li><li>Контроль обратной фазы</li></ul></div>' }
                 ]
             },
             'День 4': {
                 name: 'День 4: Функциональная + Силовая',
                 color: '#f97316',
                 exercises: [
-                    { name: 'Беговая дорожка разминка', sets: 1, reps: '10 мин', weight: '', direction: 'Вперед' },
-                    { name: 'Эллиптический тренажер', sets: 1, reps: '10 мин', weight: '', direction: 'Овальная' },
-                    { name: 'TRX упражнения', sets: 3, reps: '30сек', weight: 'Вес тела', direction: 'Многоплоскостные' },
-                    { name: 'Упражнения на баланс', sets: 2, reps: '1 мин', weight: '', direction: 'Статика' },
-                    { name: 'Приседания силовые', sets: 4, reps: '6-8', weight: '40кг', direction: 'Вниз' },
-                    { name: 'Жим силовой', sets: 4, reps: '6-8', weight: '30кг', direction: 'От груди' },
-                    { name: 'Тяга силовая', sets: 3, reps: '8-10', weight: '30кг', direction: 'К груди' },
-                    { name: 'Растяжка', sets: 1, reps: '5 мин', weight: '', direction: 'Растягивание' }
+                    { name: 'Беговая дорожка разминка', sets: 1, reps: '10 мин', weight: '', direction: 'Вперед', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вперед (разминочный бег)</p></div><h4 class="section-title">Техника:</h4><ol><li>Встаньте на дорожку</li><li>Начните с ходьбы</li><li>Постепенно увеличивайте скорость</li><li>Разминочный темп</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Разогрев суставов</li><li>Подготовка к нагрузке</li><li>Комфортный темп</li></ul></div>' },
+                    { name: 'Эллиптический тренажер', sets: 1, reps: '10 мин', weight: '', direction: 'Овальная', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Овальная траектория</p></div><h4 class="section-title">Техника:</h4><ol><li>Встаньте на педали</li><li>Возьмите рукоятки</li><li>Синхронное движение рук и ног</li><li>Равномерный ритм</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Корпус прямой</li><li>Не отрывать пятки</li><li>Глубокое дыхание</li></ul></div>' },
+                    { name: 'TRX упражнения', sets: 3, reps: '30сек', weight: 'Вес тела', direction: 'Многоплоскостные', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Многоплоскостные функциональные движения</p></div><h4 class="section-title">Техника:</h4><ol><li>Закрепите TRX</li><li>Корпус всегда напряжен</li><li>Меняйте сложность углом наклона</li><li>Полная амплитуда</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Стабилизация корпуса</li><li>Контроль во всех плоскостях</li><li>Плавные движения</li></ul></div>' },
+                    { name: 'Упражнения на баланс', sets: 2, reps: '1 мин', weight: '', direction: 'Статика', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Статическое удержание с микродвижениями</p></div><h4 class="section-title">Техника:</h4><ol><li>Встаньте на BOSU или нестабильную поверхность</li><li>Найдите равновесие</li><li>Удерживайте баланс</li><li>Мелкие корректирующие движения</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Мягкие колени</li><li>Взгляд на точке</li><li>Включение глубоких мышц</li></ul></div>' },
+                    { name: 'Приседания силовые', sets: 4, reps: '6-8', weight: '40кг', direction: 'Вниз', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вниз-назад и вверх (тяжелые приседания)</p></div><h4 class="section-title">Техника:</h4><ol><li>Штанга на плечах</li><li>Ноги шире плеч</li><li>Вдох - назад и вниз</li><li>Выдох - мощно вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Таз первым назад</li><li>Колени по носкам</li><li>Полная глубина</li></ul></div>' },
+                    { name: 'Жим силовой', sets: 4, reps: '6-8', weight: '30кг', direction: 'От груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вперед от груди (тяжелый жим)</p></div><h4 class="section-title">Техника:</h4><ol><li>Лежа на скамье</li><li>Лопатки сведены</li><li>Вдох - к груди</li><li>Выдох - мощно вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Жесткая позиция</li><li>Контроль опускания</li><li>Страховка обязательна</li></ul></div>' },
+                    { name: 'Тяга силовая', sets: 3, reps: '8-10', weight: '30кг', direction: 'К груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Сверху к груди (тяжелая тяга)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сидя, широкий хват</li><li>Грудь вперед</li><li>Выдох - к груди</li><li>Вдох - контролируемо</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Тянуть локтями</li><li>Сводить лопатки</li><li>Полная амплитуда</li></ul></div>' },
+                    { name: 'Растяжка', sets: 1, reps: '5 мин', weight: '', direction: 'Растягивание', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Медленное растягивание всех групп мышц</p></div><h4 class="section-title">Техника:</h4><ol><li>Займите позицию для растяжки</li><li>Медленно до натяжения</li><li>Удерживайте 20-30 сек</li><li>Медленно выходите</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Без болевых ощущений</li><li>Глубокое дыхание</li><li>Все основные группы</li></ul></div>' }
                 ]
             }
         };
@@ -683,10 +755,7 @@
                     
                     if (completedCount >= exercise.sets) exerciseDiv.classList.add('completed');
                     
-                    const hasWeight = exercise.weight && exercise.weight !== '' && 
-                                    !exercise.weight.includes('сек') && !exercise.weight.includes('мин');
-                    
-                    const weightDisplay = hasWeight ? 
+                    const weightDisplay = exercise.hasWeight ? 
                         WeightManager.getExerciseWeight(state.currentWorkout, index) + 'кг' : '';
                     
                     exerciseDiv.innerHTML = `
@@ -697,7 +766,7 @@
                         <div class="exercise-details" style="color: ${program.color}; font-weight: 600;">
                             ${exercise.direction}
                         </div>
-                        ${WeightManager.createWeightControl(state.currentWorkout, index, hasWeight)}
+                        ${WeightManager.createWeightControl(state.currentWorkout, index, exercise.hasWeight)}
                         <div class="set-dots">
                             ${Array(exercise.sets).fill().map((_, setIndex) => {
                                 const isCompleted = setIndex < completedCount;
@@ -715,30 +784,67 @@
                         </div>
                     `;
                     
-                    if (exercise.technique) {
-                        exerciseDiv.addEventListener('click', (e) => {
-                            if (!e.target.closest('.weight-btn') && !e.target.closest('.set-dot')) {
-                                TechniqueModal.show(exercise);
-                            }
-                        });
-                    }
-                    
                     container.appendChild(exerciseDiv);
                 });
             }
         };
 
-        const TechniqueModal = {
-            show(exercise) {
-                if (!exercise.technique) return;
+        const TechniqueManager = {
+            render() {
+                const container = document.getElementById('technique-list');
+                container.innerHTML = '';
+                
+                Object.keys(workoutPrograms).forEach(workoutKey => {
+                    const program = workoutPrograms[workoutKey];
+                    
+                    program.exercises.forEach((exercise, index) => {
+                        if (!exercise.technique) return;
+                        
+                        if (state.currentTechniqueFilter !== 'all' && 
+                            state.currentTechniqueFilter !== workoutKey) return;
+                        
+                        const techniqueDiv = document.createElement('div');
+                        techniqueDiv.className = 'technique-item';
+                        techniqueDiv.innerHTML = `
+                            <div class="technique-title">${exercise.name}</div>
+                            <div class="technique-direction" style="color: ${program.color}">
+                                ${workoutKey} • ${exercise.direction}
+                            </div>
+                            <div class="technique-preview">
+                                Кликните для просмотра полной техники выполнения упражнения
+                            </div>
+                        `;
+                        
+                        techniqueDiv.addEventListener('click', () => {
+                            this.showModal(exercise);
+                        });
+                        
+                        container.appendChild(techniqueDiv);
+                    });
+                });
+            },
+            showModal(exercise) {
                 const modal = document.getElementById('technique-modal');
-                const content = document.getElementById('technique-content');
-                document.getElementById('technique-title').textContent = exercise.name;
+                const content = document.getElementById('technique-modal-content');
+                document.getElementById('technique-modal-title').textContent = exercise.name;
                 content.innerHTML = exercise.technique;
                 modal.classList.add('active');
             },
-            hide() {
+            hideModal() {
                 document.getElementById('technique-modal').classList.remove('active');
+            },
+            setFilter(filter) {
+                state.currentTechniqueFilter = filter;
+                this.updateFilterButtons();
+                this.render();
+            },
+            updateFilterButtons() {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.filter === state.currentTechniqueFilter) {
+                        btn.classList.add('active');
+                    }
+                });
             }
         };
 
@@ -760,6 +866,10 @@
                 document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
                 document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
                 document.getElementById(`${tabName}-tab`).classList.add('active');
+                
+                if (tabName === 'technique') {
+                    TechniqueManager.render();
+                }
             }
         };
 
@@ -852,13 +962,20 @@
                 });
                 
                 document.querySelector('.modal-close').addEventListener('click', () => {
-                    TechniqueModal.hide();
+                    TechniqueManager.hideModal();
                 });
                 
                 document.getElementById('technique-modal').addEventListener('click', (e) => {
                     if (e.target.id === 'technique-modal') {
-                        TechniqueModal.hide();
+                        TechniqueManager.hideModal();
                     }
+                });
+                
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const filter = btn.dataset.filter;
+                        TechniqueManager.setFilter(filter);
+                    });
                 });
             }
         };
@@ -883,9 +1000,10 @@
             WorkoutManager.selectWorkout('День 1');
             StatsManager.render();
             ScheduleManager.render();
+            TechniqueManager.render();
             
             setTimeout(() => {
-                NotificationManager.show('✅ Приложение готово! Кликните по упражнению для просмотра техники', 4000);
+                NotificationManager.show('✅ Приложение готово! Техника в отдельной вкладке 📖', 4000);
             }, 1000);
         };
 
