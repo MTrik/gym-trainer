@@ -7,1012 +7,847 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#667eea">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <title>💪 Gym Trainer Pro</title>
-    
+    <title>Gym Trainer Pro</title>
     <style>
-    :root {
-        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --success-gradient: linear-gradient(135deg, #10b981, #059669);
-        --danger-gradient: linear-gradient(135deg, #ef4444, #dc2626);
-        --color-text: #111827;
-        --color-bg: #ffffff;
-        --transition-normal: 0.3s ease;
-    }
-    
-    [data-theme="dark"] {
-        --color-text: #f9fafb;
-        --color-bg: #111827;
-    }
-    
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    body {
-        font-family: 'Inter', sans-serif;
-        background: var(--primary-gradient);
-        color: var(--color-text);
-        position: fixed;
-        width: 100%; height: 100vh;
-    }
-    
-    .app {
-        width: 100%; height: 100vh;
-        display: flex; flex-direction: column;
-        background: var(--color-bg);
-        max-width: 768px; margin: 0 auto;
-    }
-    
-    .header {
-        background: var(--primary-gradient);
-        color: white; padding: 1.5rem;
-        display: flex; justify-content: space-between; align-items: center;
-    }
-    
-    .nav {
-        display: flex; background: var(--color-bg);
-        border-bottom: 1px solid #e5e7eb;
-    }
-    
-    .nav button {
-        flex: 1; padding: 1rem 0.5rem;
-        background: none; border: none;
-        cursor: pointer; transition: var(--transition-normal);
-        color: #6b7280; font-weight: 600; font-size: 0.75rem;
-        display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
-    }
-    
-    .nav button.active { color: #667eea; background: rgba(102, 126, 234, 0.1); }
-    
-    .content {
-        flex: 1; overflow-y: auto;
-        padding: 1.5rem;
-        background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
-    }
-    
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    
-    .workout-selector {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem; margin-bottom: 2rem;
-    }
-    
-    .workout-btn {
-        padding: 1rem; border: 2px solid #e5e7eb;
-        border-radius: 16px; background: white;
-        cursor: pointer; text-align: center;
-        font-weight: 700; transition: var(--transition-normal);
-    }
-    
-    .workout-btn.active {
-        background: var(--primary-gradient);
-        color: white; border-color: transparent;
-    }
-    
-    .exercise-item {
-        padding: 1.5rem; background: white;
-        border: 2px solid #e5e7eb; border-radius: 20px;
-        margin-bottom: 1rem; cursor: pointer;
-        transition: var(--transition-normal);
-    }
-    
-    .exercise-item:hover { transform: translateY(-4px); }
-    .exercise-item.current { border-color: #667eea; }
-    .exercise-item.completed { border-color: #10b981; }
-    
-    .exercise-name {
-        font-weight: 700; font-size: 1.1rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .exercise-details {
-        font-size: 0.85rem; color: #6b7280;
-        margin-bottom: 0.75rem;
-    }
-    
-    .weight-control {
-        display: flex; align-items: center;
-        justify-content: center; gap: 15px;
-        margin: 1rem 0; padding: 1rem;
-        background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-        border-radius: 16px;
-    }
-    
-    .weight-btn {
-        width: 48px; height: 48px;
-        border: none; border-radius: 50%;
-        font-size: 1.5rem; font-weight: 800;
-        cursor: pointer; transition: var(--transition-normal);
-        display: flex; align-items: center; justify-content: center;
-    }
-    
-    .weight-easy { background: var(--success-gradient); color: white; }
-    .weight-hard { background: var(--danger-gradient); color: white; }
-    
-    .weight-display {
-        font-size: 1.2rem; font-weight: 800;
-        min-width: 90px; text-align: center;
-        background: white; padding: 0.75rem 1.25rem;
-        border-radius: 12px; border: 2px solid #e2e8f0;
-    }
-    
-    .set-dots {
-        display: flex; gap: 0.5rem;
-        margin-top: 1rem; flex-wrap: wrap;
-    }
-    
-    .set-dot {
-        width: 36px; height: 36px; border-radius: 50%;
-        background: #e5e7eb; display: flex;
-        align-items: center; justify-content: center;
-        font-size: 0.8rem; font-weight: 700;
-        cursor: pointer; transition: var(--transition-normal);
-    }
-    
-    .set-dot.completed {
-        background: var(--success-gradient);
-        color: white; transform: scale(1.1);
-    }
-    
-    .progress-bar {
-        width: 100%; height: 10px;
-        background: #e5e7eb; border-radius: 5px;
-        overflow: hidden; margin-top: 0.75rem;
-    }
-    
-    .progress-fill {
-        height: 100%; background: var(--success-gradient);
-        transition: width 0.5s ease;
-    }
-    
-    .timer-display { text-align: center; padding: 3rem 0; }
-    
-    .timer-circle {
-        width: 220px; height: 220px;
-        margin: 0 auto 2rem; position: relative;
-        background: var(--primary-gradient);
-        border-radius: 50%; display: flex;
-        align-items: center; justify-content: center;
-    }
-    
-    .timer-time {
-        font-size: 4rem; font-weight: 800;
-        color: white; font-family: monospace;
-    }
-    
-    .btn {
-        padding: 1rem 2rem; border: none;
-        border-radius: 16px; font-weight: 700;
-        cursor: pointer; transition: var(--transition-normal);
-        text-transform: uppercase; margin: 0.5rem;
-    }
-    
-    .btn-primary {
-        background: var(--success-gradient);
-        color: white;
-    }
-    
-    .btn-secondary {
-        background: linear-gradient(135deg, #6b7280, #4b5563);
-        color: white;
-    }
-    
-    .btn-info {
-        background: var(--primary-gradient);
-        color: white;
-    }
-    
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 1rem; margin-bottom: 2rem;
-    }
-    
-    .stat-card {
-        text-align: center; padding: 1.5rem;
-        background: white; border-radius: 20px;
-    }
-    
-    .stat-value {
-        font-size: 2.5rem; font-weight: 800;
-        background: var(--primary-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-    }
-    
-    .stat-label {
-        font-size: 0.8rem; color: #6b7280;
-        font-weight: 600; text-transform: uppercase;
-    }
-    
-    .technique-list {
-        display: grid;
-        gap: 1rem;
-    }
-    
-    .technique-item {
-        background: white;
-        border: 2px solid #e5e7eb;
-        border-radius: 20px;
-        padding: 1.5rem;
-        cursor: pointer;
-        transition: var(--transition-normal);
-    }
-    
-    .technique-item:hover {
-        transform: translateY(-4px);
-        border-color: #667eea;
-    }
-    
-    .technique-title {
-        font-weight: 700;
-        font-size: 1.1rem;
-        margin-bottom: 0.5rem;
-        color: var(--color-text);
-    }
-    
-    .technique-direction {
-        font-size: 0.85rem;
-        color: #667eea;
-        font-weight: 600;
-        margin-bottom: 0.75rem;
-    }
-    
-    .technique-preview {
-        font-size: 0.8rem;
-        color: #6b7280;
-        line-height: 1.4;
-    }
-    
-    .modal {
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.8); z-index: 1000;
-        display: none; align-items: center;
-        justify-content: center; padding: 1.5rem;
-    }
-    
-    .modal.active { display: flex; }
-    
-    .modal-content {
-        background: white; border-radius: 24px;
-        padding: 2rem; max-width: 500px;
-        width: 100%; max-height: 80vh;
-        overflow-y: auto;
-    }
-    
-    .modal-header {
-        display: flex; justify-content: space-between;
-        align-items: center; margin-bottom: 1.5rem;
-        padding-bottom: 1rem; border-bottom: 2px solid #e5e7eb;
-    }
-    
-    .modal-close {
-        background: #f3f4f6; border: none;
-        font-size: 1.5rem; cursor: pointer;
-        padding: 0.5rem; border-radius: 12px;
-        width: 40px; height: 40px;
-        display: flex; align-items: center; justify-content: center;
-    }
-    
-    .direction-box {
-        background: linear-gradient(135deg, #eff6ff, #f3e8ff);
-        border-radius: 16px; padding: 1rem;
-        margin-bottom: 1rem;
-    }
-    
-    .direction-title {
-        color: #667eea; margin: 0 0 0.5rem 0;
-        font-weight: 700;
-    }
-    
-    .section-title {
-        color: #059669; font-weight: 700;
-        margin-bottom: 0.75rem;
-    }
-    
-    .important-points {
-        background: linear-gradient(135deg, #fef3c7, #fde68a);
-        border-radius: 12px; padding: 1rem;
-        margin-top: 0.75rem;
-    }
-    
-    .notification {
-        position: fixed; bottom: 2rem; left: 50%;
-        transform: translateX(-50%);
-        background: var(--primary-gradient);
-        color: white; padding: 1rem 2rem;
-        border-radius: 16px; z-index: 2000;
-        display: none;
-    }
-    
-    .notification.active { display: block; }
-    
-    .workout-filter {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 0.5rem; margin-bottom: 2rem;
-    }
-    
-    .filter-btn {
-        padding: 0.75rem; border: 2px solid #e5e7eb;
-        border-radius: 12px; background: white;
-        cursor: pointer; text-align: center;
-        font-weight: 600; font-size: 0.8rem;
-        transition: var(--transition-normal);
-    }
-    
-    .filter-btn.active {
-        background: var(--primary-gradient);
-        color: white; border-color: transparent;
-    }
-    
-    @media (max-width: 480px) {
-        .timer-circle { width: 180px; height: 180px; }
-        .workout-selector { grid-template-columns: repeat(2, 1fr); }
-        .stats-grid { grid-template-columns: 1fr; }
-        .workout-filter { grid-template-columns: repeat(2, 1fr); }
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .workout-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .workout-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .exercise-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+
+        .technique-bg {
+            background: rgba(102, 126, 234, 0.05);
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .technique-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .sets-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .set-btn {
+            aspect-ratio: 1;
+            border-radius: 15px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            position: relative;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .set-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .set-btn.completed {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+            border-color: #38a169;
+        }
+
+        .weight-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 12px;
+        }
+
+        .weight-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .weight-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .weight-display {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2d3748;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .timer-card {
+            text-align: center;
+        }
+
+        .timer-display {
+            font-size: 4em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 30px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .timer-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .timer-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .timer-btn.start {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: white;
+        }
+
+        .timer-btn.pause {
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white;
+        }
+
+        .timer-btn.reset {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+        }
+
+        .timer-btn.done {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .program-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .program-btn {
+            padding: 20px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .program-btn.active {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .timer-display {
+                font-size: 3em;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="app">
-        <header class="header">
-            <div>
-                <h1>💪 Gym Trainer Pro</h1>
-                <p>Полный функционал тренировок</p>
+    <div class="container">
+        <div class="header">
+            <h1>🏋️ GYM TRAINER</h1>
+            <p>Ваш персональный тренер TechnoGym</p>
+        </div>
+
+        <!-- Таймер -->
+        <div id="timer-tab" class="tab-content">
+            <div class="workout-card timer-card">
+                <h2>⏱️ Таймер отдыха</h2>
+                <div id="timer-display" class="timer-display">01:30</div>
+                <div class="timer-controls">
+                    <button id="start-timer" class="timer-btn start">Старт</button>
+                    <button id="pause-timer" class="timer-btn pause" style="display: none;">Пауза</button>
+                    <button id="reset-timer" class="timer-btn reset">Сброс</button>
+                    <button id="done-timer" class="timer-btn done" style="display: none;">Готово</button>
+                </div>
+                <div id="current-exercise-info" style="margin-top: 20px; padding: 15px; background: rgba(102, 126, 234, 0.1); border-radius: 10px; display: none;">
+                    <div style="font-weight: bold; color: #667eea;">Текущее упражнение:</div>
+                    <div id="exercise-name-display" style="font-size: 1.2em; margin-top: 5px;"></div>
+                </div>
             </div>
-            <button id="theme-toggle">🌙</button>
-        </header>
+        </div>
 
-        <nav class="nav">
-            <button data-tab="timer">⏱️<br>Таймер</button>
-            <button data-tab="workout" class="active">🏋️<br>Программа</button>
-            <button data-tab="technique">📖<br>Техника</button>
-            <button data-tab="stats">📊<br>Статистика</button>
-            <button data-tab="schedule">📅<br>План</button>
-        </nav>
+        <!-- Программы тренировок -->
+        <div id="workout-tab" class="tab-content active">
+            <div class="program-selector">
+                <button class="program-btn active" data-program="day1">День 1<br>Верх тела</button>
+                <button class="program-btn" data-program="day2">День 2<br>Кардио+Ноги</button>
+                <button class="program-btn" data-program="day3">День 3<br>Ноги+Пресс</button>
+                <button class="program-btn" data-program="day4">День 4<br>Функц+Сила</button>
+            </div>
+            <div id="workout-content"></div>
+        </div>
 
-        <main class="content">
-            <div id="timer-tab" class="tab-content">
-                <div class="timer-display">
-                    <div class="timer-circle">
-                        <div id="timer-display" class="timer-time">00:00</div>
+        <!-- Статистика -->
+        <div id="stats-tab" class="tab-content">
+            <div class="workout-card">
+                <h2>📊 Статистика</h2>
+                <div id="stats-content">
+                    <p>Статистика тренировок будет отображаться здесь</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- План тренировок -->
+        <div id="plan-tab" class="tab-content">
+            <div class="workout-card">
+                <h2>📅 План тренировок</h2>
+                <div style="line-height: 1.8; margin-top: 20px;">
+                    <div style="padding: 10px; margin: 10px 0; background: rgba(102, 126, 234, 0.1); border-radius: 8px;">
+                        <strong>Понедельник:</strong> День 1 - Верх тела
                     </div>
-                    <div style="text-align: center;">
-                        <button class="btn btn-primary timer-preset" data-seconds="60">60 сек</button>
-                        <button class="btn btn-primary timer-preset" data-seconds="90">90 сек</button>
-                        <button class="btn btn-primary timer-preset" data-seconds="120">2 мин</button>
-                        <div style="margin-top: 1rem;">
-                            <button id="timer-stop" class="btn btn-secondary">Стоп</button>
-                        </div>
+                    <div style="padding: 10px; margin: 10px 0; background: rgba(102, 126, 234, 0.1); border-radius: 8px;">
+                        <strong>Вторник:</strong> День 2 - Кардио + Ноги
+                    </div>
+                    <div style="padding: 10px; margin: 10px 0; background: rgba(102, 126, 234, 0.1); border-radius: 8px;">
+                        <strong>Четверг:</strong> День 3 - Ноги + Пресс
+                    </div>
+                    <div style="padding: 10px; margin: 10px 0; background: rgba(102, 126, 234, 0.1); border-radius: 8px;">
+                        <strong>Пятница:</strong> День 4 - Функциональная + Сила
                     </div>
                 </div>
             </div>
-
-            <div id="workout-tab" class="tab-content active">
-                <h2 id="workout-title" style="text-align: center; margin-bottom: 1.5rem;">Выберите программу</h2>
-                <div id="workout-selector" class="workout-selector"></div>
-                <div id="exercise-list"></div>
-                <div style="text-align: center; margin-top: 2rem;">
-                    <button id="complete-workout" class="btn btn-info">Завершить тренировку</button>
-                </div>
-            </div>
-
-            <div id="technique-tab" class="tab-content">
-                <h2 style="text-align: center; margin-bottom: 1.5rem;">Техника выполнения</h2>
-                
-                <div class="workout-filter">
-                    <button class="filter-btn active" data-filter="all">Все</button>
-                    <button class="filter-btn" data-filter="День 1">День 1</button>
-                    <button class="filter-btn" data-filter="День 2">День 2</button>
-                    <button class="filter-btn" data-filter="День 3">День 3</button>
-                </div>
-                
-                <div id="technique-list" class="technique-list"></div>
-            </div>
-
-            <div id="stats-tab" class="tab-content">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div id="stat-workouts" class="stat-value">0</div>
-                        <div class="stat-label">Тренировок</div>
-                    </div>
-                    <div class="stat-card">
-                        <div id="stat-exercises" class="stat-value">0</div>
-                        <div class="stat-label">Упражнений</div>
-                    </div>
-                    <div class="stat-card">
-                        <div id="stat-sets" class="stat-value">0</div>
-                        <div class="stat-label">Подходов</div>
-                    </div>
-                    <div class="stat-card">
-                        <div id="stat-tonnage" class="stat-value">0</div>
-                        <div class="stat-label">Тоннаж (кг)</div>
-                    </div>
-                </div>
-                <div style="text-align: center;">
-                    <button id="reset-stats" class="btn btn-secondary">Сбросить статистику</button>
-                </div>
-            </div>
-
-            <div id="schedule-tab" class="tab-content">
-                <h2 style="margin-bottom: 1.5rem;">Недельный план</h2>
-                <div id="schedule-list"></div>
-            </div>
-        </main>
-    </div>
-
-    <div id="technique-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="technique-modal-title">Техника выполнения</h3>
-                <button class="modal-close">×</button>
-            </div>
-            <div id="technique-modal-content"></div>
         </div>
     </div>
 
-    <div id="notification" class="notification">
-        <span id="notification-text"></span>
+    <!-- Навигационные вкладки -->
+    <div class="tabs">
+        <button class="tab-btn" data-tab="timer-tab">⏱️ Таймер</button>
+        <button class="tab-btn active" data-tab="workout-tab">🏋️ Программа</button>
+        <button class="tab-btn" data-tab="stats-tab">📊 Статистика</button>
+        <button class="tab-btn" data-tab="plan-tab">📅 План</button>
     </div>
 
     <script>
-    const GymTrainerApp = (function() {
-        'use strict';
-
-        const state = {
-            currentWorkout: 'День 1',
-            currentExerciseIndex: 0,
-            completedSets: {},
-            exerciseWeights: {},
-            stats: { totalWorkouts: 0, totalSets: 0, totalExercises: 0, totalTonnage: 0 },
-            timer: { interval: null, timeRemaining: 0, isRunning: false },
-            theme: 'light',
-            currentTechniqueFilter: 'all'
-        };
-
-        const baseWeights = {
-            'День 1': [20, 25, 15, 30, 10, 4, 8, 8, 10, 0],
-            'День 2': [0, 0, 0, 30, 20, 10, 15, 8, 8],
-            'День 3': [20, 50, 20, 15, 25, 0, 0, 0, 15],
-            'День 4': [0, 0, 0, 0, 40, 30, 30, 0]
-        };
-
+        // Данные тренировочных программ
         const workoutPrograms = {
-            'День 1': {
-                name: 'День 1: Грудь-Плечи-Трицепс',
-                color: '#ef4444',
+            day1: {
+                name: "День 1 - Верх тела",
                 exercises: [
-                    { name: 'Жим в тренажере', sets: 4, reps: '10-12', weight: '20кг', direction: 'Вперед от груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вперед от груди (горизонтальная плоскость)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сядьте в тренажер, спина к спинке</li><li>Хват чуть шире плеч</li><li>Выдох - жим вперед</li><li>Вдох - медленно назад</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Локти слегка вниз</li><li>Руки не до конца</li><li>Контроль движения</li></ul></div>' },
-                    { name: 'Тяга верхнего блока', sets: 3, reps: '10-12', weight: '25кг', direction: 'Сверху к груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Сверху к груди (вертикальная тяга)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сядьте, ноги под валики</li><li>Широкий хват</li><li>Выдох - к груди</li><li>Вдох - вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Тянуть локтями</li><li>Сводить лопатки</li><li>Спина прямая</li></ul></div>' },
-                    { name: 'Жим на плечи', sets: 4, reps: '10-12', weight: '15кг', direction: 'Строго вверх', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Строго вверх (вертикальный жим)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сидя, спина прямая</li><li>Рукоятки на уровне плеч</li><li>Выдох - жим вверх</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Четко вверх</li><li>Не до конца</li><li>Корпус неподвижен</li></ul></div>' },
-                    { name: 'Жим в Смите', sets: 4, reps: '10-12', weight: '30кг', direction: 'Строго вверх', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Строго вверх (в направляющих)</p></div><h4 class="section-title">Техника:</h4><ol><li>Лягте под штангу</li><li>Хват шире плеч</li><li>Выдох - жим вверх</li><li>Вдох - к груди</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Лопатки сведены</li><li>Ноги на полу</li><li>Контроль опускания</li></ul></div>' },
-                    { name: 'Сведение в кроссовере', sets: 3, reps: '15', weight: '10кг', direction: 'Навстречу', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Навстречу друг другу (дугой)</p></div><h4 class="section-title">Техника:</h4><ol><li>В центре кроссовера</li><li>Руки слегка согнуты</li><li>Выдох - сводить</li><li>Вдох - развести</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Корпус неподвижен</li><li>Широкая дуга</li><li>Пауза в сведении</li></ul></div>' },
-                    { name: 'Махи в стороны', sets: 3, reps: '15', weight: '4кг', direction: 'До плеч', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>В стороны до уровня плеч</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, гантели внизу</li><li>Руки слегка согнуты</li><li>Выдох - в стороны</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>До уровня плеч</li><li>Мизинцы выше больших</li><li>Без раскачивания</li></ul></div>' },
-                    { name: 'Подъем на бицепс', sets: 3, reps: '12-15', weight: '8кг', direction: 'К груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх к груди (сгибание рук)</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, гантели внизу</li><li>Локти к корпусу</li><li>Выдох - к груди</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Корпус неподвижен</li><li>Локти не вперед</li><li>Полная амплитуда</li></ul></div>' },
-                    { name: 'Французский жим', sets: 3, reps: '12-15', weight: '8кг', direction: 'К голове', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>К голове и обратно (дуга)</p></div><h4 class="section-title">Техника:</h4><ol><li>Лежа, руки вертикально</li><li>Локти зафиксированы</li><li>Вдох - к голове</li><li>Выдох - вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Только предплечья</li><li>Локти не расходятся</li><li>Плавное движение</li></ul></div>' },
-                    { name: 'Разгибание на блоке', sets: 3, reps: '15', weight: '10кг', direction: 'Вниз', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Строго вниз (разгибание предплечий)</p></div><h4 class="section-title">Техника:</h4><ol><li>У блока, рукоятка в руках</li><li>Локти к корпусу</li><li>Выдох - разгибать вниз</li><li>Вдох - сгибать</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Локти неподвижны</li><li>Четко вниз</li><li>Пауза внизу</li></ul></div>' },
-                    { name: 'Скручивания', sets: 3, reps: '15-20', weight: '', direction: 'К коленям', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх к коленям (подъем лопаток)</p></div><h4 class="section-title">Техника:</h4><ol><li>Лежа, ноги согнуты</li><li>Руки за голову</li><li>Выдох - лопатки вверх</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Не тянуть шею</li><li>Подбородок не к груди</li><li>Только верх корпуса</li></ul></div>' }
+                    {
+                        name: "Жим от груди сидя",
+                        sets: 4,
+                        reps: "8-12",
+                        weight: 40,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Сядьте в тренажер, спина к спинке<br>2. Хват чуть шире плеч<br>3. Выдох - жим вперед<br>4. Вдох - медленно назад",
+                        direction: "Направление: От центра груди вперед, локти слегка согнуты",
+                        important: "Важно: Не блокируйте локти полностью, контролируйте негативную фазу"
+                    },
+                    {
+                        name: "Тяга верхнего блока",
+                        sets: 4,
+                        reps: "8-12",
+                        weight: 45,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Сидя, колени зафиксированы<br>2. Хват широкий, ладони от себя<br>3. Выдох - тяга к верху груди<br>4. Вдох - медленно вверх",
+                        direction: "Направление: К верхней части груди, лопатки вместе",
+                        important: "Важно: Не наклоняйтесь назад, работают широчайшие мышцы"
+                    },
+                    {
+                        name: "Жим гантелей сидя",
+                        sets: 3,
+                        reps: "10-15",
+                        weight: 12,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Сидя, спина прямая<br>2. Гантели на уровне плеч<br>3. Выдох - жим вверх<br>4. Вдох - опускание",
+                        direction: "Направление: Строго вверх, не сводя гантели",
+                        important: "Важно: Не разгибайте руки до конца, контроль веса"
+                    },
+                    {
+                        name: "Тяга горизонтального блока",
+                        sets: 3,
+                        reps: "10-15",
+                        weight: 40,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Сидя, ноги упираются<br>2. Хват средний<br>3. Выдох - тяга к животу<br>4. Вдох - медленно вперед",
+                        direction: "Направление: К нижней части груди/животу",
+                        important: "Важно: Спина прямая, лопатки сводим в конце движения"
+                    },
+                    {
+                        name: "Подъем на бицепс",
+                        sets: 3,
+                        reps: "12-15",
+                        weight: 10,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Стоя, руки вдоль тела<br>2. Гантели нейтральным хватом<br>3. Выдох - подъем<br>4. Вдох - опускание",
+                        direction: "Направление: Сгибание только в локтевом суставе",
+                        important: "Важно: Локти неподвижны, без раскачивания корпуса"
+                    },
+                    {
+                        name: "Французский жим лежа",
+                        sets: 3,
+                        reps: "12-15",
+                        weight: 8,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Лежа, руки перпендикулярно телу<br>2. Гантели над грудью<br>3. Вдох - сгибание в локтях<br>4. Выдох - разгибание",
+                        direction: "Направление: Сгибание только в локтях, плечи неподвижны",
+                        important: "Важно: Локти не разводим, медленное опускание"
+                    }
                 ]
             },
-            'День 2': {
-                name: 'День 2: Спина-Бицепс + Кардио',
-                color: '#10b981',
+            day2: {
+                name: "День 2 - Кардио + Ноги",
                 exercises: [
-                    { name: 'Беговая дорожка', sets: 1, reps: '10 мин', weight: '', direction: 'Вперед', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вперед (естественный бег)</p></div><h4 class="section-title">Техника:</h4><ol><li>Встаньте на дорожку</li><li>Начните с медленной скорости</li><li>Корпус прямой, взгляд вперед</li><li>Естественный шаг</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Не держитесь за поручни</li><li>Ритмичное дыхание</li><li>Постепенно увеличивайте скорость</li></ul></div>' },
-                    { name: 'Гребной тренажер', sets: 1, reps: '8 мин', weight: '', direction: 'К себе', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>К себе и от себя (имитация гребли)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сядьте, ноги в упоры</li><li>Начинайте с разгибания ног</li><li>Затем тянуть к животу</li><li>Возвращайтесь в обратном порядке</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Спина прямая</li><li>Основная работа ногами</li><li>Не сутультесь</li></ul></div>' },
-                    { name: 'Степпер', sets: 1, reps: '5 мин', weight: '', direction: 'Вверх', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх-вниз (подъем по ступеням)</p></div><h4 class="section-title">Техника:</h4><ol><li>Встаньте на педали</li><li>Корпус прямой</li><li>Поочередно нажимайте педали</li><li>Руки на поручнях для равновесия</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Полная амплитуда</li><li>Не весь вес на руки</li><li>Равномерный ритм</li></ul></div>' },
-                    { name: 'Тяга верхнего блока', sets: 4, reps: '8-10', weight: '30кг', direction: 'К груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Сверху к груди (тяжелая тяга)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сядьте, широкий хват</li><li>Грудь вперед, спина прямая</li><li>Выдох - к груди</li><li>Вдох - контролируемо вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Тянуть локтями</li><li>Сводить лопатки внизу</li><li>Не отклоняться назад</li></ul></div>' },
-                    { name: 'Тяга штанги в наклоне', sets: 4, reps: '10-12', weight: '20кг', direction: 'К животу', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>К животу в наклоне</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, ноги на ширине плеч</li><li>Наклон 45°, спина прямая</li><li>Выдох - штанга к животу</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Колени слегка согнуты</li><li>Тянуть локтями назад</li><li>Естественный прогиб в спине</li></ul></div>' },
-                    { name: 'Тяга гантели к поясу', sets: 3, reps: '12', weight: '10кг', direction: 'К поясу', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>К поясу в наклоне</p></div><h4 class="section-title">Техника:</h4><ol><li>Колено и рука на скамье</li><li>Нога на полу, гантель в свободной руке</li><li>Выдох - к поясу</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Спина прямая</li><li>Локоть назад, не в сторону</li><li>Сводить лопатку вверху</li></ul></div>' },
-                    { name: 'Подъем штанги на бицепс', sets: 4, reps: '10-12', weight: '15кг', direction: 'К груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх к груди (со штангой)</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, штанга внизу</li><li>Хват на ширине плеч</li><li>Выдох - к груди</li><li>Вдох - медленно опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Не раскачиваться</li><li>Локти не выносить</li><li>Полная амплитуда</li></ul></div>' },
-                    { name: 'Подъем гантелей на бицепс', sets: 3, reps: '12', weight: '8кг', direction: 'К плечам', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>К плечам (поочередно или вместе)</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, гантели внизу</li><li>Локти к корпусу</li><li>Выдох - к плечам</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Можно поочередно</li><li>Разворачивать кисти</li><li>Избегать раскачиваний</li></ul></div>' },
-                    { name: 'Молотки', sets: 3, reps: '15', weight: '8кг', direction: 'Вверх', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх вдоль тела (нейтральный хват)</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, гантели нейтральным хватом</li><li>Руки вдоль тела</li><li>Выдох - поочередно вверх</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Ладони друг к другу</li><li>Локти неподвижны</li><li>Строго вдоль туловища</li></ul></div>' }
+                    {
+                        name: "Беговая дорожка",
+                        sets: 1,
+                        reps: "20 мин",
+                        hasWeight: false,
+                        technique: "Техника:<br>1. Разминка 5 минут ходьба<br>2. Основная часть - легкий бег<br>3. Заминка 3 минуты ходьба<br>4. Дыхание ритмичное",
+                        direction: "Направление: Пульс 120-140 ударов/мин",
+                        important: "Важно: При дискомфорте снижайте темп, пейте воду"
+                    },
+                    {
+                        name: "Приседания в тренажере",
+                        sets: 4,
+                        reps: "10-15",
+                        weight: 60,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Ноги на ширине плеч<br>2. Спина прижата к спинке<br>3. Вдох - приседание<br>4. Выдох - подъем",
+                        direction: "Направление: Таз назад, колени за носки не выходят",
+                        important: "Важно: Колени в одной плоскости со стопами"
+                    },
+                    {
+                        name: "Жим ногами",
+                        sets: 4,
+                        reps: "12-15",
+                        weight: 80,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Спина прижата, ноги на платформе<br>2. Стопы на ширине плеч<br>3. Вдох - сгибание ног<br>4. Выдох - жим",
+                        direction: "Направление: Не опускать колени к груди слишком глубоко",
+                        important: "Важно: Колени не сводить, полная амплитуда"
+                    },
+                    {
+                        name: "Подъем на носки сидя",
+                        sets: 4,
+                        reps: "15-20",
+                        weight: 25,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Сидя в тренажере<br>2. Носки на платформе<br>3. Выдох - подъем на носки<br>4. Вдох - опускание",
+                        direction: "Направление: Максимальная амплитуда движения",
+                        important: "Важно: Пауза в верхней точке, медленное опускание"
+                    },
+                    {
+                        name: "Сгибание ног лежа",
+                        sets: 3,
+                        reps: "12-15",
+                        weight: 30,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Лежа на животе<br>2. Валик на задней части голеней<br>3. Выдох - сгибание<br>4. Вдох - разгибание",
+                        direction: "Направление: Приводим пятки к ягодицам",
+                        important: "Важно: Таз прижат к скамье, без рывков"
+                    }
                 ]
             },
-            'День 3': {
-                name: 'День 3: Ноги-Пресс',
-                color: '#3b82f6',
+            day3: {
+                name: "День 3 - Ноги + Пресс",
                 exercises: [
-                    { name: 'Приседания', sets: 4, reps: '10-12', weight: '20кг', direction: 'Вниз-назад', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вниз-назад и вверх (отведение таза)</p></div><h4 class="section-title">Техника:</h4><ol><li>Стоя, ноги на ширине плеч</li><li>Носки слегка наружу</li><li>Вдох - таз назад и вниз</li><li>Выдох - вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Колени по линии носков</li><li>Спина прямая</li><li>Вес на пятках</li></ul></div>' },
-                    { name: 'Жим ногами', sets: 3, reps: '12-15', weight: '50кг', direction: 'От груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>От груди к ногам (отталкивание)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сидя в тренажере</li><li>Ноги на платформе</li><li>Вдох - к груди</li><li>Выдох - от себя</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Колени не сводить</li><li>До угла 90°</li><li>Не разгибать полностью</li></ul></div>' },
-                    { name: 'Разгибания ног', sets: 3, reps: '12-15', weight: '20кг', direction: 'Вперед', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх-вперед (разгибание голеней)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сидя в тренажере</li><li>Голени за валиками</li><li>Выдох - разгибать вперед</li><li>Вдох - сгибать</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Не резко до конца</li><li>Контроль опускания</li><li>Держаться за рукоятки</li></ul></div>' },
-                    { name: 'Сгибания ног', sets: 3, reps: '12-15', weight: '15кг', direction: 'К ягодицам', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>К ягодицам (сгибание голеней)</p></div><h4 class="section-title">Техника:</h4><ol><li>Лежа лицом вниз</li><li>Пятки под валиками</li><li>Выдох - к ягодицам</li><li>Вдох - разгибать</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Таз к скамье</li><li>Не поднимать бедра</li><li>Плавное движение</li></ul></div>' },
-                    { name: 'Подъемы на носки', sets: 4, reps: '20', weight: '25кг', direction: 'Вверх', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Строго вверх (подъем на носках)</p></div><h4 class="section-title">Техника:</h4><ol><li>Носки на платформе</li><li>Пятки в воздухе</li><li>Выдох - максимально высоко</li><li>Вдох - опустить с растяжкой</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Полная амплитуда</li><li>Пауза вверху</li><li>Медленное опускание</li></ul></div>' },
-                    { name: 'Планка', sets: 3, reps: '60сек', weight: '', direction: 'Статика', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Статическое удержание</p></div><h4 class="section-title">Техника:</h4><ol><li>Упор на предплечьях</li><li>Локти под плечами</li><li>Тело в линию</li><li>Держать время</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Не поднимать таз</li><li>Не прогибаться</li><li>Напрягать пресс и ягодицы</li></ul></div>' },
-                    { name: 'Скручивания', sets: 3, reps: '20', weight: '', direction: 'К коленям', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх к коленям</p></div><h4 class="section-title">Техника:</h4><ol><li>Лежа, ноги согнуты</li><li>Руки за голову</li><li>Выдох - лопатки вверх</li><li>Вдох - опустить</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Не тянуть шею</li><li>Работает верх корпуса</li><li>Небольшая амплитуда</li></ul></div>' },
-                    { name: 'Велосипед', sets: 3, reps: '30', weight: '', direction: 'Диагональ', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Диагональное скручивание</p></div><h4 class="section-title">Техника:</h4><ol><li>Лежа, руки за голову</li><li>Ноги на весу</li><li>Локоть к противоположному колену</li><li>Поочередно</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Скручивание корпуса</li><li>Не тянуть шею</li><li>Контролируемое движение</li></ul></div>' },
-                    { name: 'Пресс в тренажере', sets: 3, reps: '12-15', weight: '15кг', direction: 'К коленям', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вверх к коленям (в тренажере)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сидя в тренажере</li><li>Спина к спинке</li><li>Выдох - сгибать корпус</li><li>Вдох - медленно назад</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Работает пресс, не шея</li><li>Полная амплитуда</li><li>Контроль обратной фазы</li></ul></div>' }
+                    {
+                        name: "Гакк-приседания",
+                        sets: 4,
+                        reps: "8-12",
+                        weight: 70,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Спина к спинке тренажера<br>2. Ноги на платформе<br>3. Вдох - приседание<br>4. Выдох - подъем",
+                        direction: "Направление: Глубокое приседание, колени за носки",
+                        important: "Важно: Пятки не отрывать, полный контроль веса"
+                    },
+                    {
+                        name: "Румынская тяга",
+                        sets: 4,
+                        reps: "10-12",
+                        weight: 15,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Стоя, гантели перед собой<br>2. Ноги слегка согнуты<br>3. Вдох - наклон с отведением таза<br>4. Выдох - подъем",
+                        direction: "Направление: Таз назад, спина прямая",
+                        important: "Важно: Чувствуем растяжение задней поверхности бедра"
+                    },
+                    {
+                        name: "Выпады с гантелями",
+                        sets: 3,
+                        reps: "10 каждой",
+                        weight: 8,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Стоя, гантели в руках<br>2. Шаг вперед<br>3. Вдох - опускание<br>4. Выдох - подъем",
+                        direction: "Направление: Колено задней ноги к полу",
+                        important: "Важно: Колено передней ноги над стопой"
+                    },
+                    {
+                        name: "Подъемы ног в висе",
+                        sets: 3,
+                        reps: "8-15",
+                        hasWeight: false,
+                        technique: "Техника:<br>1. Вис на турнике/тренажере<br>2. Ноги прямые или согнутые<br>3. Выдох - подъем ног<br>4. Вдох - опускание",
+                        direction: "Направление: Ноги к груди, таз подкручивается",
+                        important: "Важно: Без раскачивания, контролируем опускание"
+                    },
+                    {
+                        name: "Планка",
+                        sets: 3,
+                        reps: "30-60 сек",
+                        hasWeight: false,
+                        technique: "Техника:<br>1. Упор на предплечья<br>2. Тело в одну линию<br>3. Дыхание спокойное<br>4. Удержание позиции",
+                        direction: "Направление: Прямая линия от головы до пяток",
+                        important: "Важно: Не поднимать таз, не прогибаться"
+                    },
+                    {
+                        name: "Скручивания на пресс",
+                        sets: 3,
+                        reps: "15-20",
+                        hasWeight: false,
+                        technique: "Техника:<br>1. Лежа, ноги согнуты<br>2. Руки за головой<br>3. Выдох - подъем корпуса<br>4. Вдох - опускание",
+                        direction: "Направление: Лопатки от пола, подбородок от груди",
+                        important: "Важно: Не тянем голову руками, работает пресс"
+                    }
                 ]
             },
-            'День 4': {
-                name: 'День 4: Функциональная + Силовая',
-                color: '#f97316',
+            day4: {
+                name: "День 4 - Функциональная + Сила",
                 exercises: [
-                    { name: 'Беговая дорожка разминка', sets: 1, reps: '10 мин', weight: '', direction: 'Вперед', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вперед (разминочный бег)</p></div><h4 class="section-title">Техника:</h4><ol><li>Встаньте на дорожку</li><li>Начните с ходьбы</li><li>Постепенно увеличивайте скорость</li><li>Разминочный темп</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Разогрев суставов</li><li>Подготовка к нагрузке</li><li>Комфортный темп</li></ul></div>' },
-                    { name: 'Эллиптический тренажер', sets: 1, reps: '10 мин', weight: '', direction: 'Овальная', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Овальная траектория</p></div><h4 class="section-title">Техника:</h4><ol><li>Встаньте на педали</li><li>Возьмите рукоятки</li><li>Синхронное движение рук и ног</li><li>Равномерный ритм</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Корпус прямой</li><li>Не отрывать пятки</li><li>Глубокое дыхание</li></ul></div>' },
-                    { name: 'TRX упражнения', sets: 3, reps: '30сек', weight: 'Вес тела', direction: 'Многоплоскостные', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Многоплоскостные функциональные движения</p></div><h4 class="section-title">Техника:</h4><ol><li>Закрепите TRX</li><li>Корпус всегда напряжен</li><li>Меняйте сложность углом наклона</li><li>Полная амплитуда</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Стабилизация корпуса</li><li>Контроль во всех плоскостях</li><li>Плавные движения</li></ul></div>' },
-                    { name: 'Упражнения на баланс', sets: 2, reps: '1 мин', weight: '', direction: 'Статика', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Статическое удержание с микродвижениями</p></div><h4 class="section-title">Техника:</h4><ol><li>Встаньте на BOSU или нестабильную поверхность</li><li>Найдите равновесие</li><li>Удерживайте баланс</li><li>Мелкие корректирующие движения</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Мягкие колени</li><li>Взгляд на точке</li><li>Включение глубоких мышц</li></ul></div>' },
-                    { name: 'Приседания силовые', sets: 4, reps: '6-8', weight: '40кг', direction: 'Вниз', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вниз-назад и вверх (тяжелые приседания)</p></div><h4 class="section-title">Техника:</h4><ol><li>Штанга на плечах</li><li>Ноги шире плеч</li><li>Вдох - назад и вниз</li><li>Выдох - мощно вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Таз первым назад</li><li>Колени по носкам</li><li>Полная глубина</li></ul></div>' },
-                    { name: 'Жим силовой', sets: 4, reps: '6-8', weight: '30кг', direction: 'От груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Вперед от груди (тяжелый жим)</p></div><h4 class="section-title">Техника:</h4><ol><li>Лежа на скамье</li><li>Лопатки сведены</li><li>Вдох - к груди</li><li>Выдох - мощно вверх</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Жесткая позиция</li><li>Контроль опускания</li><li>Страховка обязательна</li></ul></div>' },
-                    { name: 'Тяга силовая', sets: 3, reps: '8-10', weight: '30кг', direction: 'К груди', hasWeight: true, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Сверху к груди (тяжелая тяга)</p></div><h4 class="section-title">Техника:</h4><ol><li>Сидя, широкий хват</li><li>Грудь вперед</li><li>Выдох - к груди</li><li>Вдох - контролируемо</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Тянуть локтями</li><li>Сводить лопатки</li><li>Полная амплитуда</li></ul></div>' },
-                    { name: 'Растяжка', sets: 1, reps: '5 мин', weight: '', direction: 'Растягивание', hasWeight: false, technique: '<div class="direction-box"><h4 class="direction-title">Направление:</h4><p>Медленное растягивание всех групп мышц</p></div><h4 class="section-title">Техника:</h4><ol><li>Займите позицию для растяжки</li><li>Медленно до натяжения</li><li>Удерживайте 20-30 сек</li><li>Медленно выходите</li></ol><div class="important-points"><strong>Важно:</strong><ul><li>Без болевых ощущений</li><li>Глубокое дыхание</li><li>Все основные группы</li></ul></div>' }
+                    {
+                        name: "Функциональный тренажер - тяга",
+                        sets: 4,
+                        reps: "8-12",
+                        weight: 35,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Стоя, хват за рукояти<br>2. Небольшой наклон вперед<br>3. Выдох - тяга к животу<br>4. Вдох - возврат",
+                        direction: "Направление: Лопатки вместе, локти вдоль тела",
+                        important: "Важно: Корпус стабилен, работают мышцы спины"
+                    },
+                    {
+                        name: "Функциональный жим стоя",
+                        sets: 4,
+                        reps: "8-12",
+                        weight: 20,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Стоя, рукояти на уровне плеч<br>2. Ноги на ширине плеч<br>3. Выдох - жим вперед<br>4. Вдох - возврат",
+                        direction: "Направление: От плеч вперед, корпус прямо",
+                        important: "Важно: Пресс напряжен, не отклоняемся назад"
+                    },
+                    {
+                        name: "Приседания с гантелей",
+                        sets: 3,
+                        reps: "12-15",
+                        weight: 12,
+                        hasWeight: true,
+                        technique: "Техника:<br>1. Гантель у груди<br>2. Ноги шире плеч<br>3. Вдох - приседание<br>4. Выдох - подъем",
+                        direction: "Направление: Таз назад, колени наружу",
+                        important: "Важно: Спина прямая, вес на пятках"
+                    },
+                    {
+                        name: "Отжимания от пола",
+                        sets: 3,
+                        reps: "5-15",
+                        hasWeight: false,
+                        technique: "Техника:<br>1. Упор лежа<br>2. Руки шире плеч<br>3. Вдох - опускание<br>4. Выдох - подъем",
+                        direction: "Направление: Тело прямо, локти под углом 45°",
+                        important: "Важно: Полная амплитуда, при необходимости с колен"
+                    },
+                    {
+                        name: "Берпи",
+                        sets: 3,
+                        reps: "5-10",
+                        hasWeight: false,
+                        technique: "Техника:<br>1. Присед, руки на пол<br>2. Прыжок назад в планку<br>3. Отжимание (опционально)<br>4. Прыжок к рукам, подъем вверх",
+                        direction: "Направление: Плавные переходы между фазами",
+                        important: "Важно: При усталости убираем отжимания и прыжки"
+                    }
                 ]
             }
         };
 
-        const StorageManager = {
-            data: {},
-            save(key, value) { this.data[key] = JSON.parse(JSON.stringify(value)); },
-            load(key) { return this.data[key] ? JSON.parse(JSON.stringify(this.data[key])) : null; }
-        };
+        // Состояние приложения
+        let currentProgram = 'day1';
+        let currentExercise = null;
+        let timerInterval = null;
+        let timerSeconds = 90;
+        let isTimerRunning = false;
+        let completedSets = {};
+        let weights = {};
 
-        const NotificationManager = {
-            show(message, duration = 3000) {
-                const notification = document.getElementById('notification');
-                const text = document.getElementById('notification-text');
-                text.textContent = message;
-                notification.classList.add('active');
-                setTimeout(() => notification.classList.remove('active'), duration);
-            }
-        };
-
-        const TimerModule = {
-            start(seconds) {
-                this.stop();
-                state.timer.timeRemaining = seconds;
-                state.timer.isRunning = true;
-                state.timer.interval = setInterval(() => {
-                    state.timer.timeRemaining--;
-                    this.updateDisplay();
-                    if (state.timer.timeRemaining <= 0) this.complete();
-                }, 1000);
-                this.updateDisplay();
-            },
-            stop() {
-                if (state.timer.interval) {
-                    clearInterval(state.timer.interval);
-                    state.timer.interval = null;
-                }
-                state.timer.isRunning = false;
-                state.timer.timeRemaining = 0;
-                this.updateDisplay();
-            },
-            complete() {
-                this.stop();
-                NotificationManager.show('⏰ Время отдыха закончено!');
-                if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-            },
-            updateDisplay() {
-                const display = document.getElementById('timer-display');
-                const minutes = Math.floor(Math.abs(state.timer.timeRemaining) / 60);
-                const seconds = Math.abs(state.timer.timeRemaining) % 60;
-                display.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-        };
-
-        const WeightManager = {
-            initializeWeights() {
-                Object.keys(baseWeights).forEach(workout => {
-                    baseWeights[workout].forEach((weight, index) => {
-                        const key = `${workout}-${index}`;
-                        if (!state.exerciseWeights[key]) {
-                            state.exerciseWeights[key] = weight;
-                        }
-                    });
+        // Инициализация весов
+        function initializeWeights() {
+            for (const programId in workoutPrograms) {
+                workoutPrograms[programId].exercises.forEach((exercise, index) => {
+                    const key = `${programId}_${index}`;
+                    if (!weights[key]) {
+                        weights[key] = exercise.weight || 0;
+                    }
                 });
-                this.saveWeights();
-            },
-            getExerciseWeight(workout, exerciseIndex) {
-                const key = `${workout}-${exerciseIndex}`;
-                return state.exerciseWeights[key] || 0;
-            },
-            adjustWeight(workout, exerciseIndex, adjustment) {
-                const key = `${workout}-${exerciseIndex}`;
-                const currentWeight = state.exerciseWeights[key] || 0;
-                const newWeight = Math.max(0, currentWeight + adjustment);
-                state.exerciseWeights[key] = newWeight;
-                this.saveWeights();
-                WorkoutManager.render();
-            },
-            saveWeights() { StorageManager.save('exerciseWeights', state.exerciseWeights); },
-            createWeightControl(workout, exerciseIndex, hasWeight) {
-                if (!hasWeight) return '';
-                const currentWeight = this.getExerciseWeight(workout, exerciseIndex);
+            }
+        }
+
+        // Переключение вкладок
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+        }
+
+        // Отображение программы тренировок
+        function renderWorkout(programId) {
+            currentProgram = programId;
+            const program = workoutPrograms[programId];
+            const container = document.getElementById('workout-content');
+            
+            container.innerHTML = program.exercises.map((exercise, index) => {
+                const exerciseKey = `${programId}_${index}`;
+                const currentWeight = weights[exerciseKey] || exercise.weight || 0;
+                
                 return `
-                    <div class="weight-control">
-                        <button class="weight-btn weight-easy" data-workout="${workout}" data-index="${exerciseIndex}" data-change="-2.5">−</button>
-                        <div class="weight-display">${currentWeight}кг</div>
-                        <button class="weight-btn weight-hard" data-workout="${workout}" data-index="${exerciseIndex}" data-change="2.5">+</button>
-                    </div>
-                `;
-            }
-        };
-
-        const StatsManager = {
-            incrementSets() { state.stats.totalSets++; this.saveStats(); },
-            incrementExercises() { state.stats.totalExercises++; this.saveStats(); },
-            addTonnage(weight, reps) { 
-                const tonnage = weight * parseInt(reps);
-                state.stats.totalTonnage += tonnage; 
-                this.saveStats(); 
-            },
-            completeWorkout() {
-                state.stats.totalWorkouts++;
-                this.saveStats();
-                NotificationManager.show('🎉 Тренировка завершена! 💪');
-            },
-            resetStats() {
-                if (confirm('Сбросить всю статистику?')) {
-                    state.stats = { totalWorkouts: 0, totalSets: 0, totalExercises: 0, totalTonnage: 0 };
-                    state.completedSets = {};
-                    state.currentExerciseIndex = 0;
-                    this.saveStats();
-                    this.render();
-                    WorkoutManager.render();
-                }
-            },
-            saveStats() {
-                StorageManager.save('stats', state.stats);
-                StorageManager.save('completedSets', state.completedSets);
-                this.render();
-            },
-            render() {
-                document.getElementById('stat-workouts').textContent = state.stats.totalWorkouts;
-                document.getElementById('stat-exercises').textContent = state.stats.totalExercises;
-                document.getElementById('stat-sets').textContent = state.stats.totalSets;
-                document.getElementById('stat-tonnage').textContent = Math.round(state.stats.totalTonnage);
-            }
-        };
-
-        const WorkoutManager = {
-            selectWorkout(workoutKey) {
-                state.currentWorkout = workoutKey;
-                state.currentExerciseIndex = 0;
-                this.render();
-                this.updateWorkoutSelector();
-            },
-            updateWorkoutSelector() {
-                document.querySelectorAll('.workout-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.textContent.trim() === state.currentWorkout) {
-                        btn.classList.add('active');
-                    }
-                });
-            },
-            toggleSet(exerciseKey, setIndex, totalSets, exerciseIndex) {
-                const currentCount = state.completedSets[exerciseKey] || 0;
-                if (setIndex < currentCount) {
-                    state.completedSets[exerciseKey] = setIndex;
-                } else if (setIndex === currentCount) {
-                    state.completedSets[exerciseKey] = setIndex + 1;
-                    StatsManager.incrementSets();
-                    
-                    const program = workoutPrograms[state.currentWorkout];
-                    const exercise = program.exercises[exerciseIndex];
-                    const weight = WeightManager.getExerciseWeight(state.currentWorkout, exerciseIndex);
-                    const reps = parseInt(exercise.reps) || 1;
-                    
-                    if (weight > 0) StatsManager.addTonnage(weight, reps);
-                    if (navigator.vibrate) navigator.vibrate(100);
-                    
-                    if (setIndex + 1 < totalSets) TimerModule.start(90);
-                    if (setIndex + 1 >= totalSets) {
-                        StatsManager.incrementExercises();
-                        this.nextExercise();
-                    }
-                }
-                this.saveProgress();
-                this.render();
-            },
-            nextExercise() {
-                const program = workoutPrograms[state.currentWorkout];
-                if (state.currentExerciseIndex < program.exercises.length - 1) {
-                    state.currentExerciseIndex++;
-                }
-            },
-            completeWorkout() {
-                StatsManager.completeWorkout();
-                state.completedSets = {};
-                state.currentExerciseIndex = 0;
-                this.saveProgress();
-                this.render();
-            },
-            saveProgress() {
-                StorageManager.save('completedSets', state.completedSets);
-                StorageManager.save('currentExerciseIndex', state.currentExerciseIndex);
-            },
-            render() {
-                const program = workoutPrograms[state.currentWorkout];
-                const container = document.getElementById('exercise-list');
-                
-                const selector = document.getElementById('workout-selector');
-                selector.innerHTML = '';
-                Object.keys(workoutPrograms).forEach(key => {
-                    const btn = document.createElement('button');
-                    btn.className = 'workout-btn';
-                    btn.textContent = key;
-                    if (key === state.currentWorkout) btn.classList.add('active');
-                    selector.appendChild(btn);
-                });
-                
-                if (!program) return;
-                
-                document.getElementById('workout-title').textContent = program.name;
-                document.getElementById('workout-title').style.color = program.color;
-                
-                container.innerHTML = '';
-                program.exercises.forEach((exercise, index) => {
-                    const exerciseDiv = document.createElement('div');
-                    exerciseDiv.className = 'exercise-item';
-                    
-                    if (index === state.currentExerciseIndex) exerciseDiv.classList.add('current');
-                    
-                    const exerciseKey = `${state.currentWorkout}-${index}`;
-                    const completedCount = state.completedSets[exerciseKey] || 0;
-                    
-                    if (completedCount >= exercise.sets) exerciseDiv.classList.add('completed');
-                    
-                    const weightDisplay = exercise.hasWeight ? 
-                        WeightManager.getExerciseWeight(state.currentWorkout, index) + 'кг' : '';
-                    
-                    exerciseDiv.innerHTML = `
+                    <div class="workout-card" style="position: relative;">
                         <div class="exercise-name">${exercise.name}</div>
-                        <div class="exercise-details">
-                            ${exercise.sets}×${exercise.reps} ${weightDisplay ? '(' + weightDisplay + ')' : ''}
+                        
+                        <div class="technique-bg">
+                            <div class="technique-title">Техника выполнения:</div>
+                            ${exercise.technique}<br><br>
+                            <strong style="color: #48bb78;">${exercise.direction}</strong><br><br>
+                            <strong style="color: #e53e3e;">${exercise.important}</strong>
                         </div>
-                        <div class="exercise-details" style="color: ${program.color}; font-weight: 600;">
-                            ${exercise.direction}
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
+                            <div><strong>Подходы:</strong> ${exercise.sets}</div>
+                            <div><strong>Повторы:</strong> ${exercise.reps}</div>
+                            ${exercise.hasWeight ? `<div><strong>Вес:</strong> ${currentWeight} кг</div>` : ''}
                         </div>
-                        ${WeightManager.createWeightControl(state.currentWorkout, index, exercise.hasWeight)}
-                        <div class="set-dots">
-                            ${Array(exercise.sets).fill().map((_, setIndex) => {
-                                const isCompleted = setIndex < completedCount;
-                                return `<div class="set-dot ${isCompleted ? 'completed' : ''}" 
-                                        data-exercise="${exerciseKey}" 
-                                        data-set="${setIndex}" 
-                                        data-total="${exercise.sets}"
-                                        data-exercise-index="${index}">
+                        
+                        ${exercise.hasWeight ? `
+                            <div class="weight-controls">
+                                <button class="weight-btn" onclick="changeWeight('${exerciseKey}', -2.5)">-2.5</button>
+                                <div class="weight-display">${currentWeight} кг</div>
+                                <button class="weight-btn" onclick="changeWeight('${exerciseKey}', 2.5)">+2.5</button>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="sets-container">
+                            ${Array.from({length: exercise.sets}, (_, setIndex) => {
+                                const setKey = `${exerciseKey}_set_${setIndex}`;
+                                const isCompleted = completedSets[setKey];
+                                return `
+                                    <button class="set-btn ${isCompleted ? 'completed' : ''}" 
+                                            onclick="toggleSet('${setKey}', '${exercise.name}', ${setIndex + 1})">
                                         ${setIndex + 1}
-                                        </div>`;
+                                    </button>
+                                `;
                             }).join('')}
                         </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${(completedCount / exercise.sets) * 100}%"></div>
-                        </div>
-                    `;
-                    
-                    container.appendChild(exerciseDiv);
-                });
-            }
-        };
+                    </div>
+                `;
+            }).join('');
+        }
 
-        const TechniqueManager = {
-            render() {
-                const container = document.getElementById('technique-list');
-                container.innerHTML = '';
+        // Изменение веса
+        function changeWeight(exerciseKey, delta) {
+            weights[exerciseKey] = Math.max(0, (weights[exerciseKey] || 0) + delta);
+            renderWorkout(currentProgram);
+            saveData();
+        }
+
+        // Переключение выполнения подхода
+        function toggleSet(setKey, exerciseName, setNumber) {
+            completedSets[setKey] = !completedSets[setKey];
+            
+            if (completedSets[setKey]) {
+                // Переход на таймер при завершении подхода
+                currentExercise = exerciseName;
+                showExerciseInfo(exerciseName);
+                switchTab('timer-tab');
+                startRestTimer();
+            }
+            
+            renderWorkout(currentProgram);
+            saveData();
+        }
+
+        // Отображение информации о текущем упражнении
+        function showExerciseInfo(exerciseName) {
+            const info = document.getElementById('current-exercise-info');
+            const nameDisplay = document.getElementById('exercise-name-display');
+            
+            if (exerciseName) {
+                nameDisplay.textContent = exerciseName;
+                info.style.display = 'block';
+            } else {
+                info.style.display = 'none';
+            }
+        }
+
+        // Функции таймера
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timerSeconds / 60);
+            const seconds = timerSeconds % 60;
+            document.getElementById('timer-display').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startRestTimer() {
+            if (isTimerRunning) return;
+            
+            isTimerRunning = true;
+            document.getElementById('start-timer').style.display = 'none';
+            document.getElementById('pause-timer').style.display = 'inline-block';
+            document.getElementById('done-timer').style.display = 'inline-block';
+            
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimerDisplay();
                 
-                Object.keys(workoutPrograms).forEach(workoutKey => {
-                    const program = workoutPrograms[workoutKey];
-                    
-                    program.exercises.forEach((exercise, index) => {
-                        if (!exercise.technique) return;
-                        
-                        if (state.currentTechniqueFilter !== 'all' && 
-                            state.currentTechniqueFilter !== workoutKey) return;
-                        
-                        const techniqueDiv = document.createElement('div');
-                        techniqueDiv.className = 'technique-item';
-                        techniqueDiv.innerHTML = `
-                            <div class="technique-title">${exercise.name}</div>
-                            <div class="technique-direction" style="color: ${program.color}">
-                                ${workoutKey} • ${exercise.direction}
-                            </div>
-                            <div class="technique-preview">
-                                Кликните для просмотра полной техники выполнения упражнения
-                            </div>
-                        `;
-                        
-                        techniqueDiv.addEventListener('click', () => {
-                            this.showModal(exercise);
-                        });
-                        
-                        container.appendChild(techniqueDiv);
-                    });
-                });
-            },
-            showModal(exercise) {
-                const modal = document.getElementById('technique-modal');
-                const content = document.getElementById('technique-modal-content');
-                document.getElementById('technique-modal-title').textContent = exercise.name;
-                content.innerHTML = exercise.technique;
-                modal.classList.add('active');
-            },
-            hideModal() {
-                document.getElementById('technique-modal').classList.remove('active');
-            },
-            setFilter(filter) {
-                state.currentTechniqueFilter = filter;
-                this.updateFilterButtons();
-                this.render();
-            },
-            updateFilterButtons() {
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                    if (btn.dataset.filter === state.currentTechniqueFilter) {
-                        btn.classList.add('active');
-                    }
-                });
-            }
-        };
-
-        const ThemeManager = {
-            toggle() {
-                state.theme = state.theme === 'light' ? 'dark' : 'light';
-                this.apply();
-                StorageManager.save('theme', state.theme);
-            },
-            apply() {
-                document.documentElement.setAttribute('data-theme', state.theme);
-                document.getElementById('theme-toggle').textContent = state.theme === 'light' ? '🌙' : '☀️';
-            }
-        };
-
-        const NavigationManager = {
-            showTab(tabName) {
-                document.querySelectorAll('.nav button').forEach(btn => btn.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-                document.getElementById(`${tabName}-tab`).classList.add('active');
-                
-                if (tabName === 'technique') {
-                    TechniqueManager.render();
+                if (timerSeconds <= 0) {
+                    stopTimer();
+                    // Автоматический возврат к программе тренировки
+                    setTimeout(() => {
+                        switchTab('workout-tab');
+                        showExerciseInfo(null);
+                        resetTimer();
+                    }, 1000);
                 }
-            }
-        };
-
-        const ScheduleManager = {
-            render() {
-                const schedule = [
-                    { day: 'Понедельник', workout: 'День 1', description: 'Грудь-Плечи-Трицепс' },
-                    { day: 'Вторник', workout: 'День 3', description: 'Ноги-Пресс' },
-                    { day: 'Среда', workout: 'Отдых', description: 'Восстановление' },
-                    { day: 'Четверг', workout: 'День 2', description: 'Спина-Бицепс + Кардио' },
-                    { day: 'Пятница', workout: 'День 1', description: 'Грудь-Плечи-Трицепс' },
-                    { day: 'Суббота', workout: 'День 4', description: 'Функциональная + Силовая' },
-                    { day: 'Воскресенье', workout: 'Отдых', description: 'Восстановление' }
-                ];
-                
-                const container = document.getElementById('schedule-list');
-                container.innerHTML = '';
-                schedule.forEach(item => {
-                    const scheduleDiv = document.createElement('div');
-                    scheduleDiv.style.cssText = 'background: white; border: 2px solid #e5e7eb; border-radius: 20px; padding: 1.5rem; margin-bottom: 1rem; cursor: pointer;';
-                    scheduleDiv.innerHTML = `
-                        <div style="font-weight: 700; margin-bottom: 0.5rem;">${item.day}</div>
-                        <div style="color: ${item.workout !== 'Отдых' ? workoutPrograms[item.workout]?.color || '#6b7280' : '#6b7280'}; font-weight: 600; margin-bottom: 0.25rem;">${item.workout}</div>
-                        <div style="font-size: 0.9rem; color: #6b7280;">${item.description}</div>
-                    `;
-                    if (item.workout !== 'Отдых' && workoutPrograms[item.workout]) {
-                        scheduleDiv.addEventListener('click', () => {
-                            WorkoutManager.selectWorkout(item.workout);
-                            NavigationManager.showTab('workout');
-                        });
-                    }
-                    container.appendChild(scheduleDiv);
-                });
-            }
-        };
-
-        const EventHandlers = {
-            init() {
-                document.querySelectorAll('.nav button').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const tab = button.getAttribute('data-tab');
-                        NavigationManager.showTab(tab);
-                    });
-                });
-                
-                document.getElementById('theme-toggle').addEventListener('click', () => {
-                    ThemeManager.toggle();
-                });
-                
-                document.getElementById('workout-selector').addEventListener('click', (e) => {
-                    if (e.target.classList.contains('workout-btn')) {
-                        const workoutKey = e.target.textContent.trim();
-                        WorkoutManager.selectWorkout(workoutKey);
-                    }
-                });
-                
-                document.getElementById('exercise-list').addEventListener('click', (e) => {
-                    if (e.target.classList.contains('set-dot')) {
-                        const exerciseKey = e.target.dataset.exercise;
-                        const setIndex = parseInt(e.target.dataset.set);
-                        const totalSets = parseInt(e.target.dataset.total);
-                        const exerciseIndex = parseInt(e.target.dataset.exerciseIndex);
-                        WorkoutManager.toggleSet(exerciseKey, setIndex, totalSets, exerciseIndex);
-                    }
-                    if (e.target.classList.contains('weight-btn')) {
-                        const workout = e.target.dataset.workout;
-                        const index = parseInt(e.target.dataset.index);
-                        const change = parseFloat(e.target.dataset.change);
-                        WeightManager.adjustWeight(workout, index, change);
-                    }
-                });
-                
-                document.getElementById('complete-workout').addEventListener('click', () => {
-                    WorkoutManager.completeWorkout();
-                });
-                
-                document.querySelectorAll('.timer-preset').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const seconds = parseInt(btn.dataset.seconds);
-                        TimerModule.start(seconds);
-                    });
-                });
-                
-                document.getElementById('timer-stop').addEventListener('click', () => {
-                    TimerModule.stop();
-                });
-                
-                document.getElementById('reset-stats').addEventListener('click', () => {
-                    StatsManager.resetStats();
-                });
-                
-                document.querySelector('.modal-close').addEventListener('click', () => {
-                    TechniqueManager.hideModal();
-                });
-                
-                document.getElementById('technique-modal').addEventListener('click', (e) => {
-                    if (e.target.id === 'technique-modal') {
-                        TechniqueManager.hideModal();
-                    }
-                });
-                
-                document.querySelectorAll('.filter-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const filter = btn.dataset.filter;
-                        TechniqueManager.setFilter(filter);
-                    });
-                });
-            }
-        };
-
-        const init = () => {
-            WeightManager.initializeWeights();
-            ThemeManager.apply();
-            EventHandlers.init();
-            
-            const savedStats = StorageManager.load('stats');
-            if (savedStats) state.stats = savedStats;
-            
-            const savedSets = StorageManager.load('completedSets');
-            if (savedSets) state.completedSets = savedSets;
-            
-            const savedTheme = StorageManager.load('theme');
-            if (savedTheme) {
-                state.theme = savedTheme;
-                ThemeManager.apply();
-            }
-            
-            WorkoutManager.selectWorkout('День 1');
-            StatsManager.render();
-            ScheduleManager.render();
-            TechniqueManager.render();
-            
-            setTimeout(() => {
-                NotificationManager.show('✅ Приложение готово! Техника в отдельной вкладке 📖', 4000);
             }, 1000);
-        };
+        }
 
-        document.addEventListener('DOMContentLoaded', init);
+        function pauseTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            isTimerRunning = false;
+            document.getElementById('start-timer').style.display = 'inline-block';
+            document.getElementById('pause-timer').style.display = 'none';
+        }
 
-        return { init, state, StorageManager, NotificationManager, TimerModule, 
-                WeightManager, StatsManager, WorkoutManager, ThemeManager };
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            isTimerRunning = false;
+            document.getElementById('start-timer').style.display = 'inline-block';
+            document.getElementById('pause-timer').style.display = 'none';
+            document.getElementById('done-timer').style.display = 'none';
+        }
 
-    })();
+        function resetTimer() {
+            stopTimer();
+            timerSeconds = 90;
+            updateTimerDisplay();
+        }
+
+        function finishRest() {
+            stopTimer();
+            switchTab('workout-tab');
+            showExerciseInfo(null);
+            resetTimer();
+        }
+
+        // Сохранение данных в localStorage
+        function saveData() {
+            localStorage.setItem('gymTrainerCompletedSets', JSON.stringify(completedSets));
+            localStorage.setItem('gymTrainerWeights', JSON.stringify(weights));
+        }
+
+        // Загрузка данных из localStorage
+        function loadData() {
+            const savedSets = localStorage.getItem('gymTrainerCompletedSets');
+            const savedWeights = localStorage.getItem('gymTrainerWeights');
+            
+            if (savedSets) {
+                completedSets = JSON.parse(savedSets);
+            }
+            
+            if (savedWeights) {
+                weights = JSON.parse(savedWeights);
+            }
+        }
+
+        // Инициализация приложения
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            initializeWeights();
+            
+            // Обработчики для вкладок
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    switchTab(btn.dataset.tab);
+                });
+            });
+            
+            // Обработчики для программ
+            document.querySelectorAll('.program-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.program-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderWorkout(btn.dataset.program);
+                });
+            });
+            
+            // Обработчики таймера
+            document.getElementById('start-timer').addEventListener('click', startRestTimer);
+            document.getElementById('pause-timer').addEventListener('click', pauseTimer);
+            document.getElementById('reset-timer').addEventListener('click', resetTimer);
+            document.getElementById('done-timer').addEventListener('click', finishRest);
+            
+            // Первоначальная отрисовка
+            renderWorkout(currentProgram);
+            updateTimerDisplay();
+        });
     </script>
 </body>
 </html>
