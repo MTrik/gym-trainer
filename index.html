@@ -33,7 +33,7 @@
     .weight-display { font-size:1.2em; font-weight:500; color:#2d3748; min-width:80px; text-align:center; }
     .timer-card { text-align:center; }
     .timer-display { font-size:3.2em; font-weight:800; color:#667eea; margin:24px 0; text-shadow:0 2px 4px rgba(0,0,0,.1); }
-    .timer-controls { display:flex; gap:12px; justify-content:center; margin:22px 0; }
+    .timer-controls { display:flex; gap:16px; justify-content:center; margin-top:24px; margin-bottom:44px; flex-wrap:wrap; }
     .timer-btn { padding:14px 22px; border:0; border-radius:999px; font-size:1.05em; font-weight:800; min-width:104px; color:#fff; box-shadow:0 6px 16px rgba(0,0,0,.12); }
     .timer-btn.start{ background:linear-gradient(135deg,#48bb78,#38a169) } .timer-btn.pause{ background:linear-gradient(135deg,#ed8936,#dd6b20) } .timer-btn.reset{ background:linear-gradient(135deg,#e53e3e,#c53030) } .timer-btn.done{ background:linear-gradient(135deg,#667eea,#764ba2) }
     .program-selector { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:20px; }
@@ -41,7 +41,8 @@
     .program-btn.active{ background:rgba(255,255,255,.92); color:#333; transform:scale(1.02) }
     @media (max-width:480px){ .container{padding:14px} .header h1{font-size:1.9em} .timer-display{font-size:2.8em} }
   </style>
-</head><body>
+</head>
+<body>
   <div class="container">
     <div class="header">
       <h1>🏋️ GYM TRAINER</h1>
@@ -100,7 +101,9 @@
     <button class="tab-btn active" data-tab="workout-tab">🏋️ Программа</button>
     <button class="tab-btn" data-tab="stats-tab">📊 Статистика</button>
     <button class="tab-btn" data-tab="plan-tab">📅 План</button>
-  </div>  <script>
+  </div>
+
+  <script>
     // Данные тренировочных программ
     const workoutPrograms = {
       day1: { name: "День 1 - Верх тела", exercises: [
@@ -135,7 +138,7 @@
           direction: "Направление: Пульс 120-140 ударов/мин",
           important: "Важно: При дискомфорте снижайте темп, пейте воду" },
         { name: "Приседания в тренажере", sets: 4, reps: "10-15", weight: 60, hasWeight: true,
-          technique: "Техника:<br>1. Ноги на ширине плеч<br>2. Спина прижата к спинке<br>3. Вдох - приседание<br>4. Выдох - подъем",
+          technique: "Техника:<br>1. Ноги на ширине плеч<br>2. Спина прижата к спинке<br>3. Вдох - приседание<br>4. Вдох - подъем",
           direction: "Направление: Таз назад, колени за носки не выходят",
           important: "Важно: Колени в одной плоскости со стопами" },
         { name: "Жим ногами", sets: 4, reps: "12-15", weight: 80, hasWeight: true,
@@ -201,7 +204,6 @@
       ]}
     };
 
-    // Состояние приложения
     let currentProgram = 'day1';
     let currentExercise = null;
     let timerInterval = null;
@@ -219,14 +221,18 @@
       }
     }
 
-    function switchTab(tabId) {
+    function safeSwitchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+      const tabEl = document.getElementById(tabId);
+      const btnEl = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+      if (tabEl) tabEl.classList.add('active');
+      if (btnEl) btnEl.classList.add('active');
+      if (tabEl && tabEl.scrollIntoView) {
+        setTimeout(() => tabEl.scrollIntoView({ block: 'start', behavior: 'smooth' }), 0);
+      }
     }
 
-    // Рендер программы (исправленная версия)
     function renderWorkout(programId) {
       currentProgram = programId;
       const program = workoutPrograms[programId];
@@ -265,7 +271,6 @@
         </div>
       `;
 
-      // Клики по сетам
       container.querySelectorAll('.set-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const exIdx = Number(btn.getAttribute('data-ex'));
@@ -274,7 +279,7 @@
           completedSets[key] = !completedSets[key];
           btn.classList.toggle('completed', completedSets[key]);
 
-          switchTab('timer-tab');
+          safeSwitchTab('timer-tab');
           const nameEl = document.getElementById('exercise-name-display');
           const infoEl = document.getElementById('current-exercise-info');
           if (nameEl) nameEl.textContent = program.exercises[exIdx].name;
@@ -282,7 +287,6 @@
         });
       });
 
-      // Кнопки веса
       container.querySelectorAll('.weight-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const exIdx = Number(btn.getAttribute('data-ex'));
@@ -298,7 +302,6 @@
       });
     }
 
-    // Простой таймер
     function format(sec) {
       const m = String(Math.floor(sec / 60)).padStart(2, '0');
       const s = String(sec % 60).padStart(2, '0');
@@ -326,8 +329,7 @@
             if (timerSeconds === 0) {
               clearInterval(timerInterval);
               isTimerRunning = false;
-              // Автовозврат к упражнению
-              switchTab('workout-tab');
+              safeSwitchTab('workout-tab');
             }
           }
         }, 1000);
@@ -356,15 +358,21 @@
         update();
         pauseBtn.style.display = 'none';
         doneBtn.style.display = 'none';
-        switchTab('workout-tab');
+        safeSwitchTab('workout-tab');
       });
 
       update();
     }
 
-    // Инициализация
     document.addEventListener('DOMContentLoaded', () => {
       initializeWeights();
+
+      // Привязка нижних кнопок вкладок один раз надёжно
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => safeSwitchTab(btn.dataset.tab));
+      });
+
+      // Выбор программ
       document.querySelectorAll('.program-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           document.querySelectorAll('.program-btn').forEach(b => b.classList.remove('active'));
@@ -372,6 +380,7 @@
           renderWorkout(btn.getAttribute('data-program'));
         });
       });
+
       renderWorkout('day1');
       initTimer();
     });
