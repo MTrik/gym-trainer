@@ -1,352 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-  <meta name="theme-color" content="#667eea">
-  <title>Gym Trainer Pro</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;color:#333;overflow-x:hidden;padding-bottom:80px}
-    .container{max-width:400px;margin:0 auto;padding:20px}
-    .header{text-align:center;color:#fff;margin-bottom:14px}
-    .header h1{font-size:1.9em;margin-bottom:6px;text-shadow:0 2px 4px rgba(0,0,0,.3)}
-    .tabs{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);display:flex;justify-content:space-around;padding:10px 0;box-shadow:0 -2px 20px rgba(0,0,0,.1);z-index:1000}
-    .tab-btn{background:none;border:none;padding:8px 12px;border-radius:999px;cursor:pointer;transition:all .3s;font-size:.9em;font-weight:600;display:flex;align-items:center;gap:6px}
-    .tab-btn.active{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;transform:translateY(-2px)}
-    .tab-content{display:none}
-    .tab-content.active{display:block}
-    .workout-card{background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
-    .exercise-name{font-size:1.1em;font-weight:800;color:#2d3748;margin-bottom:10px}
-    .technique-bg{background:rgba(102,126,234,.05);border-left:4px solid #667eea;padding:12px;border-radius:10px;font-size:.9em;line-height:1.5;margin-top:8px}
-    .sets-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(64px,1fr));gap:12px;margin:12px 0}
-    .set-btn{width:64px;height:64px;aspect-ratio:1;border-radius:50%;border:0;background:#fff;color:#2d3748;font-weight:800;font-size:.95em;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.08);transition:transform .2s,box-shadow .2s,background .2s,color .2s}
-    .set-btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(0,0,0,.12)}
-    .set-btn.completed{background:linear-gradient(135deg,#48bb78,#38a169);color:#fff;box-shadow:0 8px 20px rgba(56,161,105,.35)}
-    .weight-controls{display:flex;justify-content:center;align-items:center;gap:14px;margin:8px 0 4px;padding:10px;background:rgba(102,126,234,.05);border-radius:12px}
-    .weight-btn{width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:1.2em;font-weight:800;box-shadow:0 6px 16px rgba(102,126,234,.35);transition:transform .2s}
-    .weight-btn:hover{transform:scale(1.06)}.weight-btn:active{transform:scale(.96)}
-    .weight-display{font-size:1.1em;font-weight:500;color:#2d3748;min-width:80px;text-align:center}
-    .timer-card{text-align:center}
-    .timer-display{font-size:3em;font-weight:800;color:#667eea;margin:22px 0;text-shadow:0 2px 4px rgba(0,0,0,.1)}
-    .timer-controls{display:flex;gap:16px;justify-content:center;margin-top:24px;margin-bottom:44px;flex-wrap:wrap}
-    .timer-btn{padding:14px 22px;border:0;border-radius:999px;font-size:1.05em;font-weight:800;min-width:104px;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}
-    .timer-btn.start{background:linear-gradient(135deg,#48bb78,#38a169)}
-    .timer-btn.pause{background:linear-gradient(135deg,#ed8936,#dd6b20)}
-    .timer-btn.reset{background:linear-gradient(135deg,#e53e3e,#c53030)}
-    .timer-btn.done{background:linear-gradient(135deg,#667eea,#764ba2)}
-    .program-selector{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px}
-    .program-btn{padding:16px;border:0;border-radius:15px;background:rgba(255,255,255,.2);color:#fff;font-weight:800}
-    .program-btn.active{background:rgba(255,255,255,.92);color:#333;transform:scale(1.02)}
-  </style>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Курсы валют — MonteMove</title>
+	<meta name="description" content="Актуальные курсы обмена, программа лояльности MonteMove и контакты.">
+	<style>
+		:root{
+			--bg:#0b0c10;--card:#111318;--text:#eaeef3;--muted:#a8b0bb;--accent:#59f;--border:#20232b;
+		}
+		*{box-sizing:border-box}
+		html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+		a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+		.container{max-width:1100px;margin:0 auto;padding:24px}
+		header{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
+		.nav{display:flex;gap:16px;flex-wrap:wrap} .nav a{color:var(--muted)}
+		.hero{margin:24px 0;padding:20px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(180deg,#12141a,rgba(18,20,26,0.6))}
+		.hero h1{margin:0 0 8px;font-size:28px} .hero p{margin:0 0 12px;color:var(--muted)}
+		.actions{display:flex;gap:12px;flex-wrap:wrap}
+		.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:#151823;color:var(--text);font-weight:600}
+		.btn.primary{background:var(--accent);color:#fff;border-color:transparent}
+		.badge{display:inline-flex;align-items:center;gap:8px;color:#9ee6b8;font-weight:600}
+		.badge::before{content:"●";color:#34c759}
+		.section{margin:36px 0}
+		.card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:16px}
+		.kicker{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:12px;margin-bottom:6px}
+		.list{margin:8px 0 0 0;padding-left:18px;color:var(--muted)}
+		.footer{margin:48px 0 24px;color:var(--muted);display:grid;gap:12px}
+		.links{display:flex;gap:12px;flex-wrap:wrap}
+		.tag{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted)}
+		iframe.sheet{width:100%;height:600px;border:0}
+		@media (max-width:640px){iframe.sheet{height:70vh}}
+	</style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>🏋️ GYM TRAINER</h1>
-      <p>Ваш персональный тренер TechnoGym</p>
-    </div>
+	<header class="container">
+		<div class="nav">
+			<a href="#">Курсы</a>
+			<a href="#">О нас</a>
+			<a href="#">Контакты</a>
+			<a href="#">Сербия</a>
+			<a href="#">Черногория</a>
+		</div>
+		<div class="nav">
+			<a class="btn" href="#">Консультация</a>
+			<a class="btn" href="#">Наш чат</a>
+		</div>
+	</header>
 
-    <div id="timer-tab" class="tab-content">
-      <div class="workout-card timer-card">
-        <h2>⏱️ Таймер отдыха</h2>
-        <div id="timer-display" class="timer-display">01:30</div>
-        <div class="timer-controls">
-          <button id="start-timer" class="timer-btn start">Старт</button>
-          <button id="pause-timer" class="timer-btn pause" style="display:none;">Пауза</button>
-          <button id="reset-timer" class="timer-btn reset">Сброс</button>
-          <button id="done-timer" class="timer-btn done" style="display:none;">Готово</button>
-        </div>
-        <div id="current-exercise-info" style="margin-top:12px;padding:10px;background:rgba(102,126,234,.1);border-radius:10px;display:none;">
-          <div style="font-weight:800;color:#667eea;">Текущее упражнение:</div>
-          <div id="exercise-name-display" style="font-size:1.05em;margin-top:4px;"></div>
-        </div>
-      </div>
-    </div>
+	<main class="container">
+		<section class="hero">
+			<h1>Курсы валют</h1>
+			<p>Подробно проконсультируем по всем интересующим вопросам.</p>
+			<div class="actions">
+				<a class="btn primary" href="#">Бесплатная консультация</a>
+				<span class="badge">Данные введены верно • Свяжитесь со мной</span>
+			</div>
+			<p style="margin-top:10px;color:#a8b0bb">
+				Нажимая на кнопку, вы соглашаетесь с политикой обработки данных.
+			</p>
+		</section>
 
-    <div id="workout-tab" class="tab-content active">
-      <div class="program-selector">
-        <button class="program-btn active" data-program="day1">День 1<br>Верх тела</button>
-        <button class="program-btn" data-program="day2">День 2<br>Кардио+Ноги</button>
-        <button class="program-btn" data-program="day3">День 3<br>Ноги+Пресс</button>
-        <button class="program-btn" data-program="day4">День 4<br>Функц+Сила</button>
-      </div>
-      <div id="workout-content"></div>
-    </div>
+		<section class="section card">
+			<div class="kicker">Таблица</div>
+			<h2 style="margin:0 0 8px;font-size:18px">Курсы обмена</h2>
+			<iframe
+				class="sheet"
+				src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQUb0EbKC3P-s1OaXzPLuMHY1AksyyQc9UTVpzgzoshVpBVLyxqiriPGWICqC74p_vyt0wqzndYYyUf/pubhtml?gid=597818720&single=true"
+				loading="lazy"
+				referrerpolicy="no-referrer-when-downgrade"
+			></iframe>
+		</section>
 
-    <div id="stats-tab" class="tab-content">
-      <div class="workout-card">
-        <h2>📊 Статистика</h2>
-        <div id="stats-content"><p>Статистика тренировок будет отображаться здесь</p></div>
-      </div>
-    </div>
+		<section class="section">
+			<div class="card">
+				<div class="kicker">Лояльность</div>
+				<h3 style="margin:0 0 8px;font-size:18px">Программа клуба MonteMove</h3>
+				<p style="color:#a8b0bb;font-size:13px">Скидки не суммируются и действуют на обмены от 1000 евро.</p>
+				<ul class="list">
+					<li>Первое обращение — скидка на одну строку</li>
+					<li>Членство в чате и канале — скидка на одну позицию</li>
+					<li>Самовывоз — скидка на одну строку</li>
+				</ul>
+			</div>
+		</section>
 
-    <div id="plan-tab" class="tab-content">
-      <div class="workout-card">
-        <h2>📅 План тренировок</h2>
-        <div style="line-height:1.7;margin-top:12px;">
-          <div style="padding:10px;margin:8px 0;background:rgba(102,126,234,.1);border-radius:8px;"><strong>Понедельник:</strong> День 1 - Верх тела</div>
-          <div style="padding:10px;margin:8px 0;background:rgba(102,126,234,.1);border-radius:8px;"><strong>Вторник:</strong> День 2 - Кардио + Ноги</div>
-          <div style="padding:10px;margin:8px 0;background:rgba(102,126,234,.1);border-radius:8px;"><strong>Четверг:</strong> День 3 - Ноги + Пресс</div>
-          <div style="padding:10px;margin:8px 0;background:rgba(102,126,234,.1);border-radius:8px;"><strong>Пятница:</strong> День 4 - Функциональная + Сила</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="tabs">
-    <button class="tab-btn" data-tab="timer-tab">⏱️ Таймер</button>
-    <button class="tab-btn active" data-tab="workout-tab">🏋️ Программа</button>
-    <button class="tab-btn" data-tab="stats-tab">📊 Статистика</button>
-    <button class="tab-btn" data-tab="plan-tab">📅 План</button>
-  </div>
-
-  <script>
-    // Полный набор программ и упражнений
-    const workoutPrograms = {
-      day1: {
-        name: "День 1 - Верх тела",
-        exercises: [
-          { name: "Жим от груди сидя", sets: 4, reps: "8-12", weight: 40, hasWeight: true,
-            technique: "Техника:<br>1. Сядьте в тренажер, спина к спинке<br>2. Хват чуть шире плеч<br>3. Выдох - жим вперед<br>4. Вдох - медленно назад",
-            direction: "Направление: От центра груди вперед, локти слегка согнуты",
-            important: "Важно: Не блокируйте локти полностью, контролируйте негативную фазу" },
-          { name: "Тяга верхнего блока", sets: 4, reps: "8-12", weight: 45, hasWeight: true,
-            technique: "Техника:<br>1. Сидя, колени зафиксированы<br>2. Хват широкий, ладони от себя<br>3. Выдох - тяга к верху груди<br>4. Вдох - медленно вверх",
-            direction: "Направление: К верхней части груди, лопатки вместе",
-            important: "Важно: Не наклоняйтесь назад, работают широчайшие мышцы" },
-          { name: "Жим гантелей сидя", sets: 3, reps: "10-15", weight: 12, hasWeight: true,
-            technique: "Техника:<br>1. Сидя, спина прямая<br>2. Гантели на уровне плеч<br>3. Выдох - жим вверх<br>4. Вдох - опускание",
-            direction: "Направление: Строго вверх, не сводя гантели",
-            important: "Важно: Не разгибайте руки до конца, контроль веса" },
-          { name: "Тяга горизонтального блока", sets: 3, reps: "10-15", weight: 40, hasWeight: true,
-            technique: "Техника:<br>1. Сидя, ноги упираются<br>2. Хват средний<br>3. Выдох - тяга к животу<br>4. Вдох - медленно вперед",
-            direction: "Направление: К нижней части груди/животу",
-            important: "Важно: Спина прямая, лопатки сводим в конце движения" },
-          { name: "Подъем на бицепс", sets: 3, reps: "12-15", weight: 10, hasWeight: true,
-            technique: "Техника:<br>1. Стоя, руки вдоль тела<br>2. Гантели нейтральным хватом<br>3. Выдох - подъем<br>4. Вдох - опускание",
-            direction: "Направление: Сгибание только в локтевом суставе",
-            important: "Важно: Локти неподвижны, без раскачивания корпуса" },
-          { name: "Французский жим лежа", sets: 3, reps: "12-15", weight: 8, hasWeight: true,
-            technique: "Техника:<br>1. Лежа, руки перпендикулярно телу<br>2. Гантели над грудью<br>3. Вдох - сгибание в локтях<br>4. Вдох - разгибание",
-            direction: "Направление: Сгибание только в локтях, плечи неподвижны",
-            important: "Важно: Локти не разводим, медленное опускание" }
-        ]
-      },
-      day2: {
-        name: "День 2 - Кардио + Ноги",
-        exercises: [
-          { name: "Беговая дорожка", sets: 1, reps: "20 мин", hasWeight: false,
-            technique: "Техника:<br>1. Разминка 5 минут ходьба<br>2. Основная часть - легкий бег<br>3. Заминка 3 минуты ходьба<br>4. Дыхание ритмичное",
-            direction: "Направление: Пульс 120-140 ударов/мин",
-            important: "Важно: При дискомфорте снижайте темп, пейте воду" },
-          { name: "Приседания в тренажере", sets: 4, reps: "10-15", weight: 60, hasWeight: true,
-            technique: "Техника:<br>1. Ноги на ширине плеч<br>2. Спина прижата к спинке<br>3. Вдох - приседание<br>4. Вдох - подъем",
-            direction: "Направление: Таз назад, колени за носки не выходят",
-            important: "Важно: Колени в одной плоскости со стопами" },
-          { name: "Жим ногами", sets: 4, reps: "12-15", weight: 80, hasWeight: true,
-            technique: "Техника:<br>1. Спина прижата, ноги на платформе<br>2. Стопы на ширине плеч<br>3. Вдох - сгибание ног<br>4. Выдох - жим",
-            direction: "Направление: Не опускать колени к груди слишком глубоко",
-            important: "Важно: Колени не сводить, полная амплитуда" },
-          { name: "Подъем на носки сидя", sets: 4, reps: "15-20", weight: 25, hasWeight: true,
-            technique: "Техника:<br>1. Сидя в тренажере<br>2. Носки на платформе<br>3. Выдох - подъем на носки<br>4. Вдох - опускание",
-            direction: "Направление: Максимальная амплитуда движения",
-            important: "Важно: Пауза в верхней точке, медленное опускание" },
-          { name: "Сгибание ног лежа", sets: 3, reps: "12-15", weight: 30, hasWeight: true,
-            technique: "Техника:<br>1. Лежа на животе<br>2. Валик на задней части голеней<br>3. Выдох - сгибание<br>4. Вдох - разгибание",
-            direction: "Направление: Приводим пятки к ягодицам",
-            important: "Важно: Таз прижат к скамье, без рывков" }
-        ]
-      },
-      day3: {
-        name: "День 3 - Ноги + Пресс",
-        exercises: [
-          { name: "Гакк-приседания", sets: 4, reps: "8-12", weight: 70, hasWeight: true,
-            technique: "Техника:<br>1. Спина к спинке тренажера<br>2. Ноги на платформе<br>3. Вдох - приседание<br>4. Выдох - подъем",
-            direction: "Направление: Глубокое приседание, колени за носки",
-            important: "Важно: Пятки не отрывать, полный контроль веса" },
-          { name: "Румынская тяга", sets: 4, reps: "10-12", weight: 15, hasWeight: true,
-            technique: "Техника:<br>1. Стоя, гантели перед собой<br>2. Ноги слегка согнуты<br>3. Вдох - наклон с отведением таза<br>4. Выдох - подъем",
-            direction: "Направление: Таз назад, спина прямая",
-            important: "Важно: Чувствуем растяжение задней поверхности бедра" },
-          { name: "Выпады с гантелями", sets: 3, reps: "10 каждой", weight: 8, hasWeight: true,
-            technique: "Техника:<br>1. Стоя, гантели в руках<br>2. Шаг вперед
-","direction":"Направление: Колено задней ноги к полу","important":"Важно: Колено передней ноги над стопой" },
-          { name: "Подъемы ног в висе", sets: 3, reps: "8-15", hasWeight: false,
-            technique: "Техника:<br>1. Вис на турнике/тренажере<br>2. Ноги прямые или согнутые<br>3. Выдох - подъем ног<br>4. Вдох - опускание",
-            direction: "Направление: Ноги к груди, таз подкручивается",
-            important: "Важно: Без раскачивания, контролируем опускание" },
-          { name: "Планка", sets: 3, reps: "30-60 сек", hasWeight: false,
-            technique: "Техника:<br>1. Упор на предплечья
-","direction":"Направление: Прямая линия от головы до пяток","important":"Важно: Не поднимать таз, не прогибаться" },
-          { name: "Скручивания на пресс", sets: 3, reps: "15-20", hasWeight: false,
-            technique: "Техника:<br>1. Лежа, ноги согнуты<br>2. Руки за головой<br>3. Выдох - подъем корпуса<br>4. Вдох - опускание",
-            direction: "Направление: Лопатки от пола, подбородок от груди",
-            important: "Важно: Не тянем голову руками, работает пресс" }
-        ]
-      },
-      day4: {
-        name: "День 4 - Функциональная + Сила",
-        exercises: [
-          { name: "Функциональный тренажер - тяга", sets: 4, reps: "8-12", weight: 35, hasWeight: true,
-            technique: "Техника:<br>1. Стоя, хват за рукояти<br>2. Небольшой наклон вперед<br>3. Выдох - тяга к животу<br>4. Вдох - возврат",
-            direction: "Направление: Лопатки вместе, локти вдоль тела",
-            important: "Важно: Корпус стабилен, работают мышцы спины" },
-          { name: "Функциональный жим стоя", sets: 4, reps: "8-12", weight: 20, hasWeight: true,
-            technique: "Техника:<br>1. Стоя, рукояти на уровне плеч<br>2. Ноги на ширине плеч<br>3. Выдох - жим вперед<br>4. Вдох - возврат",
-            direction: "Направление: От плеч вперед, корпус прямо",
-            important: "Важно: Пресс напряжен, не отклоняемся назад" },
-          { name: "Приседания с гантелей", sets: 3, reps: "12-15", weight: 12, hasWeight: true,
-            technique: "Техника:<br>1. Гантель у груди<br>2. Ноги шире плеч<br>3. Вдох - приседание<br>4. Выдох - подъем",
-            direction: "Направление: Таз назад, колени наружу",
-            important: "Важно: Спина прямая, вес на пятках" },
-          { name: "Отжимания от пола", sets: 3, reps: "5-15", hasWeight: false,
-            technique: "Техника:<br>1. Упор лежа<br>2. Руки шире плеч<br>3. Вдох - опускание<br>4. Выдох - подъем",
-            direction: "Направление: Тело прямо, локти под углом 45°",
-            important: "Важно: Полная амплитуда, при необходимости с колен" },
-          { name: "Берпи", sets: 3, reps: "5-10", hasWeight: false,
-            technique: "Техника:<br>1. Присед, руки на пол<br>2. Прыжок назад в планку<br>3. Отжимание (опционально)<br>4. Прыжок к рукам, подъем вверх",
-            direction: "Направление: Плавные переходы между фазами",
-            important: "Важно: При усталости убираем отжимания и прыжки" }
-        ]
-      }
-    };
-
-    let currentProgram='day1';
-    let timerInterval=null,timerSeconds=90,isTimerRunning=false;
-    let completedSets={},weights={},lastExerciseRef=null;
-
-    function avgReps(str){ if(typeof str!=='string') return 10; if(str.includes('-')){const[a,b]=str.split('-').map(n=>parseInt(n,10)); if(!isNaN(a)&&!isNaN(b)) return Math.round((a+b)/2);} if(str.includes('мин')||str.includes('сек')) return 1; const n=parseInt(str,10); return isNaN(n)?10:n; }
-    function format(sec){const m=String(Math.floor(sec/60)).padStart(2,'0');const s=String(sec%60).padStart(2,'0');return `${m}:${s}`;}
-    function safeSwitchTab(tabId){
-      document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-      const t=document.getElementById(tabId), b=document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
-      if(t) t.classList.add('active'); if(b) b.classList.add('active');
-      if(t && t.scrollIntoView) setTimeout(()=>t.scrollIntoView({block:'start',behavior:'smooth'}),0);
-    }
-
-    function renderWorkout(programId){
-      currentProgram=programId;
-      const program=workoutPrograms[programId],c=document.getElementById('workout-content');
-      c.innerHTML=`
-        <div class=\"workout-card\"> 
-          <h2>${program.name}</h2>
-          ${program.exercises.map((ex,i)=>`
-            <div class=\"exercise-card\" style=\"margin-top:12px;\">
-              <div class=\"exercise-name\">${ex.name}</div>
-              <div class=\"technique-bg\">
-                <div class=\"technique-title\" style=\"font-weight:800;color:#667eea;margin-bottom:6px;\">Техника</div>
-                ${ex.technique}
-                ${ex.direction?`<br><br><strong>Направление:</strong> ${ex.direction}`:''}
-                ${ex.important?`<br><strong>Важно:</strong> ${ex.important}`:''}
-              </div>
-              <div class=\"sets-container\">
-                ${Array.from({length:ex.sets}).map((_,s)=>`<button class=\"set-btn\" data-ex=\"${i}\" data-set=\"${s+1}\">${s+1}</button>`).join('')}
-              </div>
-              ${ex.hasWeight?`
-                <div class=\"weight-controls\">
-                  <button class=\"weight-btn\" data-action=\"minus\" data-ex=\"${i}\">−</button>
-                  <div class=\"weight-display\" id=\"weight-${programId}-${i}\">${(weights[`${programId}_${i}`] ?? ex.weight ?? 0)} кг</div>
-                  <button class=\"weight-btn\" data-action=\"plus\" data-ex=\"${i}\">+</button>
-                </div>`:''}
-            </div>
-          `).join('')}
-        </div>`;
-      c.querySelectorAll('.set-btn').forEach(btn=>{
-        btn.addEventListener('click',()=>{
-          const exIdx=+btn.dataset.ex, setNum=+btn.dataset.set;
-          const key=`${programId}_${exIdx}_${setNum}`;
-          completedSets[key]=!completedSets[key];
-          btn.classList.toggle('completed',completedSets[key]);
-          lastExerciseRef={programId,exIdx};
-          safeSwitchTab('timer-tab');
-          document.getElementById('exercise-name-display').textContent=program.exercises[exIdx].name;
-          document.getElementById('current-exercise-info').style.display='block';
-          renderStats();
-        });
-      });
-      c.querySelectorAll('.weight-btn').forEach(btn=>{
-        btn.addEventListener('click',()=>{
-          const exIdx=+btn.dataset.ex, key=`${programId}_${exIdx}`, step=2.5;
-          const base=program.exercises[exIdx].weight ?? 0;
-          const cur=Number(weights[key] ?? base);
-          const next=btn.dataset.action==='plus'?cur+step:Math.max(0,cur-step);
-          weights[key]=next;
-          const disp=document.getElementById(`weight-${programId}-${exIdx}`); if(disp) disp.textContent=`${next} кг`;
-          renderStats();
-        });
-      });
-    }
-
-    function renderStats(){
-      const stats=document.getElementById('stats-content'); if(!stats) return;
-      let totalSets=0,totalVolume=0; const exDone=new Set();
-      for(const key in completedSets){ if(!completedSets[key]) continue;
-        const [pid, exIdx]=key.split('_'); const p=workoutPrograms[pid]; if(!p) continue;
-        const ex=p.exercises[+exIdx]; if(!ex) continue;
-        totalSets++; exDone.add(`${pid}:${exIdx}`);
-        const wKey=`${pid}_${exIdx}`, w=Number(weights[wKey] ?? ex.weight ?? 0), reps=avgReps(ex.reps);
-        totalVolume+=w*reps;
-      }
-      stats.innerHTML=`
-        <div style=\"line-height:1.8;\">
-          <div><strong>Подходов выполнено:</strong> ${totalSets}</div>
-          <div><strong>Уникальных упражнений:</strong> ${exDone.size}</div>
-          <div><strong>Суммарный тоннаж:</strong> ${totalVolume.toFixed(0)} кг·повт</div>
-        </div>
-        <div style=\"margin-top:10px;font-size:.9em;color:#4a5568;\">Диапазоны повторений считаются по среднему.</div>`;
-    }
-
-    function returnToLastExercise(){
-      if(lastExerciseRef){
-        const {programId,exIdx}=lastExerciseRef;
-        safeSwitchTab('workout-tab'); renderWorkout(programId);
-        setTimeout(()=>{
-          const cards=document.querySelectorAll('#workout-content .exercise-card');
-          const target=cards[exIdx]; if(target){ target.scrollIntoView({behavior:'smooth',block:'start'});
-            target.style.outline='2px solid #667eea'; target.style.borderRadius='12px';
-            setTimeout(()=>target.style.outline='none',1200);
-          }
-        },0);
-      }else{ safeSwitchTab('workout-tab'); }
-    }
-
-    function initTimer(){
-      const display=document.getElementById('timer-display');
-      const startBtn=document.getElementById('start-timer');
-      const pauseBtn=document.getElementById('pause-timer');
-      const resetBtn=document.getElementById('reset-timer');
-      const doneBtn=document.getElementById('done-timer');
-      const update=()=>display.textContent=format(timerSeconds);
-
-      startBtn.addEventListener('click',()=>{
-        if(isTimerRunning) return; isTimerRunning=true;
-        pauseBtn.style.display='inline-block'; doneBtn.style.display='inline-block';
-        timerInterval=setInterval(()=>{
-          if(timerSeconds>0){ timerSeconds--; update();
-            if(timerSeconds===0){ clearInterval(timerInterval); isTimerRunning=false; returnToLastExercise(); }
-          }
-        },1000);
-      });
-      pauseBtn.addEventListener('click',()=>{ if(!isTimerRunning) return; clearInterval(timerInterval); isTimerRunning=false; pauseBtn.style.display='none'; });
-      resetBtn.addEventListener('click',()=>{ clearInterval(timerInterval); isTimerRunning=false; timerSeconds=90; update(); pauseBtn.style.display='none'; doneBtn.style.display='none'; });
-      doneBtn.addEventListener('click',()=>{ clearInterval(timerInterval); isTimerRunning=false; timerSeconds=90; update(); pauseBtn.style.display='none'; doneBtn.style.display='none'; returnToLastExercise(); });
-      update();
-    }
-
-    window.onload=()=>{
-      document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>safeSwitchTab(btn.dataset.tab)));
-      document.querySelectorAll('.program-btn').forEach(btn=>{
-        btn.addEventListener('click',()=>{
-          document.querySelectorAll('.program-btn').forEach(b=>b.classList.remove('active'));
-          btn.classList.add('active'); renderWorkout(btn.dataset.program);
-        });
-      });
-      // Инициализация весов на основе исходных
-      for(const pid in workoutPrograms){ workoutPrograms[pid].exercises.forEach((ex,i)=>{ const k=`${pid}_${i}`; if(weights[k]==null) weights[k]=ex.weight ?? 0; }); }
-      renderWorkout('day1'); initTimer(); renderStats();
-    };
-  </script>
+		<section class="footer">
+			<div class="links">
+				<a class="tag" href="#">Консультация</a>
+				<a class="tag" href="#">Наш чат</a>
+				<a class="tag" href="#">Политика обработки данных</a>
+				<a class="tag" href="mailto:info@example.com">Связаться</a>
+			</div>
+			<small>© MonteMove</small>
+		</section>
+	</main>
 </body>
 </html>
