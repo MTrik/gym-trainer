@@ -102,41 +102,28 @@
   </div>
 
   <script>
-    // Данные
     const workoutPrograms = {
       day1:{name:"День 1 - Верх тела",exercises:[
-        {name:"Жим от груди сидя",sets:4,reps:"8-12",weight:40,hasWeight:true,
-         technique:"Техника:<br>1. Сядьте в тренажер<br>2. Хват шире плеч<br>3. Выдох - жим<br>4. Вдох - возврат",
-         direction:"К центру груди",important:"Не блокируйте локти"},
-        {name:"Тяга верхнего блока",sets:4,reps:"8-12",weight:45,hasWeight:true,
-         technique:"Техника:<br>1. Колени зафиксированы<br>2. Хват широкий<br>3. Тяга к верхней груди<br>4. Контроль вверх",
-         direction:"К верхней части груди",important:"Не заваливаться назад"},
-        {name:"Жим гантелей сидя",sets:3,reps:"10-15",weight:12,hasWeight:true,
-         technique:"Техника:<br>1. Спина прямая<br>2. Жим вверх<br>3. Контроль вниз",
-         direction:"Строго вверх",important:"Не выпрямлять до щелчка"},
+        {name:"Жим от груди сидя",sets:4,reps:"8-12",weight:40,hasWeight:true,technique:"Техника:<br>1. Сядьте в тренажер<br>2. Хват шире плеч<br>3. Выдох - жим<br>4. Вдох - возврат",direction:"К центру груди",important:"Не блокируйте локти"},
+        {name:"Тяга верхнего блока",sets:4,reps:"8-12",weight:45,hasWeight:true,technique:"Техника:<br>1. Колени зафиксированы<br>2. Хват широкий<br>3. Тяга к верхней груди<br>4. Контроль вверх",direction:"К верхней части груди",important:"Не заваливаться назад"},
+        {name:"Жим гантелей сидя",sets:3,reps:"10-15",weight:12,hasWeight:true,technique:"Техника:<br>1. Спина прямая<br>2. Жим вверх<br>3. Контроль вниз",direction:"Строго вверх",important:"Не выпрямлять до щелчка"}
       ]},
       day2:{name:"День 2 - Кардио + Ноги",exercises:[
-        {name:"Беговая дорожка",sets:1,reps:"20 мин",hasWeight:false,
-         technique:"Разминка 5м, бег, заминка 3м",direction:"Пульс 120-140",important:"Пейте воду"},
-        {name:"Жим ногами",sets:4,reps:"12-15",weight:80,hasWeight:true,
-         technique:"Спина прижата, полная амплитуда",direction:"От платформы",important:"Колени не сводить"},
+        {name:"Беговая дорожка",sets:1,reps:"20 мин",hasWeight:false,technique:"Разминка 5м, бег, заминка 3м",direction:"Пульс 120-140",important:"Пейте воду"},
+        {name:"Жим ногами",sets:4,reps:"12-15",weight:80,hasWeight:true,technique:"Спина прижата, полная амплитуда",direction:"От платформы",important:"Колени не сводить"}
       ]},
       day3:{name:"День 3 - Ноги + Пресс",exercises:[
-        {name:"Гакк-приседания",sets:4,reps:"8-12",weight:70,hasWeight:true,
-         technique:"Глубоко, контроль",direction:"Вниз-вверх",important:"Пятки не отрывать"},
+        {name:"Гакк-приседания",sets:4,reps:"8-12",weight:70,hasWeight:true,technique:"Глубоко, контроль",direction:"Вниз-вверх",important:"Пятки не отрывать"}
       ]},
       day4:{name:"День 4 - Функц + Сила",exercises:[
-        {name:"Функциональный тренажер - тяга",sets:4,reps:"8-12",weight:35,hasWeight:true,
-         technique:"Корпус стабилен",direction:"К животу",important:"Лопатки вместе"},
+        {name:"Функциональный тренажер - тяга",sets:4,reps:"8-12",weight:35,hasWeight:true,technique:"Корпус стабилен",direction:"К животу",important:"Лопатки вместе"}
       ]}
     };
 
-    // Состояние
     let currentProgram='day1';
     let timerInterval=null,timerSeconds=90,isTimerRunning=false;
     let completedSets={},weights={},lastExerciseRef=null;
 
-    // Утилиты
     function avgReps(str){ if(typeof str!=='string') return 10; if(str.includes('-')){const[a,b]=str.split('-').map(n=>parseInt(n,10)); if(!isNaN(a)&&!isNaN(b)) return Math.round((a+b)/2);} if(str.includes('мин')||str.includes('сек')) return 1; const n=parseInt(str,10); return isNaN(n)?10:n; }
     function format(sec){const m=String(Math.floor(sec/60)).padStart(2,'0');const s=String(sec%60).padStart(2,'0');return `${m}:${s}`;}
     function safeSwitchTab(tabId){
@@ -147,7 +134,6 @@
       if(t && t.scrollIntoView) setTimeout(()=>t.scrollIntoView({block:'start',behavior:'smooth'}),0);
     }
 
-    // Рендер
     function renderWorkout(programId){
       currentProgram=programId;
       const program=workoutPrograms[programId],c=document.getElementById('workout-content');
@@ -175,7 +161,6 @@
             </div>
           `).join('')}
         </div>`;
-      // Обработчики сетов
       c.querySelectorAll('.set-btn').forEach(btn=>{
         btn.addEventListener('click',()=>{
           const exIdx=+btn.dataset.ex, setNum=+btn.dataset.set;
@@ -183,14 +168,12 @@
           completedSets[key]=!completedSets[key];
           btn.classList.toggle('completed',completedSets[key]);
           lastExerciseRef={programId,exIdx};
-          // Переход на таймер
           safeSwitchTab('timer-tab');
           document.getElementById('exercise-name-display').textContent=program.exercises[exIdx].name;
           document.getElementById('current-exercise-info').style.display='block';
           renderStats();
         });
       });
-      // Веса
       c.querySelectorAll('.weight-btn').forEach(btn=>{
         btn.addEventListener('click',()=>{
           const exIdx=+btn.dataset.ex, key=`${programId}_${exIdx}`, step=2.5;
@@ -234,9 +217,7 @@
             setTimeout(()=>target.style.outline='none',1200);
           }
         },0);
-      }else{
-        safeSwitchTab('workout-tab');
-      }
+      }else{ safeSwitchTab('workout-tab'); }
     }
 
     function initTimer(){
@@ -262,7 +243,6 @@
       update();
     }
 
-    // Инициализация
     window.onload=()=>{
       document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>safeSwitchTab(btn.dataset.tab)));
       document.querySelectorAll('.program-btn').forEach(btn=>{
@@ -271,10 +251,7 @@
           btn.classList.add('active'); renderWorkout(btn.dataset.program);
         });
       });
-      // Инициализация весов по всем программам
-      for(const pid in workoutPrograms){
-        workoutPrograms[pid].exercises.forEach((ex,i)=>{ const k=`${pid}_${i}`; if(weights[k]==null) weights[k]=ex.weight ?? 0; });
-      }
+      for(const pid in workoutPrograms){ workoutPrograms[pid].exercises.forEach((ex,i)=>{ const k=`${pid}_${i}`; if(weights[k]==null) weights[k]=ex.weight ?? 0; }); }
       renderWorkout('day1'); initTimer(); renderStats();
     };
   </script>
