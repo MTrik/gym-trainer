@@ -3,97 +3,19 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<title>Курсы валют — MonteMove</title>
-	<meta name="description" content="Актуальные курсы обмена, программа лояльности MonteMove и контакты.">
+	<title>Курсы валют</title>
+	<meta name="description" content="Курсы обмена">
 	<style>
-		:root{
-			--bg:#0b0c10;--card:#111318;--text:#eaeef3;--muted:#a8b0bb;--accent:#59f;--border:#20232b;
-		}
-		*{box-sizing:border-box}
-		html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-		a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
-		.container{max-width:1100px;margin:0 auto;padding:24px}
-		header{display:flex;justify-content:space-between;align-items:center;padding:12px 0}
-		.nav{display:flex;gap:16px;flex-wrap:wrap} .nav a{color:var(--muted)}
-		.hero{margin:24px 0;padding:20px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(180deg,#12141a,rgba(18,20,26,0.6))}
-		.hero h1{margin:0 0 8px;font-size:28px} .hero p{margin:0 0 12px;color:var(--muted)}
-		.actions{display:flex;gap:12px;flex-wrap:wrap}
-		.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:#151823;color:var(--text);font-weight:600}
-		.btn.primary{background:var(--accent);color:#fff;border-color:transparent}
-		.badge{display:inline-flex;align-items:center;gap:8px;color:#9ee6b8;font-weight:600}
-		.badge::before{content:"●";color:#34c759}
-		.section{margin:36px 0}
-		.card{border:1px solid var(--border);border-radius:12px;background:var(--card);padding:16px}
-		.kicker{color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:12px;margin-bottom:6px}
-		.list{margin:8px 0 0 0;padding-left:18px;color:var(--muted)}
-		.footer{margin:48px 0 24px;color:var(--muted);display:grid;gap:12px}
-		.links{display:flex;gap:12px;flex-wrap:wrap}
-		.tag{display:inline-block;padding:6px 10px;border:1px solid var(--border);border-radius:999px;color:var(--muted)}
-		iframe.sheet{width:100%;height:600px;border:0}
-		@media (max-width:640px){iframe.sheet{height:70vh}}
+		html, body { margin:0; padding:0; background:#fff; color:#000; }
+		iframe.sheet { width:100%; height:80vh; border:0; }
 	</style>
 </head>
 <body>
-	<header class="container">
-		<div class="nav">
-			<a href="#">Курсы</a>
-			<a href="#">О нас</a>
-			<a href="#">Контакты</a>
-			<a href="#">Сербия</a>
-			<a href="#">Черногория</a>
-		</div>
-		<div class="nav">
-			<a class="btn" href="#">Консультация</a>
-			<a class="btn" href="#">Наш чат</a>
-		</div>
-	</header>
-
-	<main class="container">
-		<section class="hero">
-			<h1>Курсы валют</h1>
-			<p>Подробно проконсультируем по всем интересующим вопросам.</p>
-			<div class="actions">
-				<a class="btn primary" href="#">Бесплатная консультация</a>
-				<span class="badge">Данные введены верно • Свяжитесь со мной</span>
-			</div>
-			<p style="margin-top:10px;color:#a8b0bb">
-				Нажимая на кнопку, вы соглашаетесь с политикой обработки данных.
-			</p>
-		</section>
-
-		<section class="section card">
-			<div class="kicker">Таблица</div>
-			<h2 style="margin:0 0 8px;font-size:18px">Курсы обмена</h2>
-			<iframe
-				class="sheet"
-				src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQUb0EbKC3P-s1OaXzPLuMHY1AksyyQc9UTVpzgzoshVpBVLyxqiriPGWICqC74p_vyt0wqzndYYyUf/pubhtml?gid=597818720&single=true"
-				loading="lazy"
-				referrerpolicy="no-referrer-when-downgrade"
-			></iframe>
-		</section>
-
-		<section class="section">
-			<div class="card">
-				<div class="kicker">Лояльность</div>
-				<h3 style="margin:0 0 8px;font-size:18px">Программа клуба MonteMove</h3>
-				<p style="color:#a8b0bb;font-size:13px">Скидки не суммируются и действуют на обмены от 1000 евро.</p>
-				<ul class="list">
-					<li>Первое обращение — скидка на одну строку</li>
-					<li>Членство в чате и канале — скидка на одну позицию</li>
-					<li>Самовывоз — скидка на одну строку</li>
-				</ul>
-			</div>
-		</section>
-
-		<section class="footer">
-			<div class="links">
-				<a class="tag" href="#">Консультация</a>
-				<a class="tag" href="#">Наш чат</a>
-				<a class="tag" href="#">Политика обработки данных</a>
-				<a class="tag" href="mailto:info@example.com">Связаться</a>
-			</div>
-			<small>© MonteMove</small>
-		</section>
-	</main>
+	<iframe
+		class="sheet"
+		src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQUb0EbKC3P-s1OaXzPLuMHY1AksyyQc9UTVpzgzoshVpBVLyxqiriPGWICqC74p_vyt0wqzndYYyUf/pubhtml?gid=597818720&single=true"
+		loading="lazy"
+		referrerpolicy="no-referrer-when-downgrade"
+	></iframe>
 </body>
 </html>
